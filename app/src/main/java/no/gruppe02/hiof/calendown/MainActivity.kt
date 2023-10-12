@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import no.gruppe02.hiof.calendown.screen.CalendownApp
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
 class MainActivity : ComponentActivity() {

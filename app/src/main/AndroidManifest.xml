@@ -13,6 +13,16 @@
         android:theme="@style/Theme.CalenDown"
         tools:targetApi="31">
         <activity
+            android:name=".screen.AddEventScreen"
+            android:exported="false"
+            android:label="@string/title_activity_add_event_screen"
+            android:theme="@style/Theme.CalenDown" />
+        <activity
+            android:name=".screen.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.CalenDown" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
