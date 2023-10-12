@@ -13,9 +13,13 @@ import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
 
-class EventDetailViewModel()
+@HiltViewModel
+class EventDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val storageService: StorageService
+)
     : ViewModel() {
-    /*
+
     val event = mutableStateOf(Event())
     init {
         val eventId = savedStateHandle.get<String>(EVENT_ID)
@@ -25,5 +29,4 @@ class EventDetailViewModel()
             }
         }
     }
-    */
 }

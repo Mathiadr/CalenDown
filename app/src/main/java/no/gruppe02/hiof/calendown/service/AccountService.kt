@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import no.gruppe02.hiof.calendown.model.User
 
 interface AccountService {
+    /*
     val currentUserId: String
     val hasUser: Boolean
 
@@ -13,4 +14,6 @@ interface AccountService {
     suspend fun createAnonymousAccount()
     suspend fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit)
     suspend fun signOut()
+
+     */
 }
