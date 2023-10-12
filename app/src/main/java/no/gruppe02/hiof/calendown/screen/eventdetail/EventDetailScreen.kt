@@ -21,9 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun EventDetailScreen(modifier: Modifier = Modifier,
-                      viewModel: EventDetailViewModel = hiltViewModel()
+fun EventDetailScreen(
 ) {
+    /*
     val event by viewModel.event
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,6 +46,8 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
         )
         */
     }
+
+     */
 }
 
 @Composable
