@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,6 +28,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import no.gruppe02.hiof.calendown.screen.AddEventScreen
+import no.gruppe02.hiof.calendown.screen.AddEventScreenApp
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
@@ -35,12 +38,14 @@ sealed class Screen(
     val route: String,
     @StringRes
     val title: Int,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector) {
+    // Property er optional
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null) {
 
     object Home : Screen("Home", R.string.home, Icons.Filled.Home, Icons.Outlined.Home)
     object Profile : Screen("Profile", R.string.profile, Icons.Filled.Person, Icons.Outlined.Person)
     object Notifications : Screen("Notifications", R.string.notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)
+    object AddEvent : Screen("Add Event", R.string.add_event)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +63,12 @@ fun CalendownApp() {
             BottomNavigationBar(
                 navController = navController,
                 bottomNavigationScreens = bottomNavigationScreens
-            )}
+            )},
+        floatingActionButton = {
+            OpenAddEventScreen(
+                navController = navController,
+            )
+        }
     ) { padding ->
         val mod = Modifier.padding(padding)
 
@@ -72,15 +82,28 @@ fun CalendownApp() {
             composable(Screen.Notifications.route) {
                 NotificationsScreen()
             }
+            composable(Screen.AddEvent.route) {
+                AddEventScreenApp()
+            }
         }
     }
 }
 
 @Composable
+fun OpenAddEventScreen(
+    navController: NavHostController) {
+    FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route) }) {
+
+    }
+
+
+}
+
+
+@Composable
 fun BottomNavigationBar (
     navController: NavHostController,
-    bottomNavigationScreens: List<Screen>
-) {
+    bottomNavigationScreens: List<Screen>) {
     // Should be stored in ViewModel??
     // Holder på hvilket element i bottomNav som er selected
     var selectedBottomNavigationIndex by rememberSaveable {
@@ -108,12 +131,14 @@ fun BottomNavigationBar (
                 // Lånt logikk for å få filled eller outlined icon basert på
                 // hva som er selected
                 icon = {
-                    Icon(
-                        imageVector = if (index == selectedBottomNavigationIndex) {
-                            screen.selectedIcon
-                        } else
-                            screen.unselectedIcon,
-                        contentDescription = title)
+                    (if (index == selectedBottomNavigationIndex) {
+                        screen.selectedIcon
+                    } else
+                        screen.unselectedIcon)?.let {
+                        Icon(
+                            imageVector = it,
+                            contentDescription = title)
+                    }
                 })
         }
     }
