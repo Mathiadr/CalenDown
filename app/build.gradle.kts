@@ -87,7 +87,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     kapt("com.google.dagger:hilt-compiler:2.48.1")
-    ksp("com.google.dagger:hilt-compiler:2.47")
+
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
