@@ -1,10 +1,11 @@
 package no.gruppe02.hiof.calendown.model
 
+import com.google.firebase.firestore.DocumentId
 import java.util.Date
 
 data class Event(
-    val uid: String = "",
-    var owner: User,
+    @DocumentId val uid: String = "",
+    var owner: User = User(),
 
     var title: String = "",
     var description: String = "",
@@ -12,5 +13,5 @@ data class Event(
     var icon: String = "",
     var category: String = "",
 
-    var date: Date,
+    var date: Date = Date(),
     )
