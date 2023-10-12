@@ -1,3 +1,5 @@
 package no.gruppe02.hiof.calendown.model
 
-data class Event()
+data class Event(
+    val id: String = ""
+)

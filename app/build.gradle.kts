@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "no.gruppe02.hiof.calendown"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "no.gruppe02.hiof.calendown"
@@ -66,4 +66,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("androidx.navigation:navigation-compose:2.7.2")
 }
