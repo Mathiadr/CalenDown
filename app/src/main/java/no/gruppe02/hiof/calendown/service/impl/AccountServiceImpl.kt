@@ -1,15 +1,7 @@
 package no.gruppe02.hiof.calendown.service.impl
 
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
-import no.gruppe02.hiof.calendown.model.User
-import no.gruppe02.hiof.calendown.service.AccountService
-import javax.inject.Inject
 
+/*
 class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
 
     override val currentUserId: String
@@ -48,3 +40,5 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         auth.signInAnonymously()
     }
 }
+
+ */
