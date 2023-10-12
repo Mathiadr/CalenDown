@@ -1,4 +1,4 @@
-package no.larseknu.hiof.compose.playingwithfirebase.service.impl
+package no.gruppe02.hiof.calendown.service.impl
 
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,39 +8,40 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
-import no.larseknu.hiof.compose.playingwithfirebase.model.Movie
-import no.larseknu.hiof.compose.playingwithfirebase.service.AccountService
-import no.larseknu.hiof.compose.playingwithfirebase.service.StorageService
+import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.service.AccountService
+import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
 class StorageServiceImpl
 @Inject
 constructor(private val firestore: FirebaseFirestore,
-            private val auth: AccountService) : StorageService {
+            private val auth: AccountService
+) : StorageService {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val movies: Flow<List<Movie>>
+    override val events: Flow<List<Event>>
         get() = auth.currentUser.flatMapLatest { user ->
-            firestore.collection(MOVIE_COLLECTION)
+            firestore.collection(EVENT_COLLECTION)
                 .where(
                     Filter.or(Filter.equalTo(USER_ID_FIELD, user.id),
                         Filter.equalTo(USER_ID_FIELD, "")))
                 .dataObjects()
         }
 
-    override suspend fun getMovie(movieId: String): Movie? =
-        firestore.collection(MOVIE_COLLECTION).document(movieId).get().await().toObject()
+    override suspend fun getEvent(eventId: String): Event? =
+        firestore.collection(EVENT_COLLECTION).document(eventId).get().await().toObject()
 
 
-    override suspend fun save(movie: Movie): String {
-        val movieWithUserId = movie.copy(userId = auth.currentUserId)
-        return firestore.collection(MOVIE_COLLECTION).add(movieWithUserId).await().id
+    override suspend fun save(event: Event): String {
+        val movieWithUserId = event.copy(userId = auth.currentUserId)
+        return firestore.collection(EVENT_COLLECTION).add(movieWithUserId).await().id
     }
 
 
 
     companion object {
-        private const val MOVIE_COLLECTION = "movies"
+        private const val EVENT_COLLECTION = "events"
         private const val USER_ID_FIELD = "userId"
     }
 }

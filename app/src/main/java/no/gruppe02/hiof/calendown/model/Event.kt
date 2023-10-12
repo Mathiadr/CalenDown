@@ -5,7 +5,7 @@ import java.util.Date
 
 data class Event(
     @DocumentId val uid: String = "",
-    var owner: User = User(),
+    var userId: String = "",
 
     var title: String = "",
     var description: String = "",
