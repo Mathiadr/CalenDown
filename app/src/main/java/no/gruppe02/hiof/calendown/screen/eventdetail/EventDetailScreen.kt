@@ -19,11 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import no.gruppe02.hiof.calendown.CalendownApp
+import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
+
 
 @Composable
-fun EventDetailScreen(
+fun EventDetailScreen(modifier: Modifier = Modifier,
+                      viewModel: EventDetailViewModel = hiltViewModel()
 ) {
-    /*
+
     val event by viewModel.event
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
@@ -32,6 +36,8 @@ fun EventDetailScreen(
         Text(text = event.title,
             style = MaterialTheme.typography.headlineLarge)
         Text(text = event.description,
+            style = MaterialTheme.typography.bodyMedium)
+        Text(text = event.date.toString(),
             style = MaterialTheme.typography.bodyMedium)
         /* TODO: Implement
         AsyncImage(
@@ -47,11 +53,13 @@ fun EventDetailScreen(
         */
     }
 
-     */
+
 }
 
 @Composable
 @Preview
 fun EventDetailScreenPreview(){
-    EventDetailScreen()
+    CalenDownTheme {
+        EventDetailScreen()
+    }
 }
