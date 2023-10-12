@@ -5,4 +5,5 @@
     <string name="notifications">Notifications</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_add_event_screen">AddEventScreen</string>
+    <string name="add_event">Add Event</string>
 </resources>
