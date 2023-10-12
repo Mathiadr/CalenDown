@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import no.gruppe02.hiof.calendown.screen.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.AddEventScreenApp
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
@@ -21,8 +20,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //AddEventScreenApp()
-                    CalendownApp()
+                    AddEventScreenApp()
+                    //CalendownApp()
                 }
             }
         }

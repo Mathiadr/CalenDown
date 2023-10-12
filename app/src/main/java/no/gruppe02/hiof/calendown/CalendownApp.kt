@@ -31,7 +31,6 @@ import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
 
-
 sealed class Screen(
     val route: String,
     @StringRes
@@ -83,6 +82,7 @@ fun BottomNavigationBar (
     bottomNavigationScreens: List<Screen>
 ) {
     // Should be stored in ViewModel??
+    // Holder på hvilket element i bottomNav som er selected
     var selectedBottomNavigationIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
@@ -99,6 +99,9 @@ fun BottomNavigationBar (
                 label = {
                     Text(text = title)
                 },
+                // https://www.youtube.com/watch?v=c8XP_Ee7iqY&t=526s
+                // Lånt logikk for å få filled eller outlined icon basert på
+                // hva som er selected
                 icon = {
                     Icon(
                         imageVector = if (index == selectedBottomNavigationIndex) {
