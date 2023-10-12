@@ -1,6 +1,7 @@
 package no.gruppe02.hiof.calendown
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,8 +25,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,6 +37,7 @@ import no.gruppe02.hiof.calendown.screen.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
+import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 
 sealed class Screen(
     val route: String,
@@ -47,6 +51,7 @@ sealed class Screen(
     object Profile : Screen("Profile", R.string.profile, Icons.Filled.Person, Icons.Outlined.Person)
     object Notifications : Screen("Notifications", R.string.notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)
     object AddEvent : Screen("Add Event", R.string.add_event)
+    object EventDetails : Screen("Event Detail", R.string.event)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +64,7 @@ fun CalendownApp() {
         Screen.Profile,
         Screen.Notifications
     )
-
+    //Test
     // When you navigate to another screen, this value is updated.
     val currentRoute = navController
         .currentBackStackEntryFlow
@@ -96,6 +101,9 @@ fun CalendownApp() {
             }
             composable(Screen.AddEvent.route) {
                 AddEventScreen()
+            }
+            composable(Screen.EventDetails.route) {
+                EventDetailScreen()
             }
         }
     }
