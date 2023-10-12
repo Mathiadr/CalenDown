@@ -2,7 +2,6 @@ package no.gruppe02.hiof.calendown.screen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.CalendarView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -36,15 +35,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 class AddEventScreen : ComponentActivity() {
-    var year : Int = 0
-    var month : Int = 0
-    var day : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.new_app_widget)
 
         setContent {
             CalenDownTheme {
@@ -192,12 +186,7 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
                 onCheckedChange = { newCheckedState ->
                     checkedState = newCheckedState
                 })
-            CalendarView.OnDateChangeListener {
-                    view: CalendarView, i: Int, i1: Int, i2: Int ->
-                year = i
-                month = i1+1
-                day = i2
-        }
+
     }
 }}}
 
