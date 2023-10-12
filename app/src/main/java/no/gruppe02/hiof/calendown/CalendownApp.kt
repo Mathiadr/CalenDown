@@ -88,6 +88,11 @@ fun BottomNavigationBar (
     }
 
     NavigationBar {
+        //TODO: Implementer funksjonalitet for å håndtere oppsamling i BackStackEntry
+        //val navBackStackEntry by navController.currentBackStackEntryAsState()
+        //val currentDestination = navBackStackEntry?.destination?.route
+
+
         bottomNavigationScreens.forEachIndexed { index, screen ->
             val title = stringResource(screen.title)
             NavigationBarItem(
