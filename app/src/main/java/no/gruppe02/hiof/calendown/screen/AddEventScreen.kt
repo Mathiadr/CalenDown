@@ -46,13 +46,6 @@ fun AddEventScreen() {
                     ) {
                         Text(text = "Save")
                     }
-                    Button(
-                        onClick = {},
-                        modifier = Modifier.absoluteOffset(x = (-15).dp, y = 0.dp)
-
-                    ) {
-                        Text(text = "Exit")
-                    }
 
                     Text(
                         text = "Create Event",
@@ -76,7 +69,9 @@ fun AddEventScreen() {
 fun AddEventScreenContent(modifier: Modifier = Modifier) {
     val textState = remember { mutableStateOf("") }
     val textState2 = remember { mutableStateOf("") }
+    val date = remember { mutableStateOf("") }
     var checkedState by rememberSaveable { mutableStateOf(false)}
+
 
     Column(
         modifier = modifier
@@ -141,6 +136,30 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 )
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .background(color = Color.LightGray)
+        ) {
+            TextField(
+                value = date.value,
+                onValueChange = {
+                    date.value = it
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            if (date.value.isEmpty()) {
+                Text(
+                    text = "Event date: 2018.09.18",
+                    color = Color.Gray,
+                    modifier = Modifier.padding(15.dp)
+                )
+            }
+        }
+
 
         Row(
             modifier = Modifier
