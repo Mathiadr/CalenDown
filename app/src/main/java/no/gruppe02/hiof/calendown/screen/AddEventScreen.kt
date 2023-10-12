@@ -33,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import no.gruppe02.hiof.calendown.screen.ui.theme.CalenDownTheme
 
@@ -46,7 +47,7 @@ class AddEventScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   CalendownApp()
+                    AddEventScreenApp()
                 }
             }
         }
@@ -55,7 +56,7 @@ class AddEventScreen : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendownApp() {
+fun AddEventScreenApp() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,6 +99,7 @@ fun CalendownApp() {
 @Composable
 fun AddEventScreen(modifier: Modifier = Modifier) {
     val textState = remember { mutableStateOf("") }
+    val textState2 = remember { mutableStateOf("") }
     var checkedState by rememberSaveable { mutableStateOf(false) }
 
 
@@ -111,7 +113,9 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(6.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Event information",
@@ -120,17 +124,20 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
         }
 
         Box(
-            modifier = Modifier.fillMaxWidth().padding(6.dp).background(color = Color.LightGray)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .background(color = Color.LightGray)
         ) {
             TextField(
-                value = textState.value,
+                value = textState2.value,
                 onValueChange = {
-                    textState.value = it
+                    textState2.value = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (textState.value.isEmpty()) {
+            if (textState2.value.isEmpty()) {
                 Text(
                     text = "Enter eventname here",
                     color = Color.Gray,
@@ -139,7 +146,10 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
             }
         }
         Box(
-            modifier = Modifier.fillMaxWidth().padding(6.dp).background(color = Color.LightGray)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .background(color = Color.LightGray)
         ) {
             TextField(
                 value = textState.value,
@@ -159,7 +169,9 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().background(color = Color.LightGray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.LightGray),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Repeat yearly?",
@@ -177,3 +189,9 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
         }
     }
 }
+@Preview
+@Composable
+fun newfunction() {
+    AddEventScreenApp()
+}
+
