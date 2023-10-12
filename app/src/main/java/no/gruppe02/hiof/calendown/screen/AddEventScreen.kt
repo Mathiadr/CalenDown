@@ -1,6 +1,8 @@
 package no.gruppe02.hiof.calendown.screen
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.CalendarView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -33,14 +35,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
+import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-
 class AddEventScreen : ComponentActivity() {
+    var year : Int = 0
+    var month : Int = 0
+    var day : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.new_app_widget)
+
         setContent {
             CalenDownTheme {
                 // A surface container using the 'background' color from the theme
@@ -53,7 +58,7 @@ class AddEventScreen : ComponentActivity() {
             }
         }
     }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,12 +101,15 @@ fun AddEventScreenApp() {
 
 
 
+
+@SuppressLint("NotConstructor")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventScreen(modifier: Modifier = Modifier) {
     val textState = remember { mutableStateOf("") }
     val textState2 = remember { mutableStateOf("") }
-    var checkedState by rememberSaveable { mutableStateOf(false) }
+    var checkedState by rememberSaveable { mutableStateOf(false)}
+
 
 
 
@@ -184,15 +192,15 @@ fun AddEventScreen(modifier: Modifier = Modifier) {
                 onCheckedChange = { newCheckedState ->
                     checkedState = newCheckedState
                 })
-
-
-
+            CalendarView.OnDateChangeListener {
+                    view: CalendarView, i: Int, i1: Int, i2: Int ->
+                year = i
+                month = i1+1
+                day = i2
         }
     }
-}
-@Preview
-@Composable
-fun newfunction() {
-    AddEventScreenApp()
-}
+}}}
+
+
+
 
