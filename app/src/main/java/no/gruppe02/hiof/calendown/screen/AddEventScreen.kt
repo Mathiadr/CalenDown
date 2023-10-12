@@ -35,7 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import no.gruppe02.hiof.calendown.screen.ui.theme.CalenDownTheme
+
+import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
 class AddEventScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
