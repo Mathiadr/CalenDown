@@ -3,7 +3,6 @@ package no.gruppe02.hiof.calendown
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -18,7 +17,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import no.gruppe02.hiof.calendown.screen.AddEventScreen
+
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
@@ -59,12 +58,6 @@ fun CalendownApp() {
         Screen.Profile,
         Screen.Notifications
     )
-
-    // When you navigate to another screen, this value is updated.
-    val currentRoute = navController
-        .currentBackStackEntryFlow
-        .collectAsState(initial = navController.currentBackStackEntry)
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -72,14 +65,9 @@ fun CalendownApp() {
                 bottomNavigationScreens = bottomNavigationScreens
             )},
         floatingActionButton = {
-            // Vis FAB om du er på HomeScreen
-            when (currentRoute.value?.destination?.route) {
-                Screen.Home.route -> {
-                    OpenAddEventScreen(
-                        navController = navController,
-                    )
-                }
-            }
+            OpenAddEventScreen(
+                navController = navController,
+            )
         }
     ) { padding ->
         val mod = Modifier.padding(padding)
@@ -95,7 +83,7 @@ fun CalendownApp() {
                 NotificationsScreen()
             }
             composable(Screen.AddEvent.route) {
-                AddEventScreen()
+                AddEventScreen().AddEventScreenApp()
             }
         }
     }
@@ -103,17 +91,14 @@ fun CalendownApp() {
 
 @Composable
 fun OpenAddEventScreen(
-    navController: NavHostController
-) {
-    FloatingActionButton(
-        onClick = { navController.navigate(Screen.AddEvent.route)})
-    {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Create new event button"
-        )
+    navController: NavHostController) {
+    FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route) }) {
+
     }
+
+
 }
+
 
 @Composable
 fun BottomNavigationBar (
