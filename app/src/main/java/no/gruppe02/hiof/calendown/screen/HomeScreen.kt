@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 
 // Dummydata for å vise et kort
 sealed class Event(
@@ -42,7 +43,7 @@ sealed class Event(
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onEventClick: () -> Unit ) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,21 +64,26 @@ fun HomeScreen() {
         Column (
             modifier = Modifier
                 .padding(innerPadding)){
-            EventCard(Event.event)
+            EventCard(Event.event, onEventClick)
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventCard(
     event: Event,
+    onEventClick: () -> Unit,
     modifier: Modifier = Modifier) {
+
     Card (
+        onClick = {onEventClick()},
         modifier
             .fillMaxWidth()
             .padding(10.dp)
             .padding(top = 6.dp)
-            .clickable { }
+            .clickable { },
+
 
     ) {
         Row (
