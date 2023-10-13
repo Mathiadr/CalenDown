@@ -13,5 +13,5 @@ data class Event(
     var icon: String = "",
     var category: String = "",
 
-    var date: Date = Date(),
+    var date: String = ""
     )

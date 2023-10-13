@@ -88,7 +88,7 @@ fun CalendownApp() {
 
         NavHost(navController = navController, startDestination = Screen.Home.route) {
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(onEventClick = { navController.navigate(Screen.EventDetails.route) })
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
