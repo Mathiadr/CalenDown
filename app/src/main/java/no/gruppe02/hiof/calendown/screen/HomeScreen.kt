@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -80,12 +82,13 @@ fun OpenAddEventScreen(
     onAddEventClick: () -> Unit
 ) {
     FloatingActionButton(
-        onClick = { onAddEventClick() }
+        onClick = { onAddEventClick() },
+        //contentColor =
     )
     {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = "Create new event button"
+            contentDescription = "Create new event button",
         )
     }
 }
