@@ -10,9 +10,9 @@ import no.gruppe02.hiof.calendown.model.Event
 
 object Datasource {
     val eventList = listOf(
-        Event(title = "Sam's birthday", description = "Happy birthday!", date = DateTime.getDefaultInstance().toString(), icon = Icons.Default.Home, userId = "" ),
-        Event(title = "Dentist appointment", description = "I hate him so much", date = DateTime.getDefaultInstance().day.toString(), icon = Icons.Default.Warning, userId = "" ),
-        Event(title = "Date with Alex", description = "Time to get lucky tonight", date = DateTime.getDefaultInstance().toString(), icon = Icons.Default.Favorite, userId = "" ),
-        Event(title = "Apply for grants", description = "I need the money...", date = DateTime.getDefaultInstance().toString(), icon = Icons.Default.Star, userId = "" ),
+        Event(title = "Sam's birthday", description = "Happy birthday!", icon = Icons.Default.Home.toString(), userId = "" ),
+        Event(title = "Dentist appointment", description = "I hate him so much", icon = Icons.Default.Warning.toString(), userId = "" ),
+        Event(title = "Date with Alex", description = "Time to get lucky tonight", icon = Icons.Default.Favorite.toString(), userId = "" ),
+        Event(title = "Apply for grants", description = "I need the money...", icon = Icons.Default.Star.toString(), userId = "" ),
     )
 }

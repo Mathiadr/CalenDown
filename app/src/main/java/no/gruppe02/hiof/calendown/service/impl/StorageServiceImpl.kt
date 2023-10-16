@@ -18,6 +18,7 @@ class StorageServiceImpl
 constructor(private val firestore: FirebaseFirestore
 ) : StorageService {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val events: Flow<List<Event>> get() = firestore.collection(EVENT_COLLECTION).dataObjects()
 
 
