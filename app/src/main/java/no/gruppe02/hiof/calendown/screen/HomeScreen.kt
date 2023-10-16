@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 
 // Dummydata for å vise et kort
 sealed class Event(
@@ -43,7 +44,8 @@ sealed class Event(
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onEventClick: () -> Unit ) {
+fun HomeScreen(onEventClick: () -> Unit,
+               onAddEventClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,17 +57,36 @@ fun HomeScreen(onEventClick: () -> Unit ) {
                         textAlign = TextAlign.Center
                     )
                 },
+
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
         },
+        floatingActionButton = {
+            OpenAddEventScreen(onAddEventClick)
+        }
     ) { innerPadding ->
         Column (
             modifier = Modifier
                 .padding(innerPadding)){
             EventCard(Event.event, onEventClick)
         }
+    }
+}
+
+@Composable
+fun OpenAddEventScreen(
+    onAddEventClick: () -> Unit
+) {
+    FloatingActionButton(
+        onClick = { onAddEventClick() }
+    )
+    {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Create new event button"
+        )
     }
 }
 
