@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import no.gruppe02.hiof.calendown.screen.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
@@ -48,7 +49,9 @@ sealed class Screen(
     object Profile : Screen("Profile", R.string.profile, Icons.Filled.Person, Icons.Outlined.Person)
     object Notifications : Screen("Notifications", R.string.notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)
     object AddEvent : Screen("Add Event", R.string.add_event)
-    object EventDetails : Screen("Event Detail", R.string.event)
+    object EventDetails : Screen(
+        route = "${EVENT_DETAIL}$EVENT_ID_ARG",
+        R.string.event)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,7 +91,10 @@ fun CalendownApp() {
 
         NavHost(navController = navController, startDestination = Screen.Home.route) {
             composable(Screen.Home.route) {
-                HomeScreen(onEventClick = { navController.navigate(Screen.EventDetails.route) })
+                HomeScreen(onEventClick = { eventId ->
+                    val route = "${EVENT_DETAIL}?$EVENT_ID=$eventId"
+                    navController.navigate(route)
+                })
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
@@ -99,7 +105,11 @@ fun CalendownApp() {
             composable(Screen.AddEvent.route) {
                 AddEventScreen()
             }
-            composable(Screen.EventDetails.route) {
+            composable(
+                route = Screen.EventDetails.route,
+                arguments = listOf(navArgument(EVENT_ID) {
+                    nullable = false})
+            ) {
                 EventDetailScreen()
             }
         }
