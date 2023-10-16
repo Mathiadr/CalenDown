@@ -15,10 +15,13 @@ import javax.inject.Inject
 
 class StorageServiceImpl
 @Inject
-constructor(private val firestore: FirebaseFirestore,
-            private val auth: AccountService
+constructor(private val firestore: FirebaseFirestore
 ) : StorageService {
 
+    override val events: Flow<List<Event>> get() = firestore.collection(EVENT_COLLECTION).dataObjects()
+
+
+/*
     @OptIn(ExperimentalCoroutinesApi::class)
     override val events: Flow<List<Event>>
         get() = auth.currentUser.flatMapLatest { user ->
@@ -28,20 +31,19 @@ constructor(private val firestore: FirebaseFirestore,
                         Filter.equalTo(USER_ID_FIELD, "")))
                 .dataObjects()
         }
+*/
 
     override suspend fun getEvent(eventId: String): Event? =
         firestore.collection(EVENT_COLLECTION).document(eventId).get().await().toObject()
 
 
     override suspend fun save(event: Event): String {
-        val movieWithUserId = event.copy(userId = auth.currentUserId)
-        return firestore.collection(EVENT_COLLECTION).add(movieWithUserId).await().id
+        return firestore.collection(EVENT_COLLECTION).add(event).await().id
     }
 
 
 
     companion object {
         private const val EVENT_COLLECTION = "events"
-        private const val USER_ID_FIELD = "userId"
     }
 }

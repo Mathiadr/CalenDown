@@ -6,12 +6,12 @@ import java.util.Date
 data class Event(
     @DocumentId val uid: String = "",
     var userId: String = "",
-
+    
     var title: String = "",
     var description: String = "",
     var image: String = "",
     var icon: String = "",
     var category: String = "",
 
-    var date: Date = Date(),
+    var date: String = ""
     )
