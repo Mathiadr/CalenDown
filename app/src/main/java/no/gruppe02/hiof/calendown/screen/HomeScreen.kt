@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,7 @@ import no.gruppe02.hiof.calendown.model.Event
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier,
                onEventClick: (String) -> Unit,
+               onAddEventClick: () -> Unit,
                viewModel: HomeViewModel = hiltViewModel()) {
     val events = viewModel.events.collectAsStateWithLifecycle(emptyList())
     val eventTitle = remember { mutableStateOf("Event Title") }
@@ -60,11 +65,15 @@ fun HomeScreen(modifier: Modifier = Modifier,
                         textAlign = TextAlign.Center
                     )
                 },
+
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
         },
+        floatingActionButton = {
+            OpenAddEventScreen(onAddEventClick)
+        }
     ) { innerPadding ->
         Column (
             modifier = Modifier
@@ -75,6 +84,22 @@ fun HomeScreen(modifier: Modifier = Modifier,
                 }
             })
         }
+    }
+}
+
+@Composable
+fun OpenAddEventScreen(
+    onAddEventClick: () -> Unit
+) {
+    FloatingActionButton(
+        onClick = { onAddEventClick() },
+        //contentColor =
+    )
+    {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Create new event button",
+        )
     }
 }
 
