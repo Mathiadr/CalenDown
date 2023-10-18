@@ -83,7 +83,7 @@ fun CalendownApp() {
                 NotificationsScreen()
             }
             composable(Screen.AddEvent.route) {
-                AddEventScreen().AddEventScreenApp()
+                AddEventScreen()
             }
         }
     }
