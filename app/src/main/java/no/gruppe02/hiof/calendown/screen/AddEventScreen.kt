@@ -69,7 +69,9 @@ fun AddEventScreen() {
 fun AddEventScreenContent(modifier: Modifier = Modifier) {
     val textState = remember { mutableStateOf("") }
     val textState2 = remember { mutableStateOf("") }
-    val date = remember { mutableStateOf("") }
+    val selectedDate = remember { mutableStateOf("") }
+    //var selectedDate by remember { mutableStateOf<Date?>(null) }
+    val openDialog = remember { mutableStateOf(false) }
     var checkedState by rememberSaveable { mutableStateOf(false)}
 
 
@@ -103,14 +105,17 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 onValueChange = {
                     textState2.value = it
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             )
 
             if (textState2.value.isEmpty()) {
                 Text(
                     text = "Enter eventname here",
                     color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
+                    modifier = Modifier
+                        .padding(0.dp)
+                        .absoluteOffset(x = 10.dp, y = 10.dp)
                 )
             }
         }
@@ -136,36 +141,34 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 )
             }
         }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(6.dp)
                 .background(color = Color.LightGray)
-        ) {
-            TextField(
-                value = date.value,
-                onValueChange = {
-                    date.value = it
-                },
+        )
+        CustomDatePicker(selectedDate = selectedDate.value) {
+            selectedDate.value = it
+        }
+        if (selectedDate.value.isEmpty()) {
+            Text(
+                text = "Select Event Date - yyyy.mm.dd",
+                color = Color.Gray,
                 modifier = Modifier
-                    .fillMaxWidth()
-            )
+                    .padding(0.dp)
+                    .absoluteOffset(x = 20.dp, y = -80.dp)
 
-            if (date.value.isEmpty()) {
-                Text(
-                    text = "Event date: 2018.09.18",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
+            )
         }
 
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.LightGray),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
+                //.background(color = Color.LightGray),
+            //horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Repeat yearly?",
                 modifier = Modifier.padding(15.dp)
@@ -176,5 +179,17 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 onCheckedChange = { newCheckedState ->
                     checkedState = newCheckedState
                 })
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .background(color = Color.LightGray)
+
+        )
+
+
+        }
     }
-}}
+}
+
