@@ -2,6 +2,7 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,12 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.type.Date
-import no.gruppe02.hiof.calendown.CalendownApp
-import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.screen.EventCard
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
+import no.gruppe02.hiof.calendown.model.Timer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +46,14 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 ) {
 
     val event by viewModel.event
+    val timer = viewModel.timer
+    var days = ""
+    var hours = ""
+    var minutes = ""
+    var seconds = ""
+    var observer: Observer<Timer>
+
+    //timer.observe(this, observer)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,6 +83,18 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             style = MaterialTheme.typography.bodyMedium)
         Text(text = event.date.toString(),
             style = MaterialTheme.typography.bodyMedium)
+            Column(verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = "${timer.value?.getDays().toString()} Days",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "${timer.value?.getHours().toString()} Hours",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "${timer.value?.getMinutes().toString()} Minutes",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "${timer.value?.getSeconds().toString()} Seconds",
+                    style = MaterialTheme.typography.bodyMedium)
+            }
+
         /* TODO: Implement
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -89,11 +111,6 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
     }
 
 
-
-}
-
-@Composable
-fun EventCountdownCounter(){
 
 }
 

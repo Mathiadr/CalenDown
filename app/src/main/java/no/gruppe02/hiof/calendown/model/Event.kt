@@ -1,11 +1,8 @@
 package no.gruppe02.hiof.calendown.model
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.google.firebase.Timestamp
+
 import com.google.firebase.firestore.DocumentId
+import no.gruppe02.hiof.calendown.api.getTimer
 import java.util.Date
 
 data class Event(
@@ -15,5 +12,6 @@ data class Event(
     var title: String = "",
     var description: String = "",
     var icon: String = "",
-    var date: Date? = null
+    var date: Date = Date(),
+    var countdown: Triple<Long, Long, Long> = getTimer(date)
     )
