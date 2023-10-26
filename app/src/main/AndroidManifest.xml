@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CalenDown"
         tools:targetApi="31">
-        <!--<receiver
+
+        <!--
+        <receiver
             <android:name=".NewAppWidget"
             android:exported="false">
             <intent-filter>
@@ -22,7 +24,8 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
-        </receiver>-->
+        </receiver>
+        -->
 
         <activity
             android:name=".screen.AddEventScreen"
@@ -30,7 +33,7 @@
             android:label="@string/title_activity_add_event_screen"
             android:theme="@style/Theme.CalenDown" />
         <activity
-            android:name=".screen.MainActivity"
+            android:name="screen.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.CalenDown" />
@@ -41,7 +44,6 @@
             android:theme="@style/Theme.CalenDown">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

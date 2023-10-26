@@ -7,5 +7,12 @@ import no.gruppe02.hiof.calendown.model.Event
 interface StorageService {
     val events: Flow<List<Event>>
     suspend fun getEvent(eventId: String): Event?
-    suspend fun save(event: Event): String
+
+    fun addListener(
+        userId: String,
+        onDocumentEvent: (Boolean, Event) -> Unit,
+        onError: (Throwable) -> Unit
+    )
+    fun removeListener()
+    suspend fun save(event: Event, onResult: (Throwable?) -> Unit)
 }
