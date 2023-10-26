@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -28,11 +27,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import no.gruppe02.hiof.calendown.screen.AddEventScreen
-
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
+import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 
 sealed class Screen(
     val route: String,
@@ -46,6 +46,9 @@ sealed class Screen(
     object Profile : Screen("Profile", R.string.profile, Icons.Filled.Person, Icons.Outlined.Person)
     object Notifications : Screen("Notifications", R.string.notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)
     object AddEvent : Screen("Add Event", R.string.add_event)
+    object EventDetails : Screen(
+        route = "${EVENT_DETAIL}$EVENT_ID_ARG",
+        R.string.event)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,23 +61,25 @@ fun CalendownApp() {
         Screen.Profile,
         Screen.Notifications
     )
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 navController = navController,
                 bottomNavigationScreens = bottomNavigationScreens
             )},
-        floatingActionButton = {
-            OpenAddEventScreen(
-                navController = navController,
-            )
-        }
-    ) { padding ->
-        val mod = Modifier.padding(padding)
+    ) { innerPadding ->
 
-        NavHost(navController = navController, startDestination = Screen.Home.route) {
+        NavHost(navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(innerPadding)) {
+
             composable(Screen.Home.route) {
-                HomeScreen(onEventClick = { navController.navigate(Screen.EventDetails.route) })
+                HomeScreen(onEventClick = { eventId ->
+                    val route = "${EVENT_DETAIL}?$EVENT_ID=$eventId"
+                    navController.navigate(route)
+                },
+                    onAddEventClick = { navController.navigate(Screen.AddEvent.route)})
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
@@ -85,20 +90,16 @@ fun CalendownApp() {
             composable(Screen.AddEvent.route) {
                 AddEventScreen()
             }
+            composable(
+                route = Screen.EventDetails.route,
+                arguments = listOf(navArgument(EVENT_ID) {
+                    nullable = false})
+            ) {
+                EventDetailScreen()
+            }
         }
     }
 }
-
-@Composable
-fun OpenAddEventScreen(
-    navController: NavHostController) {
-    FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route) }) {
-
-    }
-
-
-}
-
 
 @Composable
 fun BottomNavigationBar (
