@@ -1,26 +1,18 @@
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
-import android.os.CountDownTimer
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.EVENT_ID
-import no.gruppe02.hiof.calendown.api.getTimer
+import no.gruppe02.hiof.calendown.api.getRemainingTime
 import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.model.Timer
-import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
-import java.util.Date
 import javax.inject.Inject
 
 
@@ -32,9 +24,7 @@ class EventDetailViewModel @Inject constructor(
     : ViewModel() {
     // Expose screen UI to state
     val event = mutableStateOf(Event())
-    val timer: MutableLiveData<Timer> by lazy {
-        MutableLiveData<Timer>()
-    }
+    val remainingTimeLong = mutableLongStateOf(0L)
 
     // Business logic
     init {
@@ -42,25 +32,19 @@ class EventDetailViewModel @Inject constructor(
         if (eventId != null) {
             viewModelScope.launch {
                 event.value = storageService.getEvent(eventId) ?: Event()
-                timer.value = Timer(event.value.date)
+                remainingTimeLong.longValue = getRemainingTime(event.value.date.time)
+                handleCountdown()
             }
         }
     }
-    /*
-    // ChatGPT
-    fun handleCountdown(targetDate: Date){
+
+    fun handleCountdown(){
         viewModelScope.launch {
             while (isActive){
-                val (days, hours, minutes) = getTimer(targetDate)
-                _countdownLiveData.postValue(Triple(days, hours, minutes))
-                println(_countdownLiveData)
+                remainingTimeLong.longValue = getRemainingTime(event.value.date.time)
                 // Delay for a second
                 delay(1000)
             }
         }
     }
-    fun stopCountdown(){
-        job?.cancel()
-    }
-    */
 }
