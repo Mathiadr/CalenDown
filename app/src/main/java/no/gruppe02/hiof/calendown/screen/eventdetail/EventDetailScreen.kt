@@ -2,15 +2,11 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,21 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
-import no.gruppe02.hiof.calendown.model.Timer
+import no.gruppe02.hiof.calendown.api.getDays
+import no.gruppe02.hiof.calendown.api.getHours
+import no.gruppe02.hiof.calendown.api.getMinutes
+import no.gruppe02.hiof.calendown.api.getSeconds
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,20 +37,19 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 ) {
 
     val event by viewModel.event
-    val timer = viewModel.timer
-    var days = ""
-    var hours = ""
-    var minutes = ""
-    var seconds = ""
-    var observer: Observer<Timer>
+    val remainingTimeLong = viewModel.remainingTimeLong
+    val days = getDays(remainingTimeLong.longValue).toString()
+    val hours = getHours(remainingTimeLong.longValue).toString()
+    val minutes = getMinutes(remainingTimeLong.longValue).toString()
+    val seconds = getSeconds(remainingTimeLong.longValue).toString()
 
-    //timer.observe(this, observer)
+
     Scaffold(
         topBar = {
             TopAppBar(
-                {
+                title = {
                     Text(
-                        text = "Events",
+                        text = event.title,
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -71,29 +61,29 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             )
         },
     ) { innerPadding ->
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)) {
-        Icon(imageVector = Icons.Default.Warning, contentDescription = null)
-        Text(text = event.title,
-            style = MaterialTheme.typography.headlineLarge)
-        Text(text = event.description,
-            style = MaterialTheme.typography.bodyMedium)
-        Text(text = event.date.toString(),
-            style = MaterialTheme.typography.bodyMedium)
-            Column(verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "${timer.value?.getDays().toString()} Days",
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)) {
+            Icon(imageVector = Icons.Default.Warning, contentDescription = null)
+            Text(text = event.title,
+                style = MaterialTheme.typography.headlineLarge)
+            Text(text = event.description,
+                style = MaterialTheme.typography.bodyMedium)
+            Text(text = event.date.toString(),
+                style = MaterialTheme.typography.bodyMedium)
+            Column {
+                Text(text = "Days: $days",
                     style = MaterialTheme.typography.bodyMedium)
-                Text(text = "${timer.value?.getHours().toString()} Hours",
+                Text(text = "Hours: $hours",
                     style = MaterialTheme.typography.bodyMedium)
-                Text(text = "${timer.value?.getMinutes().toString()} Minutes",
+                Text(text = "Minutes: $minutes",
                     style = MaterialTheme.typography.bodyMedium)
-                Text(text = "${timer.value?.getSeconds().toString()} Seconds",
+                Text(text = "Seconds: $seconds",
                     style = MaterialTheme.typography.bodyMedium)
             }
+
 
         /* TODO: Implement
         AsyncImage(
