@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 import java.util.concurrent.Executor
 
@@ -30,8 +29,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     CalendownApp()
+                    fun test() {}
+
+                }
                 }
             }
         }
     }
-}

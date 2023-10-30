@@ -13,29 +13,3 @@ data class Event(
     var icon: String = "",
     var date: Date = Date(),
     )
-{
-    var timeDifferenceInLong: Long = date.time - System.currentTimeMillis()
-
-    fun update(){
-        timeDifferenceInLong = date.time - System.currentTimeMillis()
-    }
-    fun getSecondsRemaining(): Number{
-        return (timeDifferenceInLong / 1000) % 60
-    }
-
-    fun getMinutesRemaining(): Number{
-        return (timeDifferenceInLong / (1000 * 60)) % 60
-    }
-
-    fun getHoursRemaining(): Number{
-        return (timeDifferenceInLong / (1000 * 60 * 60)) % 24
-    }
-
-    fun getDaysRemaining(): Number{
-        return (timeDifferenceInLong / (1000 * 60 * 60 * 24)) % 365
-    }
-
-    fun getMonthsRemaining(): Number{
-        return (timeDifferenceInLong / (1000 * 60 * 60 * 24)) % 365
-    }
-}

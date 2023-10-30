@@ -35,7 +35,6 @@ import no.gruppe02.hiof.calendown.api.getSeconds
 fun EventDetailScreen(modifier: Modifier = Modifier,
                       viewModel: EventDetailViewModel = hiltViewModel()
 ) {
-
     val event by viewModel.event
     val remainingTimeLong = viewModel.remainingTimeLong
     val days = getDays(remainingTimeLong.longValue).toString()
