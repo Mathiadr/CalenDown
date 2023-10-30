@@ -2,9 +2,7 @@ package no.gruppe02.hiof.calendown.api
 
 fun getRemainingTime(futureTimeInLong: Long): Long {
     val currentTimeMillis = System.currentTimeMillis()
-    val timeDifference = futureTimeInLong - currentTimeMillis
-    println("New time difference: " + (timeDifference / 1000).toInt() + " seconds")
-    return timeDifference
+    return futureTimeInLong - currentTimeMillis
 }
 
 fun getSeconds(timeInLong: Long): Number{
