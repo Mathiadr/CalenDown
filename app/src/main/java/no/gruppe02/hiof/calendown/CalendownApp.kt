@@ -28,10 +28,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import no.gruppe02.hiof.calendown.screen.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
+import no.gruppe02.hiof.calendown.screen.addEvent.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 
 sealed class Screen(

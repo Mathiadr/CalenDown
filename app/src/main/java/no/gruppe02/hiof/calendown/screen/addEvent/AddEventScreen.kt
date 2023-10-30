@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.addEvent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,15 +40,6 @@ fun AddEventScreen() {
         topBar = {
             TopAppBar(
                 {
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .absoluteOffset(x = 315.dp, y = 0.dp)
-
-                    ) {
-                        Text(text = "Save")
-                    }
-
                     Text(
                         text = "Create Event",
                         style = MaterialTheme.typography.displaySmall,
@@ -66,12 +59,11 @@ fun AddEventScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEventScreenContent(modifier: Modifier = Modifier) {
-    val textState = remember { mutableStateOf("") }
-    val textState2 = remember { mutableStateOf("") }
-    val date = remember { mutableStateOf("") }
+fun AddEventScreenContent(modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
+    val eventName = remember { mutableStateOf("") }
+    val eventDescription = remember { mutableStateOf("") }
+    val selectedDate = remember { mutableStateOf("") }
     var checkedState by rememberSaveable { mutableStateOf(false)}
-
 
     Column(
         modifier = modifier
@@ -99,14 +91,14 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 .background(color = Color.LightGray)
         ) {
             TextField(
-                value = textState2.value,
+                value = eventName.value,
                 onValueChange = {
-                    textState2.value = it
+                    eventName.value = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (textState2.value.isEmpty()) {
+            if (eventName.value.isEmpty()) {
                 Text(
                     text = "Enter eventname here",
                     color = Color.Gray,
@@ -121,14 +113,14 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 .background(color = Color.LightGray)
         ) {
             TextField(
-                value = textState.value,
+                value = eventDescription.value,
                 onValueChange = {
-                    textState.value = it
+                    eventDescription.value = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (textState.value.isEmpty()) {
+            if (eventDescription.value.isEmpty()) {
                 Text(
                     text = "Enter event description",
                     color = Color.Gray,
@@ -143,17 +135,17 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                 .background(color = Color.LightGray)
         ) {
             TextField(
-                value = date.value,
+                value = selectedDate.value,
                 onValueChange = {
-                    date.value = it
+                    selectedDate.value = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()
             )
 
-            if (date.value.isEmpty()) {
+            if (selectedDate.value.isEmpty()) {
                 Text(
-                    text = "Event date: 2018.09.18",
+                    text = "Event date: 2018-09-18",
                     color = Color.Gray,
                     modifier = Modifier.padding(15.dp)
                 )
@@ -177,4 +169,21 @@ fun AddEventScreenContent(modifier: Modifier = Modifier) {
                     checkedState = newCheckedState
                 })
     }
+        Button(
+            onClick = {
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                val dateObject = dateFormat.parse(selectedDate.value)
+                viewModel.saveEvent(
+                    userID = "YourUserID",
+                    eventName = eventName.value,
+                    eventDescription = eventDescription.value,
+                    eventDate = dateObject)
+
+            },
+            modifier = Modifier
+                .absoluteOffset(x = 315.dp, y = 0.dp)
+
+        ) {
+            Text(text = "Save")
+        }
 }}

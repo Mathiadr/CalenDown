@@ -1,15 +1,12 @@
 package no.gruppe02.hiof.calendown.service.impl
 
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
@@ -41,8 +38,6 @@ constructor(private val firestore: FirebaseFirestore
     override suspend fun save(event: Event): String {
         return firestore.collection(EVENT_COLLECTION).add(event).await().id
     }
-
-
 
     companion object {
         private const val EVENT_COLLECTION = "events"
