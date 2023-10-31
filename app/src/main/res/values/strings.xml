@@ -5,6 +5,7 @@
     <string name="profile">Profile</string>
     <string name="notifications">Notifications</string>
     <string name="add_event">Add Event</string>
+    <string name="log_in">Log in</string>
 
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_add_event_screen">AddEventScreen</string>
@@ -15,4 +16,5 @@
     <string name="event_description">Description</string>
     <string name="event_date">Date</string>
     <string name="event">Event Details</string>
+
 </resources>

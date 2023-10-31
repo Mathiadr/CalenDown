@@ -1,6 +1,7 @@
 package no.gruppe02.hiof.calendown
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -16,8 +17,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -26,9 +29,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import no.gruppe02.hiof.calendown.screen.HomeScreen
+import no.gruppe02.hiof.calendown.screen.LoginScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.ProfileScreen
 import no.gruppe02.hiof.calendown.screen.addEvent.AddEventScreen
@@ -49,6 +54,7 @@ sealed class Screen(
     object EventDetails : Screen(
         route = "${EVENT_DETAIL}$EVENT_ID_ARG",
         R.string.event)
+    object LogIn : Screen("Log in", R.string.log_in)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,16 +68,21 @@ fun CalendownApp() {
         Screen.Notifications
     )
 
+    // Set to false to hide bottom nav
+    val bottomNavigationState = rememberSaveable{(mutableStateOf(true))}
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 navController = navController,
-                bottomNavigationScreens = bottomNavigationScreens
+                bottomNavigationScreens = bottomNavigationScreens,
+                bottomNavigationState = bottomNavigationState
             )},
     ) { innerPadding ->
 
-        NavHost(navController = navController,
-            startDestination = Screen.Home.route,
+        NavHost(
+            navController = navController,
+            startDestination = Screen.LogIn.route,
             modifier = Modifier.padding(innerPadding)) {
 
             composable(Screen.Home.route) {
@@ -80,6 +91,9 @@ fun CalendownApp() {
                     navController.navigate(route)
                 },
                     onAddEventClick = { navController.navigate(Screen.AddEvent.route)})
+            }
+            composable(Screen.LogIn.route) {
+                LoginScreen(continueAsGuest = { navController.navigate(Screen.Home.route) })
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
@@ -104,43 +118,73 @@ fun CalendownApp() {
 @Composable
 fun BottomNavigationBar (
     navController: NavHostController,
-    bottomNavigationScreens: List<Screen>) {
+    bottomNavigationScreens: List<Screen>,
+    bottomNavigationState: MutableState<Boolean>) {
     // Should be stored in ViewModel??
     // Holder på hvilket element i bottomNav som er selected
     var selectedBottomNavigationIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
 
-    NavigationBar {
-        //TODO: Implementer funksjonalitet for å håndtere oppsamling i BackStackEntry
-        //val navBackStackEntry by navController.currentBackStackEntryAsState()
-        //val currentDestination = navBackStackEntry?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
+    bottomNavigationState.value = navBackStackEntry?.destination?.route != Screen.LogIn.route
+    /*
+    when (navBackStackEntry?.destination?.route) {
+        Screen.Home.route ->{
+            bottomNavigationState.value = true
+        }
+        Screen.LogIn.route ->{
+            bottomNavigationState.value = false
+        }
+        Screen.Profile.route ->{
+            bottomNavigationState.value = true
+        }
+        Screen.Notifications.route->{
+            bottomNavigationState.value = true
+        }
+        Screen.AddEvent.route ->{
+            bottomNavigationState.value = true
+        }
+        Screen.EventDetails.route ->{
+            bottomNavigationState.value = true
+        }
+    }
+     */
+    AnimatedVisibility(
+        visible = bottomNavigationState.value) {
 
-        bottomNavigationScreens.forEachIndexed { index, screen ->
-            val title = stringResource(screen.title)
-            NavigationBarItem(
-                selected = selectedBottomNavigationIndex == index,
-                onClick = {
-                    selectedBottomNavigationIndex = index
-                    navController.navigate(screen.route)
-                },
-                label = {
-                    Text(text = title)
-                },
-                // https://www.youtube.com/watch?v=c8XP_Ee7iqY&t=526s
-                // Lånt logikk for å få filled eller outlined icon basert på
-                // hva som er selected
-                icon = {
-                    (if (index == selectedBottomNavigationIndex) {
-                        screen.selectedIcon
-                    } else
-                        screen.unselectedIcon)?.let {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = title)
+        NavigationBar {
+            //TODO: Implementer funksjonalitet for å håndtere oppsamling i BackStackEntry
+            //val navBackStackEntry by navController.currentBackStackEntryAsState()
+            //val currentDestination = navBackStackEntry?.destination?.route
+
+            bottomNavigationScreens.forEachIndexed { index, screen ->
+                val title = stringResource(screen.title)
+                NavigationBarItem(
+                    selected = selectedBottomNavigationIndex == index,
+                    onClick = {
+                        selectedBottomNavigationIndex = index
+                        navController.navigate(screen.route)
+                    },
+                    label = {
+                        Text(text = title)
+                    },
+                    // https://www.youtube.com/watch?v=c8XP_Ee7iqY&t=526s
+                    // Lånt logikk for å få filled eller outlined icon basert på
+                    // hva som er selected
+                    icon = {
+                        (if (index == selectedBottomNavigationIndex) {
+                            screen.selectedIcon
+                        } else
+                            screen.unselectedIcon)?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = title)
+                        }
                     }
-                })
+                )
+            }
         }
     }
 }

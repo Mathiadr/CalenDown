@@ -16,9 +16,7 @@ abstract class ServiceModule {
     @Binds
     abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
-    /*
+
     @Binds
     abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
-
-     */
 }

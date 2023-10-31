@@ -7,12 +7,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.dummydata.Datasource
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
 // TODO: implement accountService
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val storageService: StorageService)
+class HomeViewModel @Inject constructor(
+    private val storageService: StorageService,
+    private val accountService: AccountService)
     : ViewModel() {
 
     val events = storageService.events
@@ -27,16 +30,16 @@ class HomeViewModel @Inject constructor(private val storageService: StorageServi
         }
     }
 
+    private fun createAnonymousAccount(){
+        viewModelScope.launch {
+            if (!accountService.hasUser) accountService.createAnonymousAccount()
+        }
+    }
+
     fun createEvent(eventTitle: String) {
         viewModelScope.launch { storageService.save(Event(title = eventTitle)) }
     }
 
 
-    private fun createAnonymousAccount(){
-        /*
-        viewModelScope.launch {
-            if (!accountService.hasUser) accountService.createAnonymousAccount()
-        }
-         */
-    }
+
 }

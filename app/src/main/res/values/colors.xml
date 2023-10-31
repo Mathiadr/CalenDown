@@ -11,4 +11,12 @@
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
+
+    //Test colors
+    <color name="colorPrimary">#92A3FD</color> // soft blue
+    <color name="colorSecondary">#9DCEFF</color> // pale blue
+    <color name="colorText">#1D1617</color> // black
+    <color name="colorAccent">#C58BF2</color> // soft violet
+    <color name="colorWhite">#FFFFFFFF</color> // white
+    <color name="colorGray">#7B6F72</color> // gray
 </resources>
