@@ -27,7 +27,9 @@ import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 import no.gruppe02.hiof.calendown.api.getDays
 import no.gruppe02.hiof.calendown.api.getHours
 import no.gruppe02.hiof.calendown.api.getMinutes
+import no.gruppe02.hiof.calendown.api.getMonths
 import no.gruppe02.hiof.calendown.api.getSeconds
+import no.gruppe02.hiof.calendown.api.getYears
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +39,12 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 ) {
     val event by viewModel.event
     val remainingTimeLong = viewModel.remainingTimeLong
-    val days = getDays(remainingTimeLong.longValue).toString()
-    val hours = getHours(remainingTimeLong.longValue).toString()
-    val minutes = getMinutes(remainingTimeLong.longValue).toString()
-    val seconds = getSeconds(remainingTimeLong.longValue).toString()
+    val years = viewModel.getRemainingYears()
+    val months = viewModel.getRemainingMonths()
+    val days = viewModel.getRemainingDays()
+    val hours = viewModel.getRemainingHours()
+    val minutes = viewModel.getRemainingMinutes()
+    val seconds = viewModel.getRemainingSeconds()
 
 
     Scaffold(
@@ -73,6 +77,10 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             Text(text = event.date.toString(),
                 style = MaterialTheme.typography.bodyMedium)
             Column {
+                Text(text = "Years: $years",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Months: $months",
+                    style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Days: $days",
                     style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Hours: $hours",
