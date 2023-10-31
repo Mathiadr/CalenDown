@@ -7,12 +7,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
 class StorageServiceImpl
 @Inject
-constructor(private val firestore: FirebaseFirestore
+constructor(
+    private val firestore: FirebaseFirestore,
+    private val auth: AccountService
 ) : StorageService {
 
     @OptIn(ExperimentalCoroutinesApi::class)

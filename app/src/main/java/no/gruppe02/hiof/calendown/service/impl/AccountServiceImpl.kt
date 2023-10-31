@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 
 class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
-    /*
+
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
@@ -28,12 +28,14 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
             awaitClose { auth.removeAuthStateListener(listener) }
         }
 
-    override suspend fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { onResult(it.exception) }.await()
-    }
     override suspend fun createAnonymousAccount() {
         auth.signInAnonymously().await()
     }
+    /*
+    override suspend fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { onResult(it.exception) }.await()
+    }
+
 
     override suspend fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
         // Av en eller annen grunn har fungerer ikke linkingen av kontoer nå?
@@ -47,6 +49,7 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
 
         auth.signInAnonymously()
     }
-    */
+
+     */
 }
 
