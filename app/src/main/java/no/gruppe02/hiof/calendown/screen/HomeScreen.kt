@@ -74,6 +74,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
         floatingActionButton = {
             OpenAddEventScreen(onAddEventClick)
         }
+
     ) { innerPadding ->
         Column (
             modifier = Modifier

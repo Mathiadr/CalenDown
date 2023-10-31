@@ -9,6 +9,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import no.gruppe02.hiof.calendown.screen.AddEventScreen
+import no.gruppe02.hiof.calendown.screen.HomeScreen
+import no.gruppe02.hiof.calendown.screen.LoginScreen
+import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
 
@@ -24,6 +28,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     CalendownApp()
+
                 }
             }
         }

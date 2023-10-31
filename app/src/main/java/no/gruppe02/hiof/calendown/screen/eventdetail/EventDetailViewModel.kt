@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.EVENT_ID
 import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 

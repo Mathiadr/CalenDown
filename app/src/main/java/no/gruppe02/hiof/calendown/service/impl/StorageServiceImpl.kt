@@ -15,8 +15,9 @@ import javax.inject.Inject
 
 class StorageServiceImpl
 @Inject
-constructor(private val firestore: FirebaseFirestore
-) : StorageService {
+constructor(
+    private val firestore: FirebaseFirestore,
+    private val auth: AccountService) : StorageService {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val events: Flow<List<Event>> get() = firestore.collection(EVENT_COLLECTION).dataObjects()
