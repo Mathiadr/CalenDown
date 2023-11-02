@@ -58,7 +58,7 @@ fun LoginScreen(
 
             Spacer(
                 modifier = Modifier
-                    .height(230.dp))
+                    .height(130.dp))
 
             ButtonComponent(
                 textValue = "Login"
