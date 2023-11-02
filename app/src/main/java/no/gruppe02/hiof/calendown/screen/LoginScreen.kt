@@ -46,7 +46,7 @@ fun LoginScreen(
             )
             Spacer(
                 modifier = Modifier
-                    .height(20.dp))
+                    .height(120.dp))
 
             InputTextField(
                 labelValue = "Email",
@@ -58,7 +58,7 @@ fun LoginScreen(
 
             Spacer(
                 modifier = Modifier
-                    .height(130.dp))
+                    .height(80.dp))
 
             ButtonComponent(
                 textValue = "Login"
@@ -76,7 +76,7 @@ fun LoginScreen(
             )
             Spacer(
                 modifier = Modifier
-                    .height(20.dp))
+                    .height(30.dp))
 
             ClickableTextComponent(
                 initialText = "No account? ",

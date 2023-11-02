@@ -1,6 +1,7 @@
 package no.gruppe02.hiof.calendown.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -115,7 +116,7 @@ fun ButtonComponent (textValue: String) {
             .heightIn(48.dp),
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),
-        shape = RoundedCornerShape(50.dp)
+        shape = RoundedCornerShape(4.dp)
     ) {
         Box(
             modifier = Modifier

@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
                viewModel: HomeViewModel = hiltViewModel()) {
     val events = viewModel.events.collectAsStateWithLifecycle(emptyList())
     val eventTitle = remember { mutableStateOf("Event Title") }
+
 
     Scaffold(
         topBar = {
