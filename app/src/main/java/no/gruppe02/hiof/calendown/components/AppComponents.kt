@@ -1,7 +1,6 @@
 package no.gruppe02.hiof.calendown.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -81,17 +80,12 @@ fun HeaderText(textValue: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputTextField(labelValue: String, imageVector: ImageVector) {
-
-    val textValue = remember{
-        mutableStateOf("")
-    }
+fun InputTextField(value: String, onNewValue: (String) -> Unit, placeholderText: String, imageVector: ImageVector) {
 
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp)),
-        label = {Text(text = labelValue)},
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Primary,
             focusedLabelColor = Primary,
@@ -99,18 +93,17 @@ fun InputTextField(labelValue: String, imageVector: ImageVector) {
         ),
 
         keyboardOptions = KeyboardOptions.Default,
-        value = textValue.value,
-        onValueChange = { textValue.value = it },
-        leadingIcon = {
-            Icon(imageVector = imageVector, contentDescription = "")
-        }
+        value = value,
+        onValueChange = { onNewValue(it) },
+        label = { Text(text = placeholderText) },
+        leadingIcon = { Icon(imageVector = imageVector, contentDescription = "") }
 
     )
 }
 
 @Composable
-fun ButtonComponent (textValue: String) {
-    Button(onClick = { /*TODO*/ },
+fun ButtonComponent (textValue: String, onClick: () -> Unit) {
+    Button(onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),

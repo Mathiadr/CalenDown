@@ -13,15 +13,19 @@ import no.gruppe02.hiof.calendown.service.AccountService
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val accountService: AccountService) : ViewModel() {
+class CreateAccountViewModel @Inject constructor(
+    private val accountService: AccountService
+) : ViewModel() {
+
     var uiState = mutableStateOf(LoginUiState())
         private set
+
     private val email
         get() = uiState.value.email
 
     private val password
         get() = uiState.value.password
+
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
     }
@@ -30,7 +34,11 @@ class LoginViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun onLoginClick(loggedIn: () -> Unit) {
+    fun onRepeatPasswordChange(newValue: String) {
+        uiState.value = uiState.value.copy(repeatPassword = newValue)
+    }
+
+    fun onSignUpClick(loggedIn: () -> Unit) {
         if (!email.isValidEmail()) {
             uiState.value = uiState.value.copy(errorMessage = R.string.email_error)
             return
@@ -41,23 +49,21 @@ class LoginViewModel @Inject constructor(
             return
         }
 
+        else if (password != uiState.value.repeatPassword) {
+            uiState.value = uiState.value.copy(errorMessage = R.string.password_match_error)
+            return
+        }
+
         viewModelScope.launch {
             try {
-                accountService.authenticate(email, password) { error ->
+                accountService.linkAccount(email, password) { error ->
                     if (error == null)
                         loggedIn()
                 }
             }
             catch(e: Exception) {
-                uiState.value = uiState.value.copy(errorMessage = R.string.could_not_log_in)
+                uiState.value = uiState.value.copy(errorMessage = R.string.could_not_create_account)
             }
-        }
-    }
-
-    fun createAnonymousAccount(loggedIn: () -> Unit){
-        viewModelScope.launch {
-            if (!accountService.hasUser) accountService.createAnonymousAccount()
-            loggedIn()
         }
     }
 }

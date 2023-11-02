@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import no.gruppe02.hiof.calendown.screen.CreateAccountScreen
 import no.gruppe02.hiof.calendown.screen.HomeScreen
 import no.gruppe02.hiof.calendown.screen.LoginScreen
 import no.gruppe02.hiof.calendown.screen.NotificationsScreen
@@ -55,6 +56,7 @@ sealed class Screen(
         route = "${EVENT_DETAIL}$EVENT_ID_ARG",
         R.string.event)
     object LogIn : Screen("Log in", R.string.log_in)
+    object CreateAccount : Screen("Create account", R.string.create_account)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +95,13 @@ fun CalendownApp() {
                     onAddEventClick = { navController.navigate(Screen.AddEvent.route)})
             }
             composable(Screen.LogIn.route) {
-                LoginScreen(continueAsGuest = { navController.navigate(Screen.Home.route) })
+                LoginScreen(
+                    loggedIn = { navController.navigate(Screen.Home.route) },
+                    createAccount = { navController.navigate(Screen.CreateAccount.route)}
+                )
+            }
+            composable(Screen.CreateAccount.route) {
+                CreateAccountScreen(loggedIn = { navController.navigate(Screen.Home.route) })
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
@@ -128,13 +136,14 @@ fun BottomNavigationBar (
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    bottomNavigationState.value = navBackStackEntry?.destination?.route != Screen.LogIn.route
-    /*
     when (navBackStackEntry?.destination?.route) {
         Screen.Home.route ->{
             bottomNavigationState.value = true
         }
         Screen.LogIn.route ->{
+            bottomNavigationState.value = false
+        }
+        Screen.CreateAccount.route ->{
             bottomNavigationState.value = false
         }
         Screen.Profile.route ->{
@@ -150,7 +159,7 @@ fun BottomNavigationBar (
             bottomNavigationState.value = true
         }
     }
-     */
+
     AnimatedVisibility(
         visible = bottomNavigationState.value) {
 
