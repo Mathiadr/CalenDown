@@ -2,13 +2,17 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,12 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-import no.gruppe02.hiof.calendown.api.getDays
-import no.gruppe02.hiof.calendown.api.getHours
-import no.gruppe02.hiof.calendown.api.getMinutes
-import no.gruppe02.hiof.calendown.api.getMonths
-import no.gruppe02.hiof.calendown.api.getSeconds
-import no.gruppe02.hiof.calendown.api.getYears
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +50,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             TopAppBar(
                 title = {
                     Text(
-                        text = event.title,
+                        text = "Event",
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -62,6 +60,18 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
+            IconButton(
+                onClick = {
+                          viewModel.deleteEvent()
+                },
+                modifier = Modifier
+                    .absoluteOffset(x = 10.dp, y = 10.dp)
+            ) {
+                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Edit",
+                    modifier = Modifier
+                        .size(50.dp, 50.dp))
+
+            }
         },
     ) { innerPadding ->
             Column(horizontalAlignment = Alignment.CenterHorizontally,
