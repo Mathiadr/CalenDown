@@ -110,7 +110,7 @@ fun CalendownApp() {
                 NotificationsScreen()
             }
             composable(Screen.AddEvent.route) {
-                AddEventScreen()
+                AddEventScreen(onSaveEventClick = { navController.navigate(Screen.Home.route) })
             }
             composable(
                 route = Screen.EventDetails.route,
