@@ -75,7 +75,6 @@ fun getMonths(timeInLong: Long): Number {
     val remainingMonthValue = (targetYearMonth.monthValue - currentYearMonth.monthValue).mod(
         MONTHS_IN_YEAR)
     return remainingMonthValue
-
 }
 
 fun getYears(timeInLong: Long): Number {

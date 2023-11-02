@@ -40,7 +40,6 @@ fun HomeScreen(modifier: Modifier = Modifier,
                onAddEventClick: () -> Unit,
                viewModel: HomeViewModel = hiltViewModel()) {
     val events = viewModel.events.collectAsStateWithLifecycle(emptyList())
-    val eventTitle = remember { mutableStateOf("Event Title") }
 
     Scaffold(
         topBar = {

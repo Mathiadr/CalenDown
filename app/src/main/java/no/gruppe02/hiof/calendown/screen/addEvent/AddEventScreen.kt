@@ -174,7 +174,6 @@ fun AddEventScreenContent(modifier: Modifier = Modifier, viewModel: AddEventView
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd")
                 val dateObject = dateFormat.parse(selectedDate.value)
                 viewModel.saveEvent(
-                    userID = "YourUserID",
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
                     eventDate = dateObject)
