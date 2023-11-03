@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen.addEvent
+package no.gruppe02.hiof.calendown.screen.editEvent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,19 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import no.gruppe02.hiof.calendown.screen.addEvent.AddEventViewModel
 import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEventScreen(
-    onSaveEventClick: () -> Unit
-) {
+fun AddEventScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
                 {
                     Text(
-                        text = "Create Event",
+                        text = "Edit Event",
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.absoluteOffset(x = 80.dp, y = 0.dp)
                     )
@@ -50,16 +49,14 @@ fun AddEventScreen(
             )
         },
     ) { innerPadding ->
-        AddEventScreenContent(onSaveEventClick, Modifier.padding(innerPadding))
+        AddEventScreenContent(Modifier.padding(innerPadding))
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEventScreenContent(
-    onSaveEventClick: () -> Unit,
-    modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
+fun AddEventScreenContent(modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf("") }
@@ -150,15 +147,17 @@ fun AddEventScreenContent(
                 )
             }
         }
+
         Button(
             onClick = {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd")
                 val dateObject = dateFormat.parse(selectedDate.value)
                 viewModel.saveEvent(
+                    userID = "YourUserID",
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
                     eventDate = dateObject)
-                onSaveEventClick()
+
             },
             modifier = Modifier
                 .absoluteOffset(x = 315.dp, y = 0.dp)
@@ -166,4 +165,4 @@ fun AddEventScreenContent(
         ) {
             Text(text = "Save")
         }
-}}
+    }}

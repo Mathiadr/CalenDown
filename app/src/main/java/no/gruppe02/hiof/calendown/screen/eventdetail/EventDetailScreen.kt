@@ -3,6 +3,7 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,8 +11,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -67,7 +70,21 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
+            IconButton(
+                onClick = {
+                          viewModel.deleteEvent()
+                },
+                modifier = Modifier
+                    .absoluteOffset(x = 10.dp, y = 10.dp)
+            ) {
+                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete event",
+                    modifier = Modifier
+                        .size(50.dp, 50.dp))
+
+            }
+
         },
+
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -193,5 +210,58 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 }
             }
         }
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)) {
+            Icon(imageVector = Icons.Default.Warning, contentDescription = null)
+            Text(text = event.title,
+                style = MaterialTheme.typography.headlineLarge)
+            Text(text = event.description,
+                style = MaterialTheme.typography.bodyMedium)
+            Text(text = event.date.toString(),
+                style = MaterialTheme.typography.bodyMedium)
+            Column {
+                Text(text = "Years: $years",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Months: $months",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Days: $days",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Hours: $hours",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Minutes: $minutes",
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Seconds: $seconds",
+                    style = MaterialTheme.typography.bodyMedium)
+            }
+
+
+        /* TODO: Implement
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(event.image)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(16.dp).width(400.dp).height(600.dp)
+        )
+        */
+    }
+    }
+
+
+
+}
+
+
+@Composable
+@Preview
+fun EventDetailScreenPreview(){
+    CalenDownTheme {
+        EventDetailScreen()
     }
 }
