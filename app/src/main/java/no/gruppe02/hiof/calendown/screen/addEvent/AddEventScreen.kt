@@ -35,7 +35,9 @@ import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEventScreen() {
+fun AddEventScreen(
+    onSaveEventClick: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,14 +54,16 @@ fun AddEventScreen() {
             )
         },
     ) { innerPadding ->
-        AddEventScreenContent(Modifier.padding(innerPadding))
+        AddEventScreenContent(onSaveEventClick, Modifier.padding(innerPadding))
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEventScreenContent(modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
+fun AddEventScreenContent(
+    onSaveEventClick: () -> Unit,
+    modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf("") }
@@ -177,7 +181,7 @@ fun AddEventScreenContent(modifier: Modifier = Modifier, viewModel: AddEventView
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
                     eventDate = dateObject)
-
+                onSaveEventClick()
             },
             modifier = Modifier
                 .absoluteOffset(x = 315.dp, y = 0.dp)
