@@ -67,12 +67,14 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 modifier = Modifier
                     .absoluteOffset(x = 10.dp, y = 10.dp)
             ) {
-                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Edit",
+                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete event",
                     modifier = Modifier
                         .size(50.dp, 50.dp))
 
             }
+
         },
+
     ) { innerPadding ->
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -120,6 +122,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 
 
 }
+
 
 @Composable
 @Preview

@@ -10,11 +10,11 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_add_event_screen">AddEventScreen</string>
 
-
     <!-- Event Details -->
     <string name="event_details">Event details</string>
     <string name="event_description">Description</string>
     <string name="event_date">Date</string>
     <string name="event">Event Details</string>
+
 
 </resources>
