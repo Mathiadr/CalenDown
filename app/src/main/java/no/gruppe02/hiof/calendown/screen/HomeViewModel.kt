@@ -3,14 +3,14 @@ package no.gruppe02.hiof.calendown.screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.dummydata.Datasource
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.service.AccountService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
@@ -22,21 +22,32 @@ class HomeViewModel @Inject constructor(
     private val storageService: StorageService)
     : ViewModel() {
 
-    private val _events = MutableStateFlow(emptyList<Event>())
-    //val events: StateFlow<List<Event>> = _events
-    val events = storageService.events
+    val activeEvents = MutableStateFlow<Map<Event, EventTimer>>(emptyMap())
 
     init {
         viewModelScope.launch {
-            if (events.first().isEmpty()) {
+            activeEvents.value = storageService.events.first().filter { event: Event ->
+                event.date.time >= System.currentTimeMillis()
+            }.associateWith { event: Event ->
+                EventTimer(event.date.time)
+            }
+            handleCountdown()
+            if (activeEvents.first().isEmpty()) {
                 Datasource.eventList.forEach { event ->
                     event.userId = accountService.currentUserId
-                    storageService.save(event) }
+                    storageService.save(event)
+                }
             }
         }
     }
 
-    fun createEvent(eventTitle: String) {
-        viewModelScope.launch { storageService.save(Event(title = eventTitle)) }
+    private fun handleCountdown() {
+        viewModelScope.launch {
+            while (isActive) {
+                activeEvents.value.values.forEach{ eventTimer ->
+                    eventTimer.update() }
+                delay(1000)
+            }
+        }
     }
 }

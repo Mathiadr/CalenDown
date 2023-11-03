@@ -20,24 +20,24 @@ fun getRemainingTime(futureTimeInLong: Long): Long {
     return futureTimeInLong - currentTimeMillis
 }
 
-fun getSeconds(timeInLong: Long): Number{
-    return (timeInLong / MILLIS_IN_SECOND) % SECONDS_IN_MINUTE
+fun getSeconds(timeInLong: Long): Int{
+    return ((timeInLong / MILLIS_IN_SECOND) % SECONDS_IN_MINUTE).toInt()
 }
 
-fun getMinutes(timeInLong: Long): Number{
-    return timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE) % MINUTES_IN_HOUR
+fun getMinutes(timeInLong: Long): Int{
+    return (timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE) % MINUTES_IN_HOUR).toInt()
 }
 
-fun getHours(timeInLong: Long): Number{
-    return timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR) % HOURS_IN_DAY
+fun getHours(timeInLong: Long): Int{
+    return (timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR) % HOURS_IN_DAY).toInt()
 }
 
-fun getTotalDays(timeInLong: Long): Number{
-    return timeInLong /
-            (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY)
+fun getTotalDays(timeInLong: Long): Int{
+    return (timeInLong /
+            (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY)).toInt()
 }
 
-fun getDays(timeInLong: Long): Number{
+fun getDays(timeInLong: Long): Int{
 
     val calendarTarget = Calendar.getInstance()
     calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
@@ -63,7 +63,7 @@ fun getDays(timeInLong: Long): Number{
     else return 0
 }
 
-fun getMonths(timeInLong: Long): Number {
+fun getMonths(timeInLong: Long): Int {
     val calendarTarget = Calendar.getInstance()
     calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
 
@@ -77,13 +77,13 @@ fun getMonths(timeInLong: Long): Number {
     return remainingMonthValue
 }
 
-fun getYears(timeInLong: Long): Number {
+fun getYears(timeInLong: Long): Int {
     val calendarTarget = Calendar.getInstance()
     calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
 
     val calendarCurrent = Calendar.getInstance()
     calendarCurrent.timeInMillis = System.currentTimeMillis()
 
-    return if (calendarCurrent.before(calendarTarget)) Math.floorDiv(getTotalDays(timeInLong).toInt() ,DAYS_IN_YEAR)
-    else 0L
+    return if (calendarCurrent.before(calendarTarget)) Math.floorDiv(getTotalDays(timeInLong) ,DAYS_IN_YEAR)
+    else 0
 }
