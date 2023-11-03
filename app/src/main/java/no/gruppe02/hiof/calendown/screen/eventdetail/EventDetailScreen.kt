@@ -2,10 +2,13 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +33,8 @@ import no.gruppe02.hiof.calendown.api.getMinutes
 import no.gruppe02.hiof.calendown.api.getMonths
 import no.gruppe02.hiof.calendown.api.getSeconds
 import no.gruppe02.hiof.calendown.api.getYears
+import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
+import java.text.SimpleDateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +43,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                       viewModel: EventDetailViewModel = hiltViewModel()
 ) {
     val event by viewModel.event
-    val remainingTimeLong = viewModel.remainingTimeLong
+    val dateString = SimpleDateFormat.getDateTimeInstance().format(event.date)
     val years = viewModel.getRemainingYears()
     val months = viewModel.getRemainingMonths()
     val days = viewModel.getRemainingDays()
@@ -64,57 +69,129 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             )
         },
     ) { innerPadding ->
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)) {
-            Icon(imageVector = Icons.Default.Warning, contentDescription = null)
-            Text(text = event.title,
-                style = MaterialTheme.typography.headlineLarge)
-            Text(text = event.description,
-                style = MaterialTheme.typography.bodyMedium)
-            Text(text = event.date.toString(),
-                style = MaterialTheme.typography.bodyMedium)
-            Column {
-                Text(text = "Years: $years",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Months: $months",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Days: $days",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Hours: $hours",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Minutes: $minutes",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Seconds: $seconds",
-                    style = MaterialTheme.typography.bodyMedium)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Icon(
+                imageVector = DefaultIcons.defaultIcons.getOrDefault(
+                    event.icon,
+                    Icons.Default.ThumbUp
+                ),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
+
+            Text(
+                text = event.title,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = dateString,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Row(horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp)) {
+                Column(verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = years,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "years",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = months,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "months",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = days,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "days",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = hours,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "hours",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = minutes,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "minutes",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Text(
+                        text = seconds,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "seconds",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
             }
-
-
-        /* TODO: Implement
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(event.image)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(16.dp).width(400.dp).height(600.dp)
-        )
-        */
-    }
-    }
-
-
-
-}
-
-@Composable
-@Preview
-fun EventDetailScreenPreview(){
-    CalenDownTheme {
-        EventDetailScreen()
+        }
     }
 }
