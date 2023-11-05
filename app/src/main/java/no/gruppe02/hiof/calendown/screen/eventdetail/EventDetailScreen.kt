@@ -76,15 +76,36 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
-
+            Text(
+                text = "id: " + event.uid,
+                style = MaterialTheme.typography.bodySmall
+            )
             Text(
                 text = event.title,
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
+                text = "Owned by " + event.userId,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
                 text = event.description,
                 style = MaterialTheme.typography.bodyMedium
             )
+            if (event.participants?.isNotEmpty() == true){
+                Column {
+                    Text(
+                        text = "participants:",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    event.participants?.forEach {participant ->
+                        Text(
+                            text = participant,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
             Text(
                 text = dateString,
                 style = MaterialTheme.typography.bodyLarge

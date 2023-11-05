@@ -26,12 +26,12 @@ constructor(
             Filter.or(
                 Filter.arrayContains(PARTICIPANTS_FIELD, user.id),
                 Filter.equalTo(USER_ID_FIELD, user.id),
-                )) .dataObjects()
+                )).dataObjects()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val participatedEvents: Flow<List<Event>> get() = auth.currentUser.flatMapLatest { user ->
-        firestore.collection(EVENT_COLLECTION).whereArrayContains(PARTICIPANTS_FIELD, user.id).dataObjects()
+    override suspend fun deleteEvent(event: Event){
+        firestore.collection(EVENT_COLLECTION).document(event.uid).delete()
+        //result.reference.delete()
     }
 
     override suspend fun getEvent(eventId: String): Event? =

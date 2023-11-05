@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -25,10 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
@@ -55,6 +60,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
+                    DeleteAll(onDelete = { viewModel.deleteAll()})
                 },
 
                 colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -95,6 +101,22 @@ fun OpenAddEventScreen(
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "Create new event button",
+        )
+    }
+}
+
+@Composable
+fun DeleteAll(
+    onDelete: () -> Unit
+) {
+    Button(
+        onClick = { onDelete() }
+    )
+    {
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Delete All",
+            tint = Color.Red
         )
     }
 }
