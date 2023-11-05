@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.createaccount
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

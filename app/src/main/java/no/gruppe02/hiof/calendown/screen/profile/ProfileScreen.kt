@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.profile
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

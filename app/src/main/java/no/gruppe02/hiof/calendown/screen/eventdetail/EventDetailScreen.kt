@@ -23,16 +23,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-import no.gruppe02.hiof.calendown.api.getDays
-import no.gruppe02.hiof.calendown.api.getHours
-import no.gruppe02.hiof.calendown.api.getMinutes
-import no.gruppe02.hiof.calendown.api.getMonths
-import no.gruppe02.hiof.calendown.api.getSeconds
-import no.gruppe02.hiof.calendown.api.getYears
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
 import java.text.SimpleDateFormat
 
@@ -57,7 +49,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             TopAppBar(
                 title = {
                     Text(
-                        text = event.title,
+                        text = "Event Details",
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center

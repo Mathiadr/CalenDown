@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

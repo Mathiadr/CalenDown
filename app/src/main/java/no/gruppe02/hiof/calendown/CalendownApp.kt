@@ -32,11 +32,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import no.gruppe02.hiof.calendown.screen.CreateAccountScreen
-import no.gruppe02.hiof.calendown.screen.HomeScreen
-import no.gruppe02.hiof.calendown.screen.LoginScreen
-import no.gruppe02.hiof.calendown.screen.NotificationsScreen
-import no.gruppe02.hiof.calendown.screen.ProfileScreen
+import no.gruppe02.hiof.calendown.screen.createaccount.CreateAccountScreen
+import no.gruppe02.hiof.calendown.screen.home.HomeScreen
+import no.gruppe02.hiof.calendown.screen.login.LoginScreen
+import no.gruppe02.hiof.calendown.screen.notifications.NotificationsScreen
+import no.gruppe02.hiof.calendown.screen.profile.ProfileScreen
 import no.gruppe02.hiof.calendown.screen.addEvent.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 
@@ -128,7 +128,6 @@ fun BottomNavigationBar (
     navController: NavHostController,
     bottomNavigationScreens: List<Screen>,
     bottomNavigationState: MutableState<Boolean>) {
-    // Should be stored in ViewModel??
     // Holder på hvilket element i bottomNav som er selected
     var selectedBottomNavigationIndex by rememberSaveable {
         mutableIntStateOf(0)
