@@ -3,6 +3,7 @@ package no.gruppe02.hiof.calendown.model
 import androidx.annotation.StringRes
 
 data class LoginUiState (
+    val username: String = "",
     val email: String = "",
     val password: String = "",
     val repeatPassword: String = "",

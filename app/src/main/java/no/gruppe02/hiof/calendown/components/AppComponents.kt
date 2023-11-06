@@ -39,6 +39,25 @@ fun HeaderText(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun BasicTextField (
+    value: String,
+    onNewValue: (String) -> Unit,
+    label: String,
+    imageVector: ImageVector,
+    modifier: Modifier = Modifier) {
+
+    OutlinedTextField(
+        singleLine = true,
+        modifier = modifier
+            .fillMaxWidth(),
+        value = value,
+        onValueChange = { onNewValue(it) },
+        label = { Text(text = label) },
+        leadingIcon = { Icon(imageVector = imageVector, contentDescription = "Username") })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun EmailField(
     value: String,
     onNewValue: (String) -> Unit,

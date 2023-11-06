@@ -20,11 +20,18 @@ class CreateAccountViewModel @Inject constructor(
     var uiState = mutableStateOf(LoginUiState())
         private set
 
+    private val user
+        get() = uiState.value.username
+
     private val email
         get() = uiState.value.email
 
     private val password
         get() = uiState.value.password
+
+    fun onUsernameChange(newValue: String) {
+        uiState.value = uiState.value.copy(username = newValue)
+    }
 
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
