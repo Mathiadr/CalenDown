@@ -1,6 +1,7 @@
 package no.gruppe02.hiof.calendown.screen.addEvent
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -76,6 +77,16 @@ fun AddEventScreenContent(
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
+    val mMinute = mCalendar[Calendar.MINUTE]
+    val mTime = remember { mutableStateOf("") }
+
+    val mTimePickerDialog = TimePickerDialog(
+        mContext,
+        {_, mHour : Int, mMinute: Int ->
+            mTime.value = ":$mHour:$mMinute"
+        }, mHour, mMinute, false
+    )
 
     mCalendar.time = Date()
     val mDatePickerDialog = DatePickerDialog(
@@ -160,8 +171,18 @@ fun AddEventScreenContent(
         }
         Button(
             onClick = {
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy")
-                val dateObject = dateFormat.parse(selectedDate.value)
+                mTimePickerDialog.show()
+            },
+            modifier = Modifier
+                .absoluteOffset(x = 315.dp, y = 30.dp)
+
+        ) {
+            Text(text = "Time")
+        }
+        Button(
+            onClick = {
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
+                val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
                 viewModel.saveEvent(
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
