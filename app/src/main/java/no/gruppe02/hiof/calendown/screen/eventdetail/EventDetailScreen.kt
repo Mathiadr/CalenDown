@@ -26,9 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
+import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 import java.text.SimpleDateFormat
 
 

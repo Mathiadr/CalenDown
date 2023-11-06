@@ -1,5 +1,7 @@
 package no.gruppe02.hiof.calendown.screen.addEvent
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,9 +27,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +68,23 @@ fun AddEventScreenContent(
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf("") }
+    val mContext = LocalContext.current
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val mCalendar = Calendar.getInstance()
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+    mCalendar.time = Date()
+    val mDate = remember { mutableStateOf("") }
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+        }, mYear, mMonth, mDay
+    )
 
     Column(
         modifier = modifier
@@ -166,4 +188,17 @@ fun AddEventScreenContent(
         ) {
             Text(text = "Save")
         }
-}}
+        Button(
+            onClick = {
+                mDatePickerDialog.show()
+            },
+            modifier = Modifier
+                .absoluteOffset(x = 315.dp, y = 0.dp)
+
+        ) {
+            Text(text = "Test")
+        }
+}
+
+}
+

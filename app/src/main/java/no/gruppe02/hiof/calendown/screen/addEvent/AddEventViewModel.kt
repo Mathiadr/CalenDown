@@ -21,5 +21,4 @@ class AddEventViewModel @Inject constructor(
             storageService.save(Event(userId = accountService.currentUserId, title = eventName, description = eventDescription, date = eventDate))
         }
     }
-
 }
