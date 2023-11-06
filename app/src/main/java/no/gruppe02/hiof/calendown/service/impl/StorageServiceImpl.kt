@@ -24,8 +24,8 @@ constructor(
     override val events: Flow<List<Event>> get() = auth.currentUser.flatMapLatest { user ->
         firestore.collection(EVENT_COLLECTION).where(
             Filter.or(
-                Filter.arrayContains(PARTICIPANTS_FIELD, user.id),
-                Filter.equalTo(USER_ID_FIELD, user.id),
+                Filter.arrayContains(PARTICIPANTS_FIELD, user.uid),
+                Filter.equalTo(USER_ID_FIELD, user.uid),
                 )).dataObjects()
     }
 

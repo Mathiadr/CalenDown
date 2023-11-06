@@ -8,5 +8,5 @@ interface UserService {
     val currentUserInfo: Flow<User>
     suspend fun delete(user: User): Unit
     suspend fun get(userId: String): User?
-    suspend fun save(user: User): String
+    suspend fun save(user: User): Void
 }

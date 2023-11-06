@@ -70,7 +70,8 @@ class CreateAccountViewModel @Inject constructor(
                         loggedIn()
                 }
                 userService.save(User(
-                    id = authenticationService.currentUserId,
+                    uid = authenticationService.currentUserId,
+                    isAnonymous = false,
                     username = username,
                     email = email,
                     friends = emptyList(),

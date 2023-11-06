@@ -1,6 +1,5 @@
 package no.gruppe02.hiof.calendown.service.impl
 
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +17,7 @@ class InvitationServiceImpl @Inject constructor(
 ) : InvitationService {
     override val invitations: Flow<List<Invitation>>
         get() = auth.currentUser.flatMapLatest { user ->
-            firestore.collection("${USER_COLLECTION}/${user.id}/${INVITATION_SUBCOLLECTION}").dataObjects()
+            firestore.collection("${USER_COLLECTION}/${user.uid}/${INVITATION_SUBCOLLECTION}").dataObjects()
         }
 
     override suspend fun accept(invitation: Invitation) {
