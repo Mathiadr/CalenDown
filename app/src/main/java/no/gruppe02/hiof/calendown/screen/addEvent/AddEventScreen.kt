@@ -1,5 +1,8 @@
 package no.gruppe02.hiof.calendown.screen.addEvent
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,16 +24,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +69,32 @@ fun AddEventScreenContent(
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf("") }
-    var checkedState by rememberSaveable { mutableStateOf(false)}
+    val mContext = LocalContext.current
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val mCalendar = Calendar.getInstance()
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
+    val mMinute = mCalendar[Calendar.MINUTE]
+    val mTime = remember { mutableStateOf("") }
+
+    val mTimePickerDialog = TimePickerDialog(
+        mContext,
+        {_, mHour : Int, mMinute: Int ->
+            mTime.value = ":$mHour:$mMinute"
+        }, mHour, mMinute, false
+    )
+
+    mCalendar.time = Date()
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            selectedDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+        }, mYear, mMonth, mDay
+    )
 
     Column(
         modifier = modifier
@@ -132,51 +159,30 @@ fun AddEventScreenContent(
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .background(color = Color.LightGray)
-        ) {
-            TextField(
-                value = selectedDate.value,
-                onValueChange = {
-                    selectedDate.value = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-            if (selectedDate.value.isEmpty()) {
-                Text(
-                    text = "Event date: 2018-09-18",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
-        }
-
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.LightGray),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Repeat yearly?",
-                modifier = Modifier.padding(15.dp)
-
-            )
-            Checkbox(
-                checked = checkedState,
-                onCheckedChange = { newCheckedState ->
-                    checkedState = newCheckedState
-                })
-    }
         Button(
             onClick = {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-                val dateObject = dateFormat.parse(selectedDate.value)
+                mDatePickerDialog.show()
+            },
+            modifier = Modifier
+                .absoluteOffset(x = 315.dp, y = 30.dp)
+
+        ) {
+            Text(text = "Date")
+        }
+        Button(
+            onClick = {
+                mTimePickerDialog.show()
+            },
+            modifier = Modifier
+                .absoluteOffset(x = 315.dp, y = 30.dp)
+
+        ) {
+            Text(text = "Time")
+        }
+        Button(
+            onClick = {
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
+                val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
                 viewModel.saveEvent(
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
@@ -189,4 +195,8 @@ fun AddEventScreenContent(
         ) {
             Text(text = "Save")
         }
-}}
+
+}
+
+}
+

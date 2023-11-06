@@ -42,6 +42,10 @@ constructor(
         return firestore.collection(EVENT_COLLECTION).add(event).await().id
     }
 
+    override suspend fun delete(eventId: String) {
+        firestore.collection(EVENT_COLLECTION).document(eventId).delete()
+    }
+
     companion object {
         private const val EVENT_COLLECTION = "events"
         private const val USER_ID_FIELD = "userId"
