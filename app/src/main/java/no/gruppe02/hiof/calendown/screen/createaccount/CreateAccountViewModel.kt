@@ -63,7 +63,7 @@ class CreateAccountViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                accountService.linkAccount(email, password) { error ->
+                accountService.createAccount(email, password) { error ->
                     if (error == null)
                         loggedIn()
                 }

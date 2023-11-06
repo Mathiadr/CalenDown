@@ -11,7 +11,7 @@ interface AccountService {
 
     suspend fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit)
     suspend fun createAnonymousAccount()
-    suspend fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit)
+    suspend fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit)
     //suspend fun signOut()
 
 

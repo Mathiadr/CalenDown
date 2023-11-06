@@ -38,7 +38,7 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
     }
 
 
-    override suspend fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
+    override suspend fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }.await()
     }
