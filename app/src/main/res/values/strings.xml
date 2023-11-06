@@ -18,7 +18,7 @@
     <string name="event">Event Details</string>
 
 
-    <!-- SignUpScreen -->
+    <!-- Log in -->
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="repeat_password">Repeat password</string>

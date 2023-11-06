@@ -1,6 +1,5 @@
 package no.gruppe02.hiof.calendown.screen.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,21 +10,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.R
-import no.gruppe02.hiof.calendown.components.ButtonComponent
+import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 import no.gruppe02.hiof.calendown.components.ClickableTextComponent
+import no.gruppe02.hiof.calendown.components.EmailField
 import no.gruppe02.hiof.calendown.components.HeaderText
-import no.gruppe02.hiof.calendown.components.InputTextField
+import no.gruppe02.hiof.calendown.components.PasswordField
 import no.gruppe02.hiof.calendown.ui.theme.Gray
 
 @Composable
@@ -39,55 +39,47 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .padding(28.dp)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderText(
-                textValue = "Log in"
+            HeaderText(text = stringResource(R.string.log_in))
+
+            Spacer(modifier = Modifier.height(120.dp))
+
+            if (uiState.errorMessage != 0)
+                Text(
+                    text = stringResource(id = uiState.errorMessage),
+                    color = MaterialTheme.colorScheme.error
+                )
+
+            EmailField(
+                value = uiState.email,
+                onNewValue = viewModel::onEmailChange,
+                label = stringResource(R.string.email),
+                imageVector = Icons.Outlined.Email
             )
 
-            if(uiState.errorMessage != 0)
-                Text(text = stringResource(id = uiState.errorMessage),
-                    Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(
-                modifier = Modifier
-                    .height(120.dp))
-
-            InputTextField(
-                uiState.email,
-                viewModel::onEmailChange,
-                placeholderText = stringResource(R.string.email),
-                imageVector = Icons.Outlined.Email)
-
-            Spacer(
-                modifier = Modifier
-                    .height(10.dp))
-
-            InputTextField(
-                uiState.password,
-                viewModel::onPasswordChange,
-                placeholderText = stringResource(R.string.password),
-                imageVector = Icons.Outlined.Lock)
-
-            Spacer(
-                modifier = Modifier
-                    .height(80.dp))
-
-            ButtonComponent(
-                textValue = "Login",
-                onClick = { viewModel.onLoginClick(loggedIn)}
+            PasswordField(
+                value = uiState.password,
+                onNewValue = viewModel::onPasswordChange,
+                label = stringResource(R.string.password),
+                imageVector = Icons.Outlined.Lock
             )
 
-            Spacer(
-                modifier = Modifier
-                    .height(50.dp))
+            Spacer(modifier = Modifier.height(80.dp))
+
+            ElevatedButtonComponent(
+                label = "Login",
+                onClick = { viewModel.onLoginClick(loggedIn) }
+            )
+
+            Spacer(modifier = Modifier.height(50.dp))
 
             Divider(
                 modifier = Modifier
@@ -95,9 +87,8 @@ fun LoginScreen(
                 color = Gray,
                 thickness = 1.dp
             )
-            Spacer(
-                modifier = Modifier
-                    .height(30.dp))
+
+            Spacer(modifier = Modifier.height(30.dp))
 
             ClickableTextComponent(
                 initialText = "No account? ",
@@ -107,10 +98,7 @@ fun LoginScreen(
                 }
             )
 
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-            )
+            Spacer(modifier = Modifier.height(20.dp))
 
             ClickableTextComponent(
                 initialText = "Continue as ",
