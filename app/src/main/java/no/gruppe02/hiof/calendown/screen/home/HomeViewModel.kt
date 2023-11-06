@@ -11,14 +11,13 @@ import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.dummydata.Datasource
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
-import no.gruppe02.hiof.calendown.service.AccountService
+import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
-// TODO: implement accountService
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val accountService: AccountService,
+    private val authenticationService: AuthenticationService,
     private val storageService: StorageService)
     : ViewModel() {
 
@@ -38,7 +37,7 @@ class HomeViewModel @Inject constructor(
                 if (activeEvents.first().isEmpty()) {
                     Datasource.eventList.forEach { event ->
                         if(event.userId.isEmpty()) {
-                            event.userId = accountService.currentUserId
+                            event.userId = authenticationService.currentUserId
                         }
                         storageService.save(event)
                     }

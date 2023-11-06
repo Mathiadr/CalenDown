@@ -9,16 +9,22 @@ import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.common.isValidEmail
 import no.gruppe02.hiof.calendown.common.isValidPassword
 import no.gruppe02.hiof.calendown.model.LoginUiState
-import no.gruppe02.hiof.calendown.service.AccountService
+import no.gruppe02.hiof.calendown.model.User
+import no.gruppe02.hiof.calendown.service.AuthenticationService
+import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val authenticationService: AuthenticationService,
+    private val userService: UserService
 ) : ViewModel() {
 
     var uiState = mutableStateOf(LoginUiState())
         private set
+
+    private val username
+        get() = uiState.value.username
 
     private val email
         get() = uiState.value.email
@@ -26,8 +32,13 @@ class CreateAccountViewModel @Inject constructor(
     private val password
         get() = uiState.value.password
 
+
+
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
+    }
+    fun onUsernameChange(newValue: String) {
+        uiState.value = uiState.value.copy(username = newValue)
     }
 
     fun onPasswordChange(newValue: String) {
@@ -56,10 +67,17 @@ class CreateAccountViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                accountService.linkAccount(email, password) { error ->
+                authenticationService.linkAccount(email, password) { error ->
                     if (error == null)
                         loggedIn()
                 }
+                userService.save(User(
+                    id = authenticationService.currentUserId,
+                    username = username,
+                    email = email,
+                    friends = emptyList(),
+                    invitations = emptyList()
+                ))
             }
             catch(e: Exception) {
                 uiState.value = uiState.value.copy(errorMessage = R.string.could_not_create_account)

@@ -35,7 +35,7 @@ class EventDetailViewModel @Inject constructor(
     val event = mutableStateOf(Event())
     val remainingTimeLong = mutableLongStateOf(0L)
 
-        // Business logic
+    // Business logic
     init {
         val eventId = savedStateHandle.get<String>(EVENT_ID)
         if (eventId != null) {

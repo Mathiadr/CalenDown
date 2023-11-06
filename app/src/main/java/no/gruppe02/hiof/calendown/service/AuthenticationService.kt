@@ -3,7 +3,7 @@ package no.gruppe02.hiof.calendown.service
 import kotlinx.coroutines.flow.Flow
 import no.gruppe02.hiof.calendown.model.User
 
-interface AccountService {
+interface AuthenticationService {
 
     val currentUserId: String
     val hasUser: Boolean

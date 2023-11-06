@@ -9,12 +9,12 @@ import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.common.isValidEmail
 import no.gruppe02.hiof.calendown.common.isValidPassword
 import no.gruppe02.hiof.calendown.model.LoginUiState
-import no.gruppe02.hiof.calendown.service.AccountService
+import no.gruppe02.hiof.calendown.service.AuthenticationService
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val accountService: AccountService) : ViewModel() {
+    private val authenticationService: AuthenticationService) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
     private val email
@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                accountService.authenticate(email, password) { error ->
+                authenticationService.authenticate(email, password) { error ->
                     if (error == null)
                         loggedIn()
                 }
@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
 
     fun createAnonymousAccount(loggedIn: () -> Unit){
         viewModelScope.launch {
-            if (!accountService.hasUser) accountService.createAnonymousAccount()
+            if (!authenticationService.hasUser) authenticationService.createAnonymousAccount()
             loggedIn()
         }
     }
