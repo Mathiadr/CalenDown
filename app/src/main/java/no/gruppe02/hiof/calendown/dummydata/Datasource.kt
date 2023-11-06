@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.graphics.vector.ImageVector
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.model.Invitation
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -61,6 +62,14 @@ object Datasource {
                 "kwA1lNGBRZd0zMluHLoM3WC0k763"
             )),
     )
+    val invitations = listOf(
+        Invitation(
+            recipientId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
+            senderId = "bmtqUlv0nGdZ4co2m64ud1WaKwG2",
+            status = "pending",
+            eventId = "tTo7pTkRNSIPHtv6Ephw"
+        )
+    )
     private fun addFutureDate(days: Int, months: Int, years: Int): Date{
         var date = LocalDate.now()
         date = date.plusYears(years.toLong())
@@ -68,6 +77,8 @@ object Datasource {
         date = date.plusDays(days.toLong())
         return Date.from(date.atTime(LocalTime.now()).toInstant(ZoneOffset.UTC))
     }
+
+
 }
 
 object DefaultIcons {

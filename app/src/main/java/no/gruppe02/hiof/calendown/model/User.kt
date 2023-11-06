@@ -7,5 +7,6 @@ data class User(
     val username: String = "",
     val email: String = "",
     val isAnonymous: Boolean = true,
+    val friends: List<String>? = null,
     val invitations: List<Invitation>? = null,
 )

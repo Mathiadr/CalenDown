@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.User
-import no.gruppe02.hiof.calendown.service.AccountService
+import no.gruppe02.hiof.calendown.service.AuthenticationService
 import javax.inject.Inject
 
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+class AuthenticationServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AuthenticationService {
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
