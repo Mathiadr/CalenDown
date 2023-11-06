@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,18 +26,31 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            activeEvents.value = storageService.events.first().filter { event: Event ->
-                event.date.time >= System.currentTimeMillis()
-            }.associateWith { event: Event ->
-                EventTimer(event.date.time)
-            }
-            handleCountdown()
-            if (activeEvents.first().isEmpty()) {
-                Datasource.eventList.forEach { event ->
-                    event.userId = accountService.currentUserId
-                    storageService.save(event)
+            try {
+                activeEvents.value = storageService.events.first().filter { event: Event ->
+                    event.date.time >= System.currentTimeMillis()
+                }.associateWith { event: Event ->
+                    EventTimer(event.date.time)
                 }
+            } catch(e: Exception) {
+                error("Error occurred while fetching events")
+            } finally {
+                if (activeEvents.first().isEmpty()) {
+                    Datasource.eventList.forEach { event ->
+                        if(event.userId.isEmpty()) {
+                            event.userId = accountService.currentUserId
+                        }
+                        storageService.save(event)
+                    }
             }
+        }
+            handleCountdown()
+        }
+    }
+
+    fun deleteAll(){
+        viewModelScope.launch {
+            activeEvents.value.keys.forEach { event: Event -> storageService.deleteEvent(event) }
         }
     }
 

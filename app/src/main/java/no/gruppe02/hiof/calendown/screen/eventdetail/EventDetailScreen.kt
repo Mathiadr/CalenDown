@@ -26,16 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
-import no.gruppe02.hiof.calendown.api.getDays
-import no.gruppe02.hiof.calendown.api.getHours
-import no.gruppe02.hiof.calendown.api.getMinutes
-import no.gruppe02.hiof.calendown.api.getMonths
-import no.gruppe02.hiof.calendown.api.getSeconds
-import no.gruppe02.hiof.calendown.api.getYears
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
 import java.text.SimpleDateFormat
 
@@ -60,7 +52,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             TopAppBar(
                 title = {
                     Text(
-                        text = event.title,
+                        text = "Event Details",
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -101,15 +93,36 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
-
+            Text(
+                text = "id: " + event.uid,
+                style = MaterialTheme.typography.bodySmall
+            )
             Text(
                 text = event.title,
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
+                text = "Owned by " + event.userId,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
                 text = event.description,
                 style = MaterialTheme.typography.bodyMedium
             )
+            if (event.participants?.isNotEmpty() == true){
+                Column {
+                    Text(
+                        text = "participants:",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    event.participants?.forEach {participant ->
+                        Text(
+                            text = participant,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
             Text(
                 text = dateString,
                 style = MaterialTheme.typography.bodyLarge

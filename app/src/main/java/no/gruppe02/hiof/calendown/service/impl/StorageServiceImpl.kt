@@ -23,7 +23,15 @@ constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val events: Flow<List<Event>> get() = auth.currentUser.flatMapLatest { user ->
         firestore.collection(EVENT_COLLECTION).where(
-            Filter.or(Filter.equalTo(USER_ID_FIELD, user.id))).dataObjects()
+            Filter.or(
+                Filter.arrayContains(PARTICIPANTS_FIELD, user.id),
+                Filter.equalTo(USER_ID_FIELD, user.id),
+                )).dataObjects()
+    }
+
+    override suspend fun deleteEvent(event: Event){
+        firestore.collection(EVENT_COLLECTION).document(event.uid).delete()
+        //result.reference.delete()
     }
 
     override suspend fun getEvent(eventId: String): Event? =
@@ -41,5 +49,6 @@ constructor(
     companion object {
         private const val EVENT_COLLECTION = "events"
         private const val USER_ID_FIELD = "userId"
+        private const val PARTICIPANTS_FIELD = "participants"
     }
 }

@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.screen
+package no.gruppe02.hiof.calendown.screen.createaccount
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
