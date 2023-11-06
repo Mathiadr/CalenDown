@@ -78,11 +78,10 @@ fun AddEventScreenContent(
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     mCalendar.time = Date()
-    val mDate = remember { mutableStateOf("") }
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            selectedDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
         }, mYear, mMonth, mDay
     )
 
@@ -149,32 +148,19 @@ fun AddEventScreenContent(
                 )
             }
         }
-        Box(
+        Button(
+            onClick = {
+                mDatePickerDialog.show()
+            },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .background(color = Color.LightGray)
-        ) {
-            TextField(
-                value = selectedDate.value,
-                onValueChange = {
-                    selectedDate.value = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+                .absoluteOffset(x = 315.dp, y = 30.dp)
 
-            if (selectedDate.value.isEmpty()) {
-                Text(
-                    text = "Event date: 2018-09-18",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
+        ) {
+            Text(text = "Date")
         }
         Button(
             onClick = {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy")
                 val dateObject = dateFormat.parse(selectedDate.value)
                 viewModel.saveEvent(
                     eventName = eventName.value,
@@ -188,16 +174,7 @@ fun AddEventScreenContent(
         ) {
             Text(text = "Save")
         }
-        Button(
-            onClick = {
-                mDatePickerDialog.show()
-            },
-            modifier = Modifier
-                .absoluteOffset(x = 315.dp, y = 0.dp)
 
-        ) {
-            Text(text = "Test")
-        }
 }
 
 }
