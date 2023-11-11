@@ -38,7 +38,7 @@ class NotificationsViewModel @Inject constructor(
 
     private suspend fun getSender(senderId: String): String? =
         withContext(Dispatchers.Default) {
-        return@withContext userService.get(senderId)?.username
+            return@withContext userService.get(senderId)?.username
     }
 
     private suspend fun getEventName(eventId: String): String? =

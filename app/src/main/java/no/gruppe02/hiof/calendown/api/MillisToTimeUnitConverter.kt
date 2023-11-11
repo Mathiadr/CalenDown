@@ -1,8 +1,11 @@
 package no.gruppe02.hiof.calendown.api
 
+import java.time.Instant
 import java.time.LocalDate
-import java.time.YearMonth
+import java.time.Period
+import java.time.ZoneId
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 private const val MILLIS_IN_SECOND = 1000L
 private const val SECONDS_IN_MINUTE = 60
@@ -38,52 +41,28 @@ fun getTotalDays(timeInLong: Long): Int{
 }
 
 fun getDays(timeInLong: Long): Int{
+    val dateCurrent = LocalDate.now()
+    val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
 
-    val calendarTarget = Calendar.getInstance()
-    calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
-
-    val calendarCurrent = Calendar.getInstance()
-    calendarCurrent.timeInMillis = System.currentTimeMillis()
-
-    if (calendarCurrent.before(calendarTarget)) {
-        val currentLocalDate = LocalDate.of(
-            calendarCurrent.get(Calendar.YEAR),
-            calendarCurrent.get(Calendar.MONTH) + 1,
-            calendarCurrent.get(Calendar.DAY_OF_MONTH)
-        )
-        val targetLocalDate = LocalDate.of(
-            calendarTarget.get(Calendar.YEAR),
-            calendarTarget.get(Calendar.MONTH) + 1,
-            calendarTarget.get(Calendar.DAY_OF_MONTH)
-        )
-        val remainingDays = targetLocalDate.dayOfMonth - currentLocalDate.dayOfMonth
-        return remainingDays
-
-    }
-    else return 0
+    return Period.between(
+        dateCurrent, dateTarget
+    ).days
 }
 
 fun getMonths(timeInLong: Long): Int {
-    val calendarTarget = Calendar.getInstance()
-    calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
+    val dateCurrent = LocalDate.now()
+    val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
 
-    val calendarCurrent = Calendar.getInstance()
-    calendarCurrent.timeInMillis = System.currentTimeMillis()
-
-    val currentYearMonth = YearMonth.of(calendarCurrent.get(Calendar.YEAR), calendarCurrent.get(Calendar.MONTH)+1)
-    val targetYearMonth = YearMonth.of(calendarTarget.get(Calendar.YEAR), calendarTarget.get(Calendar.MONTH)+1)
-    val remainingMonthValue = (targetYearMonth.monthValue - currentYearMonth.monthValue).mod(
-        MONTHS_IN_YEAR)
-    return remainingMonthValue
+    return Period.between(
+        dateCurrent, dateTarget
+    ).months
 }
 
 fun getYears(timeInLong: Long): Int {
-    val calendarTarget = Calendar.getInstance()
-    calendarTarget.timeInMillis = System.currentTimeMillis() + timeInLong
+    val dateCurrent = LocalDate.now()
+    val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
 
-    val calendarCurrent = Calendar.getInstance()
-    calendarCurrent.timeInMillis = System.currentTimeMillis()
-
-    return if (calendarCurrent.before(calendarTarget)) Math.floorDiv(getTotalDays(timeInLong) ,DAYS_IN_YEAR)
-    else 0
+    return Period.between(
+        dateCurrent, dateTarget
+    ).years
 }

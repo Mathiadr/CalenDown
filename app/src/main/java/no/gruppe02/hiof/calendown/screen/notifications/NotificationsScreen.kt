@@ -100,26 +100,21 @@ fun InvitationCard(
                     .size(50.dp)
                     .background(Color.Gray, CircleShape))
             Column {
-                if (senderName != null) {
-                    Text(
-                        text = senderName,
-                        style = MaterialTheme.typography.bodyMedium)
-                }
-                if (eventName != null) {
-                    Text(
-                        text = eventName,
-                        modifier = Modifier.width(150.dp),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.headlineMedium)
-                }
                 Text(
-                    text = "Received 2 days ago",
+                    text = senderName,
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = eventName,
+                    modifier = Modifier.width(150.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = "Received 2 days ago", // TODO: Change
                     style = MaterialTheme.typography.labelMedium)
             }
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround){
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
                 AcceptButton()
-                Spacer(modifier = Modifier.width(20.dp))
                 DeclineButton()
             }
         }
