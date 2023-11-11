@@ -10,7 +10,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_add_event_screen">AddEventScreen</string>
 
-
     <!-- Event Details -->
     <string name="event_details">Event details</string>
     <string name="event_description">Description</string>
@@ -33,5 +32,6 @@
     <string name="could_not_create_account">Could not create account</string>
     <string name="could_not_log_in">Could not log in</string>
     <string name="sign_out">Sign out</string>
+
 
 </resources>

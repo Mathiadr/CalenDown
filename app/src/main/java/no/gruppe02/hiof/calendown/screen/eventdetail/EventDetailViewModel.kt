@@ -2,13 +2,10 @@ package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -44,6 +41,12 @@ class EventDetailViewModel @Inject constructor(
                 remainingTimeLong.longValue = getRemainingTime(event.value.date.time)
                 handleCountdown()
             }
+        }
+    }
+
+     fun deleteEvent(){
+        viewModelScope.launch {
+            storageService.delete(event.value.uid)
         }
     }
 

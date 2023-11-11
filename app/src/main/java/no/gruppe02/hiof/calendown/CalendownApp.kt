@@ -92,7 +92,10 @@ fun CalendownApp() {
                     val route = "${EVENT_DETAIL}?$EVENT_ID=$eventId"
                     navController.navigate(route)
                 },
-                    onAddEventClick = { navController.navigate(Screen.AddEvent.route)})
+                    onAddEventClick = { navController.navigate(Screen.AddEvent.route)},
+                    )
+
+
             }
             composable(Screen.LogIn.route) {
                 LoginScreen(
@@ -112,6 +115,7 @@ fun CalendownApp() {
             composable(Screen.AddEvent.route) {
                 AddEventScreen(onSaveEventClick = { navController.navigate(Screen.Home.route) })
             }
+
             composable(
                 route = Screen.EventDetails.route,
                 arguments = listOf(navArgument(EVENT_ID) {
