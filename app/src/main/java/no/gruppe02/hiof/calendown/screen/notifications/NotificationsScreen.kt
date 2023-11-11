@@ -1,14 +1,11 @@
 package no.gruppe02.hiof.calendown.screen.notifications
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,19 +28,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dagger.hilt.android.lifecycle.HiltViewModel
-import no.gruppe02.hiof.calendown.model.Invitation
-import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +43,7 @@ fun NotificationsScreen(
     modifier: Modifier = Modifier,
     viewModel: NotificationsViewModel = hiltViewModel()
 ) {
-    val invitations = viewModel._invitations
+    val invitations = viewModel.invitations
 
     Scaffold(
         topBar = {
@@ -116,6 +108,9 @@ fun InvitationCard(
                 if (eventName != null) {
                     Text(
                         text = eventName,
+                        modifier = Modifier.width(150.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineMedium)
                 }
                 Text(
@@ -137,13 +132,13 @@ fun AcceptButton(){
         onClick = { /*TODO*/ },
         modifier = Modifier
             .clip(CircleShape)
-            .size(60.dp),
+            .size(40.dp),
         colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.hsv(110f, 0.5f, 0.9f)),
         ) {
         Icon(modifier = Modifier
             .clip(CircleShape)
-            .size(45.dp),
+            .size(25.dp),
             imageVector = Icons.Default.Check,
             tint = Color.DarkGray,
             contentDescription = "Accept invitation")
@@ -156,13 +151,13 @@ fun DeclineButton(){
         onClick = { /*TODO*/ },
         modifier = Modifier
             .clip(CircleShape)
-            .size(60.dp),
+            .size(40.dp),
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.hsv(0f, 0.5f, 0.9f)),
     ) {
         Icon(modifier = Modifier
             .clip(CircleShape)
-            .size(45.dp),
+            .size(25.dp),
             imageVector = Icons.Default.Close,
             tint = Color.DarkGray,
             contentDescription = "Decline invitation")
