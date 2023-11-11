@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,14 +39,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dagger.hilt.android.lifecycle.HiltViewModel
 import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: NotificationsViewModel = hiltViewModel()
 ) {
+    val invitations = viewModel._invitations
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -60,28 +69,25 @@ fun NotificationsScreen(
                 )
             )
         },
-    ){ innerPadding -> Column(modifier = Modifier.padding(innerPadding)){
-        InvitationCard()
+    ){ innerPadding -> LazyColumn(modifier = Modifier.padding(innerPadding)){
+        items(invitations, key ={it.invitation.uid}){ invitation ->
+            InvitationCard(invitation = invitation, viewModel = viewModel)
+        }
     } }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InvitationCard(modifier: Modifier = Modifier){
-    val invitation = Invitation(
-        uid = "",
-        recipientId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
-        senderId = "bmtqUlv0nGdZ4co2m64ud1WaKwG2",
-        status = "Pending",
-        eventId = "HwP1NAJ4ont9e2kVmkDd",
-    )
-    val recipient = "Mathias"
-    val sender = "Oliver"
-    val status = "Pending"
+fun InvitationCard(
+    invitation: InvitationUiState,
+    viewModel: NotificationsViewModel,
+    modifier: Modifier = Modifier){
+
+    val senderName = invitation.senderName
+    val eventName = invitation.eventName
 
     Card (
-        onClick = {},
         modifier
             .fillMaxWidth()
             .padding(10.dp),
@@ -96,18 +102,22 @@ fun InvitationCard(modifier: Modifier = Modifier){
         ) {
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "Oliver",
+                contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(50.dp)
                     .background(Color.Gray, CircleShape))
             Column {
-                Text(
-                    text = "Oliver",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(
-                    text = "Event title",
-                    style = MaterialTheme.typography.headlineMedium)
+                if (senderName != null) {
+                    Text(
+                        text = senderName,
+                        style = MaterialTheme.typography.bodyMedium)
+                }
+                if (eventName != null) {
+                    Text(
+                        text = eventName,
+                        style = MaterialTheme.typography.headlineMedium)
+                }
                 Text(
                     text = "Received 2 days ago",
                     style = MaterialTheme.typography.labelMedium)
@@ -164,6 +174,7 @@ fun invitation(){
 
 }
 
+/*
 @Preview
 @Composable
 fun InvitationPreview(){
@@ -171,3 +182,5 @@ fun InvitationPreview(){
         InvitationCard()
     }
 }
+
+ */

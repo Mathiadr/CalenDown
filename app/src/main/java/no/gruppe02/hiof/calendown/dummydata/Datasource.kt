@@ -66,7 +66,6 @@ object Datasource {
         Invitation(
             recipientId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
             senderId = "bmtqUlv0nGdZ4co2m64ud1WaKwG2",
-            status = "pending",
             eventId = "tTo7pTkRNSIPHtv6Ephw"
         )
     )
