@@ -3,23 +3,28 @@ package no.gruppe02.hiof.calendown.screen.addEvent
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.DatePicker
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
@@ -27,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -103,83 +107,57 @@ fun AddEventScreenContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+            Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Event information",
-                style = MaterialTheme.typography.headlineSmall
+                modifier = Modifier.absoluteOffset(5.dp, 0.dp),
+                style = MaterialTheme.typography.headlineSmall,
             )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .background(color = Color.LightGray)
-        ) {
-            TextField(
+            OutlinedTextField(
+                singleLine = true,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .absoluteOffset(0.dp, (-50).dp),
                 value = eventName.value,
-                onValueChange = {
-                    eventName.value = it
-                },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { eventName.value = it },
+                label = { Text(text = "Enter eventname") },
             )
 
-            if (eventName.value.isEmpty()) {
-                Text(
-                    text = "Enter eventname here",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
+        OutlinedTextField(
+            singleLine = true,
+            modifier = modifier
                 .fillMaxWidth()
-                .padding(6.dp)
-                .background(color = Color.LightGray)
-        ) {
-            TextField(
-                value = eventDescription.value,
-                onValueChange = {
-                    eventDescription.value = it
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                .absoluteOffset(0.dp, (-100).dp),
+            value = eventDescription.value,
+            onValueChange = { eventDescription.value = it },
+            label = { Text(text = "Enter eventname") },
+        )
 
-            if (eventDescription.value.isEmpty()) {
-                Text(
-                    text = "Enter event description",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
-        }
-        Button(
+        OutlinedButton(
             onClick = {
                 mDatePickerDialog.show()
             },
             modifier = Modifier
-                .absoluteOffset(x = 315.dp, y = 30.dp)
-
+                .absoluteOffset(0.dp, (-70).dp)
+                .fillMaxSize()
+                //.size(200.dp, 50.dp)
         ) {
-            Text(text = "Date")
+            Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event date")
+            Text(text = "Choose Date of Event")
         }
-        Button(
+        OutlinedButton(
             onClick = {
                 mTimePickerDialog.show()
             },
             modifier = Modifier
-                .absoluteOffset(x = 315.dp, y = 30.dp)
+                .absoluteOffset(0.dp, (-60).dp)
+                .fillMaxSize()
+                //.size(200.dp, 50.dp)
 
         ) {
-            Text(text = "Time")
+            Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
+            Text(text = "Choose Time of Event")
         }
-        Button(
+        FilledTonalButton(
             onClick = {
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
                 val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
@@ -190,13 +168,14 @@ fun AddEventScreenContent(
                 onSaveEventClick()
             },
             modifier = Modifier
-                .absoluteOffset(x = 315.dp, y = 0.dp)
+                .absoluteOffset(240.dp, 60.dp)
+                .size(120.dp, 50.dp)
 
         ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "save event")
             Text(text = "Save")
         }
-
+    }
 }
 
-}
 
