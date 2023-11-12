@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import androidx.compose.foundation.layout.Arrangement
@@ -8,13 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
+import no.gruppe02.hiof.calendown.model.EventTimer
+import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 import java.text.SimpleDateFormat
 
@@ -43,12 +52,8 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
     val event = viewModel.event.value
     val eventTimer = viewModel.eventTimer.value
     val dateString = SimpleDateFormat.getDateTimeInstance().format(event.date)
-    val years = eventTimer.years.value
-    val months = eventTimer.months.value
-    val days = eventTimer.days.value
-    val hours = eventTimer.hours.value
-    val minutes = eventTimer.minutes.value
-    val seconds = eventTimer.seconds.value
+    val owner = viewModel.owner.value
+    val participants = viewModel.participants.toList()
 
 
     Scaffold(
@@ -83,8 +88,8 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 
     ) { innerPadding ->
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -99,58 +104,74 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             )
             GenericInformation(
                 title = event.title, 
-                owner = event.userId, 
+                owner = owner,
                 description = event.description, 
                 date = dateString
             )
-            if (event.participants?.isNotEmpty() == true){
-                Participants(participants = event.participants!!)
+            if (!event.participants.isNullOrEmpty()){
+                Participants(participants = participants)
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 6.dp)) {
-                Timer(
-                    years = years,
-                    months = months,
-                    days = days,
-                    hours = hours,
-                    minutes = minutes,
-                    seconds = seconds
-                )
+                Timer(eventTimer = eventTimer)
             }
         }
     }
 }
 
 @Composable
-fun GenericInformation(title: String, date: String, owner: String, description: String){
-    Text(text = title)
-    Text(text = date)
-    Text(text = owner)
-    Text(text = description)
-}
-
-@Composable
-fun Participants(participants: List<String>){
-    participants.forEach { 
-        Participant(participant = it)
+fun GenericInformation(title: String, date: String, owner: User, description: String){
+    Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(text = title, style = MaterialTheme.typography.headlineLarge)
+        Text(text = date, style = MaterialTheme.typography.headlineSmall)
+        Text(text = "by ${owner.username}", style = MaterialTheme.typography.headlineSmall)
+        Text(text = description)
     }
 }
 
 @Composable
-fun Participant(participant: String){
-    Text(text = participant)
+fun Participants(participants: List<User>){
+    Column {
+        Text(text = "Participants of this event:")
+
+        LazyColumn(content = {
+            participants.forEach { user ->
+                item {
+                    Participant(participant = user)
+                }
+            }
+        })
+
+    }
+
+}
+
+
+@Composable
+fun Participant(participant: User){
+    ListItem (headlineText = {
+        Text(text = participant.username)
+    },
+        leadingContent = {
+            Icon(imageVector = Icons.Default.Face,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp))
+        })
+    Divider()
 }
 
 @Composable
-fun Timer(years: String,
-          months: String,
-          days: String,
-          hours: String,
-          minutes: String,
-          seconds: String){
-    Column(verticalArrangement = Arrangement.Center,
+fun Timer(eventTimer: EventTimer){
+    val years = eventTimer.years.value
+    val months = eventTimer.months.value
+    val days = eventTimer.days.value
+    val hours = eventTimer.hours.value
+    val minutes = eventTimer.minutes.value
+    val seconds = eventTimer.seconds.value
+
+    Column(verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally){
         Text(
             text = years,
