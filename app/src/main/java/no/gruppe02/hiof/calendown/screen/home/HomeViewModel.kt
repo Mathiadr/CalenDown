@@ -28,7 +28,8 @@ class HomeViewModel @Inject constructor(
             try {
                 activeEvents.value = storageService.events.first().filter { event: Event ->
                     event.date.time >= System.currentTimeMillis()
-                }.associateWith { event: Event ->
+                }.sortedBy { event -> event.date.time  }
+                    .associateWith { event: Event ->
                     EventTimer(event.date.time)
                 }
             } catch(e: Exception) {
