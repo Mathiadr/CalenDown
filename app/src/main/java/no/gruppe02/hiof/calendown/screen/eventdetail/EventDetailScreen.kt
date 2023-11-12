@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
 import java.text.SimpleDateFormat
@@ -39,14 +40,15 @@ import java.text.SimpleDateFormat
 fun EventDetailScreen(modifier: Modifier = Modifier,
                       viewModel: EventDetailViewModel = hiltViewModel()
 ) {
-    val event by viewModel.event
+    val event = viewModel.event.value
+    val eventTimer = viewModel.eventTimer.value
     val dateString = SimpleDateFormat.getDateTimeInstance().format(event.date)
-    val years = viewModel.getRemainingYears()
-    val months = viewModel.getRemainingMonths()
-    val days = viewModel.getRemainingDays()
-    val hours = viewModel.getRemainingHours()
-    val minutes = viewModel.getRemainingMinutes()
-    val seconds = viewModel.getRemainingSeconds()
+    val years = eventTimer.years.value
+    val months = eventTimer.months.value
+    val days = eventTimer.days.value
+    val hours = eventTimer.hours.value
+    val minutes = eventTimer.minutes.value
+    val seconds = eventTimer.seconds.value
 
 
     Scaffold(
@@ -95,183 +97,150 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
-            Text(
-                text = "id: " + event.uid,
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = event.title,
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Text(
-                text = "Owned by " + event.userId,
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = event.description,
-                style = MaterialTheme.typography.bodyMedium
+            GenericInformation(
+                title = event.title, 
+                owner = event.userId, 
+                description = event.description, 
+                date = dateString
             )
             if (event.participants?.isNotEmpty() == true){
-                Column {
-                    Text(
-                        text = "participants:",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    event.participants?.forEach {participant ->
-                        Text(
-                            text = participant,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
+                Participants(participants = event.participants!!)
             }
-            Text(
-                text = dateString,
-                style = MaterialTheme.typography.bodyLarge
-            )
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 6.dp)) {
-                Column(verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = years,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "years",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
-                Column(verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = months,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "months",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
-                Column(verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = days,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "days",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
-                Column(verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = hours,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "hours",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
-                Column(verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = minutes,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "minutes",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
-                Column(verticalArrangement = Arrangement.SpaceAround,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(
-                        text = seconds,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .padding(end = 5.dp),
-                        textAlign = TextAlign.End)
-                    Text(
-                        text = "seconds",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(end = 2.dp),
-                        textAlign = TextAlign.End)
-                }
+                Timer(
+                    years = years,
+                    months = months,
+                    days = days,
+                    hours = hours,
+                    minutes = minutes,
+                    seconds = seconds
+                )
             }
         }
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)) {
-            Icon(imageVector = Icons.Default.Warning, contentDescription = null)
-            Text(text = event.title,
-                style = MaterialTheme.typography.headlineLarge)
-            Text(text = event.description,
-                style = MaterialTheme.typography.bodyMedium)
-            Text(text = event.date.toString(),
-                style = MaterialTheme.typography.bodyMedium)
-            Column {
-                Text(text = "Years: $years",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Months: $months",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Days: $days",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Hours: $hours",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Minutes: $minutes",
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Seconds: $seconds",
-                    style = MaterialTheme.typography.bodyMedium)
-            }
-
-
-        /* TODO: Implement
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(event.image)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(16.dp).width(400.dp).height(600.dp)
-        )
-        */
     }
-    }
-
-
-
 }
 
+@Composable
+fun GenericInformation(title: String, date: String, owner: String, description: String){
+    Text(text = title)
+    Text(text = date)
+    Text(text = owner)
+    Text(text = description)
+}
+
+@Composable
+fun Participants(participants: List<String>){
+    participants.forEach { 
+        Participant(participant = it)
+    }
+}
+
+@Composable
+fun Participant(participant: String){
+    Text(text = participant)
+}
+
+@Composable
+fun Timer(years: String,
+          months: String,
+          days: String,
+          hours: String,
+          minutes: String,
+          seconds: String){
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = years,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "years",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = months,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "months",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = days,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "days",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = hours,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "hours",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = minutes,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "minutes",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+    Column(verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally){
+        Text(
+            text = seconds,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier
+                .padding(end = 5.dp),
+            textAlign = TextAlign.End)
+        Text(
+            text = "seconds",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(end = 2.dp),
+            textAlign = TextAlign.End)
+    }
+}
 
 @Composable
 @Preview

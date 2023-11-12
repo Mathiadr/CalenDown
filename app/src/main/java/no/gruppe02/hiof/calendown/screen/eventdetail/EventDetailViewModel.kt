@@ -18,6 +18,7 @@ import no.gruppe02.hiof.calendown.api.getRemainingTime
 import no.gruppe02.hiof.calendown.api.getSeconds
 import no.gruppe02.hiof.calendown.api.getYears
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.service.StorageService
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class EventDetailViewModel @Inject constructor(
     : ViewModel() {
     // Expose screen UI to state
     val event = mutableStateOf(Event())
-    val remainingTimeLong = mutableLongStateOf(0L)
+    val eventTimer = mutableStateOf(EventTimer(0L))
 
     // Business logic
     init {
@@ -38,7 +39,7 @@ class EventDetailViewModel @Inject constructor(
         if (eventId != null) {
             viewModelScope.launch {
                 event.value = storageService.getEvent(eventId) ?: Event()
-                remainingTimeLong.longValue = getRemainingTime(event.value.date.time)
+                eventTimer.value = EventTimer(event.value.date.time)
                 handleCountdown()
             }
         }
@@ -53,31 +54,10 @@ class EventDetailViewModel @Inject constructor(
     fun handleCountdown(){
         viewModelScope.launch {
             while (isActive){
-                remainingTimeLong.longValue = getRemainingTime(event.value.date.time)
+                eventTimer.value.update()
                 // Delay for a second
                 delay(1000)
             }
         }
-    }
-
-    fun getRemainingSeconds(): String {
-        return getSeconds(remainingTimeLong.longValue).toString()
-    }
-    fun getRemainingMinutes(): String{
-        return getMinutes(remainingTimeLong.longValue).toString()
-    }
-    fun getRemainingHours(): String{
-        return getHours(remainingTimeLong.longValue).toString()
-    }
-    fun getRemainingDays(): String{
-        return getDays(remainingTimeLong.longValue).toString()
-    }
-
-    fun getRemainingMonths(): String{
-        return getMonths(remainingTimeLong.longValue).toString()
-    }
-
-    fun getRemainingYears(): String{
-        return getYears(remainingTimeLong.longValue).toString()
     }
 }
