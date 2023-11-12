@@ -65,8 +65,23 @@ object Datasource {
     val invitations = listOf(
         Invitation(
             recipientId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
+            senderId = "kwA1lNGBRZd0zMluHLoM3WC0k763",
+            eventId = "tq3Hx5rXn9aY7bYzaLpF"
+        ),
+        Invitation(
+            recipientId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
             senderId = "bmtqUlv0nGdZ4co2m64ud1WaKwG2",
-            eventId = "tTo7pTkRNSIPHtv6Ephw"
+            eventId = "5PpWmaFDaUzvNaYJ9egP"
+        ),
+        Invitation(
+            recipientId = "bmtqUlv0nGdZ4co2m64ud1WaKwG2",
+            senderId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
+            eventId = "8128KNIn7wIE5lyF8iI1"
+        ),
+        Invitation(
+            recipientId = "kwA1lNGBRZd0zMluHLoM3WC0k763",
+            senderId = "OTVjFVYXSVNpvQLyrNTBgD7EGEg2",
+            eventId = "8128KNIn7wIE5lyF8iI1"
         )
     )
     private fun addFutureDate(days: Int, months: Int, years: Int): Date{

@@ -29,8 +29,11 @@ class InvitationServiceImpl @Inject constructor(
                     it.forEach { invitation -> invitation.recipientId = user.uid }
                 }
         }
+
+    override suspend fun create(invitation: Invitation) {
+        firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}").add(invitation)
+    }
     override suspend fun delete(invitation: Invitation) {
-        println("Deleting invitation ${invitation.uid}... ")
         firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}").document(invitation.uid).delete()
     }
 

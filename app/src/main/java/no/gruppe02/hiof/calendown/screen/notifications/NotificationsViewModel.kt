@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import no.gruppe02.hiof.calendown.dummydata.Datasource
 import no.gruppe02.hiof.calendown.model.Invitation
+import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class NotificationsViewModel @Inject constructor(
     private val invitationService: InvitationService,
     private val userService: UserService,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val authenticationService: AuthenticationService
 ) : ViewModel() {
 
     val invitations = mutableStateListOf<InvitationUiState>()
@@ -33,6 +36,15 @@ class NotificationsViewModel @Inject constructor(
                         eventName = getEventName(invitation.eventId).toString()
                     )
                 )
+            }
+            if (invitations.isEmpty()) {
+                println("List empty... creating dummies")
+                Datasource.invitations.forEach { invitation ->
+                    if (invitation.recipientId == authenticationService.currentUserId) {
+                        invitationService.create(invitation)
+                    }
+                }
+
             }
         }
     }
