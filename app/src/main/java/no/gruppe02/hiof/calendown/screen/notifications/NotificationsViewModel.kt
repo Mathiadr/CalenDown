@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
@@ -46,10 +47,18 @@ class NotificationsViewModel @Inject constructor(
             return@withContext storageService.getEvent(eventId)?.title
     }
 
-    fun acceptInvitation(){
-
+    fun getAcceptInvitation(invitation: Invitation) {
+        println("User ${invitation.recipientId} accepted invitation ${invitation.uid}")
+        viewModelScope.launch {
+            storageService.addParticipant(invitation.eventId, invitation.recipientId)
+            invitationService.delete(invitation)
+        }
     }
-    fun declineInvitation(){
 
+    fun getDeclineInvitation(invitation: Invitation) {
+        println("User declined invitation ${invitation.uid}")
+        viewModelScope.launch {
+            invitationService.delete(invitation)
+        }
     }
 }

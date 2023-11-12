@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.service.impl
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
@@ -42,11 +43,16 @@ constructor(
         return firestore.collection(EVENT_COLLECTION).add(event).await().id
     }
 
+
+
     override suspend fun delete(eventId: String) {
         firestore.collection(EVENT_COLLECTION).document(eventId).delete()
     }
+    override suspend fun addParticipant(eventId: String, userId: String) {
+        firestore.collection(EVENT_COLLECTION).document(eventId).update(PARTICIPANTS_FIELD, FieldValue.arrayUnion(userId))
+    }
 
-    companion object {
+            companion object {
         private const val EVENT_COLLECTION = "events"
         private const val USER_ID_FIELD = "userId"
         private const val PARTICIPANTS_FIELD = "participants"

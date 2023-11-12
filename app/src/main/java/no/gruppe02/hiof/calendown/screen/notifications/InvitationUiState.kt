@@ -6,5 +6,5 @@ import no.gruppe02.hiof.calendown.model.Invitation
 data class InvitationUiState(
     val invitation: Invitation,
     val senderName: String,
-    val eventName: String
+    val eventName: String,
 )

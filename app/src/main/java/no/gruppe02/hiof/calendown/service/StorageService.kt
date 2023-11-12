@@ -12,4 +12,6 @@ interface StorageService {
     suspend fun save(event: Event): String
     suspend fun delete (eventId: String)
 
+    suspend fun addParticipant(eventId: String, userId: String)
+
 }

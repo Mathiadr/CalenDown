@@ -47,6 +47,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    // TODO: Remove from production
     fun deleteAll(){
         viewModelScope.launch {
             activeEvents.value.keys.forEach { event: Event -> storageService.deleteEvent(event) }

@@ -114,17 +114,17 @@ fun InvitationCard(
                     style = MaterialTheme.typography.labelMedium)
             }
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
-                AcceptButton()
-                DeclineButton()
+                AcceptButton { viewModel.getAcceptInvitation(invitation.invitation) }
+                DeclineButton { viewModel.getAcceptInvitation(invitation.invitation) }
             }
         }
     }
 }
 
 @Composable
-fun AcceptButton(){
+fun AcceptButton(onAccept: () -> Unit){
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = { onAccept() },
         modifier = Modifier
             .clip(CircleShape)
             .size(40.dp),
@@ -141,9 +141,9 @@ fun AcceptButton(){
 }
 
 @Composable
-fun DeclineButton(){
+fun DeclineButton(onDecline: () -> Unit){
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = { onDecline() },
         modifier = Modifier
             .clip(CircleShape)
             .size(40.dp),
