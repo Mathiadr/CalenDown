@@ -47,8 +47,7 @@ fun BasicTextField (
     OutlinedTextField(
         singleLine = true,
         modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Gray),
+            .fillMaxWidth(),
         value = value,
         onValueChange = { onNewValue(it) },
         label = { Text(text = label) },

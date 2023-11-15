@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import no.gruppe02.hiof.calendown.R
 
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -63,6 +65,10 @@ fun ProfileScreen(
             )
         }
         Text(text = "Logged in as " + viewModel.userId)
+        Text(text = "Logged in as " + viewModel.user.value.username)
+
+
+
     }
     }
 }
