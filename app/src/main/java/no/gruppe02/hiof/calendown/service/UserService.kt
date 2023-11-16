@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.service
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.User
@@ -9,4 +10,6 @@ interface UserService {
     suspend fun delete(user: User): Unit
     suspend fun get(userId: String): User?
     suspend fun save(user: User): Void
+    suspend fun uploadImage(img: Uri)
+
 }

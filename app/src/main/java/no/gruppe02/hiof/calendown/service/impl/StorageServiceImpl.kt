@@ -21,6 +21,7 @@ constructor(
     private val auth: AuthenticationService
 ) : StorageService {
 
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override val events: Flow<List<Event>> get() = auth.currentUser.flatMapLatest { user ->
         firestore.collection(EVENT_COLLECTION).where(

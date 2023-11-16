@@ -1,7 +1,11 @@
 package no.gruppe02.hiof.calendown.screen.profile
 
+import android.net.Uri
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,14 +24,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService,
     private val userService: UserService
 ) : ViewModel() {
 
     val userId = authenticationService.currentUserId
     val user = mutableStateOf(User())
+
+    var selectedImgUri by mutableStateOf<Uri?>(null)
+
     init {
         viewModelScope.launch {  user.value = getUser(userId)!! }
+    }
+
+    fun uploadProfileImg (img: Uri) {
+        viewModelScope.launch {
+            userService.uploadImage(img)
+        }
     }
 
     private suspend fun getUser(userId: String) =

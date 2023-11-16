@@ -1,10 +1,13 @@
 package no.gruppe02.hiof.calendown.screen.profile
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,16 +21,21 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.R
-
+import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -56,19 +64,23 @@ fun ProfileScreen(
     ) { innerPadding -> Column (
         modifier = Modifier
             .padding(innerPadding)
-            .padding(28.dp)){
-        Row {
+            .padding(15.dp)){
+        Column {
             RoundImage(
                 image = painterResource(R.drawable.profilepic),
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(150.dp)
             )
+            Text(
+                text = viewModel.user.value.username,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            
+            ImgPicker(viewModel)
         }
-        Text(text = "Logged in as " + viewModel.userId)
-        Text(text = "Logged in as " + viewModel.user.value.username)
 
-
-
+        //Text(text = "Logged in as " + viewModel.userId)
     }
     }
 }
@@ -90,5 +102,45 @@ fun RoundImage (
             )
             .padding(3.dp)
             .clip(CircleShape))
+}
+
+@Composable
+fun ImgPicker(viewModel: ProfileViewModel) {
+
+    var selectedImgUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> selectedImgUri = uri},
+    )
+    ElevatedButtonComponent(
+        label = "Rediger profilbilde",
+        onClick = {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        })
+    if (selectedImgUri != null) {
+        ElevatedButtonComponent(
+            label = "Lagre",
+            onClick = { viewModel.uploadProfileImg(selectedImgUri!!) })
+    }
+}
+
+@Composable
+fun ImgagePicker(onImageSelected: (Uri) -> Unit) {
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {  uri: Uri? -> uri?.let { onImageSelected(it) }},
+    )
+    ElevatedButtonComponent(
+        label = "Rediger profilbilde",
+        onClick = {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        })
 }
 
