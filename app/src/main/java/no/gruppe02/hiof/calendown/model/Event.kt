@@ -11,7 +11,5 @@ data class Event(
     var description: String = "",
     var icon: String = "",
     var date: Date = Date(),
-    var date2: String = "",
-
     var participants: List<String>? = emptyList()
     )
