@@ -47,8 +47,5 @@ class ProfileViewModel @Inject constructor(
         withContext(Dispatchers.Default) {
             return@withContext userService.get(userId)
         }
-
-
-
 }
 
