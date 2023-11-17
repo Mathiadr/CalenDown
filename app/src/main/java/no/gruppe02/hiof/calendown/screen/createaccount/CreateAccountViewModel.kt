@@ -75,7 +75,6 @@ class CreateAccountViewModel @Inject constructor(
                     username = username,
                     email = email,
                     friends = emptyList(),
-                    invitations = emptyList()
                 ))
             }
             catch(e: Exception) {

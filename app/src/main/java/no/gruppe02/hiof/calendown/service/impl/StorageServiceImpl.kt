@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.service.impl
 
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,24 +13,22 @@ import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.StorageService
+import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject
 
-class StorageServiceImpl
-@Inject
-constructor(
+class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val auth: AuthenticationService
-) : StorageService {
+    private val userService: UserService)
+    : StorageService {
+    private val TAG = this::class.simpleName
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val events: Flow<List<Event>> get() = auth.currentUser.flatMapLatest { user ->
+    override val events: Flow<List<Event>> get() =
         firestore.collection(EVENT_COLLECTION).where(
             Filter.or(
-                Filter.arrayContains(PARTICIPANTS_FIELD, user.uid),
-                Filter.equalTo(USER_ID_FIELD, user.uid),
+                Filter.arrayContains(PARTICIPANTS_FIELD, userService.currentUserId),
+                Filter.equalTo(USER_ID_FIELD, userService.currentUserId),
                 )).dataObjects()
-    }
+
 
     override suspend fun deleteEvent(event: Event){
         firestore.collection(EVENT_COLLECTION).document(event.uid).delete()
@@ -41,16 +40,36 @@ constructor(
 
 
     override suspend fun save(event: Event): String {
-        return firestore.collection(EVENT_COLLECTION).add(event).await().id
+        return firestore.collection(EVENT_COLLECTION).add(event)
+            .addOnSuccessListener {
+                Log.i(TAG, "Event saved to Firestore")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Error occurred while saving event to Firestore:\n$it")
+            }
+            .await().id
     }
 
 
 
     override suspend fun delete(eventId: String) {
         firestore.collection(EVENT_COLLECTION).document(eventId).delete()
+            .addOnSuccessListener {
+                Log.i(TAG, "Event deleted from firebase")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Error occurred while deleting event:\n$it")
+            }
+
     }
     override suspend fun addParticipant(eventId: String, userId: String) {
         firestore.collection(EVENT_COLLECTION).document(eventId).update(PARTICIPANTS_FIELD, FieldValue.arrayUnion(userId))
+            .addOnSuccessListener {
+                Log.i(TAG, "Participant added to event")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Error occurred while adding participant:\n${it}")
+            }
     }
 
             companion object {

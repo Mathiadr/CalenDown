@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen.notifications
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.gruppe02.hiof.calendown.dummydata.Datasource
 import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
@@ -23,6 +23,7 @@ class NotificationsViewModel @Inject constructor(
     private val storageService: StorageService,
     private val authenticationService: AuthenticationService
 ) : ViewModel() {
+    private val TAG = this::class.simpleName
 
     val invitations = mutableStateListOf<InvitationUiState>()
 
@@ -37,15 +38,6 @@ class NotificationsViewModel @Inject constructor(
                     )
                 )
             }
-            if (invitations.isEmpty()) {
-                println("List empty... creating dummies")
-                Datasource.invitations.forEach { invitation ->
-                    if (invitation.recipientId == authenticationService.currentUserId) {
-                        invitationService.create(invitation)
-                    }
-                }
-
-            }
         }
     }
 
@@ -59,16 +51,16 @@ class NotificationsViewModel @Inject constructor(
             return@withContext storageService.getEvent(eventId)?.title
     }
 
-    fun getAcceptInvitation(invitation: Invitation) {
-        println("User ${invitation.recipientId} accepted invitation ${invitation.uid}")
+    fun acceptInvitation(invitation: Invitation) {
+        Log.d(TAG, "User ${invitation.recipientId} accepted invitation ${invitation.uid}")
         viewModelScope.launch {
             storageService.addParticipant(invitation.eventId, invitation.recipientId)
             invitationService.delete(invitation)
         }
     }
 
-    fun getDeclineInvitation(invitation: Invitation) {
-        println("User declined invitation ${invitation.uid}")
+    fun declineInvitation(invitation: Invitation) {
+        Log.d(TAG, "User declined invitation ${invitation.uid}")
         viewModelScope.launch {
             invitationService.delete(invitation)
         }

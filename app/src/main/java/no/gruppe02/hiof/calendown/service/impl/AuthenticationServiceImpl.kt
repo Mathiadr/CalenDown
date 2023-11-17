@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.service.impl
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -7,26 +8,18 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.service.AuthenticationService
+import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject
 
 
-class AuthenticationServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AuthenticationService {
-
+class AuthenticationServiceImpl @Inject constructor(
+    private val auth: FirebaseAuth)
+    : AuthenticationService {
+    private val TAG = this::class.simpleName
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
-
     override val hasUser: Boolean
         get() = auth.currentUser != null
-
-    override val currentUser: Flow<User>
-        get() = callbackFlow {
-            val listener =
-                FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User( it.uid) } ?: User())
-                }
-            auth.addAuthStateListener(listener)
-            awaitClose { auth.removeAuthStateListener(listener) }
-        }
 
     override suspend fun createAnonymousAccount() {
         auth.signInAnonymously().await()
@@ -34,13 +27,16 @@ class AuthenticationServiceImpl @Inject constructor(private val auth: FirebaseAu
 
     override suspend fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }.await()
+            .addOnCompleteListener { onResult(it.exception) }
+            .addOnFailureListener { onResult(it.cause) }
+            .await()
     }
 
 
     override suspend fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }.await()
+        Log.i(TAG, "New account registered to Firebase")
     }
     /*
     override suspend fun signOut() {
@@ -50,5 +46,9 @@ class AuthenticationServiceImpl @Inject constructor(private val auth: FirebaseAu
     }
 
      */
+
+    companion object{
+        private const val TAG = "AuthenticationServiceImpl"
+    }
 }
 

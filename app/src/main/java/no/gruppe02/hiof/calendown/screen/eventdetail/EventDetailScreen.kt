@@ -2,7 +2,9 @@
 
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
@@ -12,11 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +36,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -54,7 +62,14 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
     val dateString = SimpleDateFormat.getDateTimeInstance().format(event.date)
     val owner = viewModel.owner.value
     val participants = viewModel.participants.toList()
+    val addFriendsToEventList = viewModel.friendList.collectAsStateWithLifecycle()
 
+    viewModel.getFriendList()
+    Log.d("Screen", "Count: ${addFriendsToEventList.value.size}")
+    addFriendsToEventList.value.forEach { user ->
+        Log.d("Screen", "\tName: ${user.username}")
+
+    }
 
     Scaffold(
         topBar = {
@@ -71,20 +86,38 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
-            IconButton(
-                onClick = {
-                          viewModel.deleteEvent()
-                },
-                modifier = Modifier
-                    .absoluteOffset(x = 10.dp, y = 10.dp)
-            ) {
-                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "Delete event",
-                    modifier = Modifier
-                        .size(50.dp, 50.dp))
+            Box(modifier = Modifier){
+                val show = remember {
+                    mutableStateOf(false)
+                }
 
-            }
+                IconButton(onClick = { show.value = !show.value}) {
+                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Dropdown Menu")
+                }
+                DropdownMenu(expanded = show.value, onDismissRequest = { show.value = false }) {
+                    DropdownMenuItem(
+                        text = { Text(text = "Delete Event") },
+                        onClick = { viewModel.deleteEvent() },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete this event"
+                            )
+                        } )
+                    DropdownMenuItem(
+                        text = { Text(text = "Add friends to event") },
+                        onClick = { /* TODO */ },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.AddCircle,
+                                contentDescription = "Delete this event"
+                            )
+                        })
+                    }
 
-        },
+
+                }
+            },
 
     ) { innerPadding ->
         Column(
@@ -97,7 +130,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
             Icon(
                 imageVector = DefaultIcons.defaultIcons.getOrDefault(
                     event.icon,
-                    Icons.Default.ThumbUp
+                    Icons.Default.DateRange
                 ),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
@@ -108,7 +141,23 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 description = event.description, 
                 date = dateString
             )
-            if (!event.participants.isNullOrEmpty()){
+            LazyColumn(content = {
+                addFriendsToEventList.value.forEach { friend ->
+                    item {
+                        ListItem (headlineText = {
+                            Text(text = friend.username)
+                        },
+                            leadingContent = {
+                                Icon(imageVector = Icons.Default.Face,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(25.dp))
+                            })
+                        Divider()
+                    }
+                    viewModel.getFriendList()
+                }
+            })
+            if (event.participants.isNotEmpty()){
                 Participants(participants = participants)
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
@@ -160,6 +209,11 @@ fun Participant(participant: User){
                 modifier = Modifier.size(25.dp))
         })
     Divider()
+}
+
+@Composable
+fun EventDropdownMenu(){
+
 }
 
 @Composable
