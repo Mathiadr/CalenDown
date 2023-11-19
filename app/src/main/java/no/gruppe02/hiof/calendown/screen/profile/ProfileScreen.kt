@@ -26,25 +26,30 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,11 +67,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 import no.gruppe02.hiof.calendown.components.HeaderText
+import no.gruppe02.hiof.calendown.model.User
 
 
 @SuppressLint("StateFlowValueCalledInComposition") // ?
@@ -120,6 +127,7 @@ fun PrimaryInfo(viewModel: ProfileViewModel){
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
         tonalElevation = 4.dp,
         shadowElevation = 4.dp) {
         Column(
@@ -158,11 +166,14 @@ fun PrimaryInfo(viewModel: ProfileViewModel){
 @Composable
 fun FriendListCard(viewModel: ProfileViewModel){
     val friends = viewModel.friendList.collectAsStateWithLifecycle().value
+    val openSendFriendRequestDialog = remember { mutableStateOf(false) }
+
     viewModel.getFriendList()
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
         tonalElevation = 4.dp,
         shadowElevation = 4.dp) {
         Column(
@@ -212,12 +223,15 @@ fun FriendListCard(viewModel: ProfileViewModel){
             Row(modifier = Modifier
                 .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = { /*TODO*/ }) {
+                TextButton(onClick = { openSendFriendRequestDialog.value = true }) {
                     Text(text = "Add friend")
                 }
             }
         }
 
+    }
+    if (openSendFriendRequestDialog.value) {
+        SearchDialog(viewModel = viewModel, closeDialog = { openSendFriendRequestDialog.value = false })
     }
 }
 
@@ -285,5 +299,84 @@ fun ImgagePicker(onImageSelected: (Uri) -> Unit) {
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         })
+}
+
+@Composable
+fun SearchDialog(
+    viewModel: ProfileViewModel,
+    closeDialog: () -> Unit){
+
+    var searchQuery by remember { mutableStateOf("") }
+    var searchResult = viewModel.searchResults.collectAsState().value
+    val selectedUserId = remember { mutableStateOf("") }
+
+    Dialog(
+        onDismissRequest = { closeDialog() }){
+        Surface(modifier = Modifier
+            .width(300.dp)
+            .height(400.dp)
+            .padding(16.dp),
+            shape = RoundedCornerShape(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                HeaderText(text = "Search for user")
+                Divider()
+                TextField(
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                        viewModel.searchUsers(it)
+                    })
+                if (searchResult.isNotEmpty()){
+                    LazyColumn(
+                        modifier = Modifier.height(200.dp),
+                        content = {
+                            searchResult.forEach { user ->
+                                item {
+                                    ListItem (
+                                        headlineText = {
+                                            Text(text = user.username)
+                                        },
+                                        leadingContent = {
+                                            Icon(imageVector = Icons.Default.Face,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(25.dp))
+                                        },
+                                        trailingContent = {
+                                                RadioButton(
+                                                    selected = user.uid == selectedUserId.value,
+                                                    onClick = {
+                                                        if (user.uid != selectedUserId.value) selectedUserId.value = user.uid
+                                                        else selectedUserId.value = ""
+                                                })
+                                        })
+                                }
+                                viewModel.getFriendList()
+                            }
+                        })
+                    }
+                Divider()
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly) {
+                    TextButton(
+                        onClick = {
+                            Log.d("ProfileScreen", "Sending friend request to $selectedUserId")
+                            viewModel.sendFriendRequest(selectedUserId.value)
+                            closeDialog()
+                        },
+                        enabled = selectedUserId.value.isNotEmpty()) {
+                        Text(text = "Send friend request")
+                    }
+                    TextButton(onClick = { closeDialog() }) {
+                        Text(text = "Cancel")
+                    }
+                }
+            }
+        }
+    }
 }
 

@@ -82,11 +82,8 @@ class UserServiceImpl @Inject constructor(
                         val currentFriends = snapshot.get(FRIENDS_FIELD) as List<String>
                         launch {
                             val collection = firestore.collection(USER_COLLECTION).where(
-                                Filter.and(
-                                    Filter.greaterThanOrEqualTo(USER_USERNAME_FIELD, nameQuery),
-                                    Filter.notInArray(USER_ID, currentFriends))
+                                Filter.greaterThanOrEqualTo(USER_USERNAME_FIELD, nameQuery)
                             )
-
                             trySend(collection.get().await().toObjects())
                         }
                     }catch (e: Exception){

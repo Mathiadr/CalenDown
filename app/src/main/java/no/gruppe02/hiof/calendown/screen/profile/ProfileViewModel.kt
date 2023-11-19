@@ -63,6 +63,12 @@ class ProfileViewModel @Inject constructor(
             return@withContext userService.get(userId)
         }
 
+    fun sendFriendRequest(recipientId: String){
+        viewModelScope.launch {
+            userService.addFriend(currentUser.value.uid, recipientId)
+        }
+    }
+
     fun getFriendList() {
         viewModelScope.launch {
             try {

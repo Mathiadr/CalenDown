@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,11 +40,13 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(28.dp)
+            .background(MaterialTheme.colorScheme.background),
+
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HeaderText(text = stringResource(R.string.log_in))
