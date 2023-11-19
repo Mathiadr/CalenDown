@@ -377,7 +377,7 @@ fun RemoveParticipantFromEventDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly) {
                     TextButton(
                         onClick = {
-                            Log.d("EventDetailScreen", "Sending invites to ${selectedParticipants.size}")
+                            Log.d("EventDetailScreen", "Removed ${selectedParticipants.size} participants")
                             selectedParticipants.forEach { user -> viewModel.removeFromEvent(user.uid) }
                             closeDialog()
                                   },
