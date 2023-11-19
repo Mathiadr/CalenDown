@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
@@ -165,6 +165,7 @@ fun Participants(participants: List<User>){
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Participant(participant: User){
     ListItem (headlineText = {
@@ -377,7 +378,7 @@ fun RemoveParticipantFromEventDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly) {
                     TextButton(
                         onClick = {
-                            Log.d("EventDetailScreen", "Sending invites to ${selectedParticipants.size}")
+                            Log.d("EventDetailScreen", "Removed ${selectedParticipants.size} participants")
                             selectedParticipants.forEach { user -> viewModel.removeFromEvent(user.uid) }
                             closeDialog()
                                   },

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,7 +27,6 @@ import no.gruppe02.hiof.calendown.components.ClickableTextComponent
 import no.gruppe02.hiof.calendown.components.EmailField
 import no.gruppe02.hiof.calendown.components.HeaderText
 import no.gruppe02.hiof.calendown.components.PasswordField
-import no.gruppe02.hiof.calendown.ui.theme.Gray
 
 @Composable
 fun LoginScreen(
@@ -84,7 +84,6 @@ fun LoginScreen(
             Divider(
                 modifier = Modifier
                     .fillMaxWidth(),
-                color = Gray,
                 thickness = 1.dp
             )
 
