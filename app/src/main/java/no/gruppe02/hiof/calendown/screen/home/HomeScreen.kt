@@ -1,13 +1,17 @@
 package no.gruppe02.hiof.calendown.screen.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -20,6 +24,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -48,8 +53,6 @@ fun HomeScreen(modifier: Modifier = Modifier,
                viewModel: HomeViewModel = hiltViewModel()) {
     val activeEvents by viewModel.activeEvents.collectAsStateWithLifecycle(emptyMap())
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,19 +76,32 @@ fun HomeScreen(modifier: Modifier = Modifier,
         }
 
     ) { innerPadding ->
-        Column (
+        Surface(
             modifier = Modifier
-                .padding(innerPadding)){
-            LazyColumn(content = {
-                activeEvents.entries.forEach{ entry ->
-                    item(entry.key.uid) {
-                        EventCard(
-                            event = entry.key,
-                            eventTimer = entry.value,
-                            onEventClick = onEventClick)
-                }
-                }
-            })
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            Column (
+                modifier = Modifier
+                    .padding()
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                LazyColumn(
+
+                    content = {
+                        activeEvents.entries.forEach{ entry ->
+                            item(entry.key.uid) {
+                                EventCard(
+                                    event = entry.key,
+                                    eventTimer = entry.value,
+                                    onEventClick = onEventClick)
+                            }
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -143,9 +159,7 @@ fun EventCard(
         modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .padding(top = 6.dp)
             .clickable { },
-
 
     ) {
         Row (

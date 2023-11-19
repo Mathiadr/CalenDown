@@ -12,6 +12,7 @@ interface UserService {
     fun getUserData(userId: String): Flow<User>
 
     suspend fun getFriendList(userId: String): Flow<List<User>>
+    suspend fun searchUser(nameQuery: String): Flow<List<User>>
     suspend fun getMultipleUsers(userIds: List<String>): Flow<List<User>>
     suspend fun delete(user: User)
     suspend fun get(userId: String): User?

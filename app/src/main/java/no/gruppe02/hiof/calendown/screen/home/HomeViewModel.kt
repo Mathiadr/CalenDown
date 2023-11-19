@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
             userService.addFriend(userId, dummyFriend.uid)
             DummyGenerator.eventList(userId, dummyFriend).forEach {event ->
                 val docId = storageService.save(event)
-                if (!event.participants.contains(userId) || event.userId != userId){
+                if (!event.participants.contains(userId) && event.userId != userId){
                     invitationService.create(Invitation(recipientId = userId, senderId = dummyFriend.uid, eventId = docId))
                 }
 

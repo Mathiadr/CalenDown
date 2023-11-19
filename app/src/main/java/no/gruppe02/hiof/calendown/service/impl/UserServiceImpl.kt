@@ -4,8 +4,10 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import android.net.Uri
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
 import kotlinx.coroutines.channels.awaitClose
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.Flow
@@ -63,6 +65,38 @@ class UserServiceImpl @Inject constructor(
             }
         }
     // TODO: HANDLE ANON USE CASE
+
+
+    override suspend fun searchUser(nameQuery: String): Flow<List<User>> =
+        callbackFlow {
+            val docRef = firestore.collection(USER_COLLECTION).document(currentUserId)
+
+            val listenerRegistration = docRef.addSnapshotListener { snapshot, error ->
+                if (error != null){
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    try {
+                        val currentFriends = snapshot.get(FRIENDS_FIELD) as List<String>
+                        launch {
+                            val collection = firestore.collection(USER_COLLECTION).where(
+                                Filter.greaterThanOrEqualTo(USER_USERNAME_FIELD, nameQuery)
+                            )
+                            trySend(collection.get().await().toObjects())
+                        }
+                    }catch (e: Exception){
+                        Log.e(TAG, "Exception occurred while searching for queried user")
+                    }
+                }
+
+            }
+            awaitClose {
+                listenerRegistration.remove()
+            }
+        }
+
 
     override suspend fun getFriendList(userId: String): Flow<List<User>> =
         callbackFlow {
@@ -150,6 +184,7 @@ class UserServiceImpl @Inject constructor(
     }
 
     override suspend fun addFriend(userId: String, friendId: String) {
+        // TODO: Make a transaction instead to avoid discrepancy?
         firestore.collection(USER_COLLECTION).document(userId)
             .update(FRIENDS_FIELD, FieldValue.arrayUnion(friendId))
         firestore.collection(USER_COLLECTION).document(friendId)
@@ -165,7 +200,8 @@ class UserServiceImpl @Inject constructor(
 
     companion object {
         private const val USER_COLLECTION = "users"
-        private const val USER_ID_FIELD = "id"
+        private const val USER_USERNAME_FIELD = "username"
+        private const val USER_ID = "id"
         private const val FRIENDS_FIELD = "friends"
     }
 }
