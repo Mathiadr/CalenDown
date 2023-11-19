@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -80,6 +81,7 @@ fun CalendownApp() {
                 bottomNavigationScreens = bottomNavigationScreens,
                 bottomNavigationState = bottomNavigationState
             )},
+
     ) { innerPadding ->
 
         NavHost(
@@ -94,8 +96,6 @@ fun CalendownApp() {
                 },
                     onAddEventClick = { navController.navigate(Screen.AddEvent.route)},
                     )
-
-
             }
             composable(Screen.LogIn.route) {
                 LoginScreen(
@@ -166,7 +166,9 @@ fun BottomNavigationBar (
     AnimatedVisibility(
         visible = bottomNavigationState.value) {
 
-        NavigationBar {
+        NavigationBar(
+
+        ) {
             //TODO: Implementer funksjonalitet for å håndtere oppsamling i BackStackEntry
             //val navBackStackEntry by navController.currentBackStackEntryAsState()
             //val currentDestination = navBackStackEntry?.destination?.route
