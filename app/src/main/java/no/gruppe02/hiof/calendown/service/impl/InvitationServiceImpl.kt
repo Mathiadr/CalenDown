@@ -35,11 +35,22 @@ class InvitationServiceImpl @Inject constructor(
         }
 
     override suspend fun create(invitation: Invitation) {
-        firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}").add(invitation).await()
+        firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}")
+            .add(invitation)
+            .addOnFailureListener { Log.d(TAG, "Error occurred while creating new invitation for user ${invitation.recipientId}") }
+            .addOnSuccessListener { Log.d(TAG, "Invitation successfully created") }
+            .await()
         Log.d(TAG, "Invitation created")
     }
     override suspend fun delete(invitation: Invitation) {
-        firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}").document(invitation.uid).delete()
+        firestore.collection(USER_COLLECTION)
+            .document(invitation.recipientId)
+            .collection(INVITATION_SUBCOLLECTION)
+            .document(invitation.uid)
+            .delete()
+            .addOnFailureListener { Log.d(TAG, "Error occurred while deleting Invitation ${invitation.uid} for user ${invitation.recipientId}") }
+            .addOnSuccessListener { Log.d(TAG, "Invitation deleted") }
+
     }
 
     companion object {

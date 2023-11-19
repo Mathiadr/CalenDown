@@ -11,8 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,10 +40,13 @@ class EventDetailViewModel @Inject constructor(
     private val TAG = this::class.simpleName
 
     // Expose screen UI to state
+    val currentUserId = userService.currentUserId
+
     val event = mutableStateOf(Event())
     val eventTimer = mutableStateOf(EventTimer(0L))
     val owner = mutableStateOf(User())
-    val participants = mutableStateListOf<User>()
+    private val _participants = MutableStateFlow<List<User>>(emptyList())
+    val participants = _participants.asStateFlow()
 
     private val _friendList = MutableStateFlow<List<User>>(emptyList())
     val friendList = _friendList.asStateFlow()
@@ -50,16 +55,14 @@ class EventDetailViewModel @Inject constructor(
     // Business logic
     init {
         val eventId = savedStateHandle.get<String>(EVENT_ID)
+
         if (eventId != null) {
             viewModelScope.launch {
                 event.value = storageService.getEvent(eventId) ?: Event()
                 eventTimer.value = EventTimer(event.value.date.time)
-                owner.value = getUser(event.value.userId)!! // TODO: Catch error
-                event.value.participants?.forEach { participant -> participants.add(getUser(participant)!!)
-                }
+                owner.value =  userService.get(event.value.userId)!! // TODO: Catch error
                 getFriendList()
-                Log.d(TAG, "${_friendList.value.size} Friends acquired")
-                _friendList.value.forEach { friend -> Log.d(TAG, "(${friend.uid}): ${friend.username}") }
+                getParticipants()
                 handleCountdown()
             }
         }
@@ -83,7 +86,7 @@ class EventDetailViewModel @Inject constructor(
 
     private suspend fun getUser(userId: String) =
         withContext(Dispatchers.Default) {
-            return@withContext userService.get(userId)
+            return@withContext userService.getUserData(userId)
         }
 
     fun getFriendList(){
@@ -91,7 +94,7 @@ class EventDetailViewModel @Inject constructor(
             try {
                 userService.getFriendList(userService.currentUserId)
                     // Filter out friends who already have access to the event
-                    .map { friends -> friends.filter { !participants.contains(it) } }
+                    .map { friends -> friends.filter { !_participants.value.contains(it) } }
                     .collect {
                         friends -> _friendList.value = friends
                     }
@@ -102,14 +105,32 @@ class EventDetailViewModel @Inject constructor(
             }
         }
     }
+    fun getParticipants() =
+        viewModelScope.launch {
+            try {
+                userService.getMultipleUsers(event.value.participants).collect { participants ->
+                    _participants.value = participants
+                }
+            } catch (e: Exception){
+                Log.e(TAG, "Error occurred while fetching participants", e)
+            }
+        }
 
     fun createInvitation(recipientId: String) =
         viewModelScope.launch {
+            Log.d(TAG, "Creating invitation for $recipientId")
             invitationService.create(Invitation(
                 recipientId = recipientId,
                 senderId = userService.currentUser.first().uid,
                 eventId = event.value.uid
             ))
         }
+
+    fun removeFromEvent(participantId: String) =
+        viewModelScope.launch {
+            Log.d(TAG, "Removing user ${participantId} from event")
+            storageService.removeParticipant(event.value.uid, participantId)
+        }
+
 
 }
