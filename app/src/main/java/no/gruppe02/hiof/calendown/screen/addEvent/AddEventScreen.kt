@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -105,31 +107,30 @@ fun AddEventScreenContent(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Event information",
-                modifier = Modifier.absoluteOffset(5.dp, 0.dp),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            OutlinedTextField(
-                singleLine = true,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .absoluteOffset(0.dp, (-50).dp),
-                value = eventName.value,
-                onValueChange = { eventName.value = it },
-                label = { Text(text = "Enter eventname") },
-            )
-
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Event information",
+            style = MaterialTheme.typography.headlineSmall,
+        )
         OutlinedTextField(
             singleLine = true,
             modifier = modifier
-                .fillMaxWidth()
-                .absoluteOffset(0.dp, (-100).dp),
+                .fillMaxWidth(),
+            value = eventName.value,
+            onValueChange = { eventName.value = it },
+            label = { Text(text = "Enter event name") },
+        )
+        // TODO: Select icon
+
+        OutlinedTextField(
+            singleLine = false,
+            modifier = modifier
+                .fillMaxWidth(),
             value = eventDescription.value,
             onValueChange = { eventDescription.value = it },
-            label = { Text(text = "Enter eventname") },
+            label = { Text(text = "Describe your event (optional)") },
         )
 
         OutlinedButton(
@@ -137,19 +138,18 @@ fun AddEventScreenContent(
                 mDatePickerDialog.show()
             },
             modifier = Modifier
-                .absoluteOffset(0.dp, (-70).dp)
                 .fillMaxSize()
                 //.size(200.dp, 50.dp)
         ) {
             Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event date")
             Text(text = "Choose Date of Event")
         }
+
         OutlinedButton(
             onClick = {
                 mTimePickerDialog.show()
             },
             modifier = Modifier
-                .absoluteOffset(0.dp, (-60).dp)
                 .fillMaxSize()
                 //.size(200.dp, 50.dp)
 
@@ -157,23 +157,22 @@ fun AddEventScreenContent(
             Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
             Text(text = "Choose Time of Event")
         }
-        FilledTonalButton(
-            onClick = {
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
-                val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
-                viewModel.saveEvent(
-                    eventName = eventName.value,
-                    eventDescription = eventDescription.value,
-                    eventDate = dateObject)
-                onSaveEventClick()
-            },
-            modifier = Modifier
-                .absoluteOffset(240.dp, 60.dp)
-                .size(120.dp, 50.dp)
+        Row(horizontalArrangement = Arrangement.End){
+            FilledTonalButton(
+                onClick = {
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
+                    val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
+                    viewModel.saveEvent(
+                        eventName = eventName.value,
+                        eventDescription = eventDescription.value,
+                        eventDate = dateObject)
+                    onSaveEventClick()
+                },
 
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "save event")
-            Text(text = "Save")
+                ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "save event")
+                Text(text = "Save")
+            }
         }
     }
 }
