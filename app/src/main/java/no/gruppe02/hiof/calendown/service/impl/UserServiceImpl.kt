@@ -4,18 +4,12 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import android.net.Uri
-import androidx.core.net.toFile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.User
@@ -57,7 +51,9 @@ class UserServiceImpl @Inject constructor(
                 if (snapshot != null && snapshot.exists()) {
                     Log.i(TAG, "User document found.")
                     val user = snapshot.toObject<User>()
-                    this.trySend(currentUser.let { user } ?: User(uid = userId, isAnonymous = true))
+                    if (user != null) {
+                        this.trySend(user)
+                    } else Log.e(TAG,"Error occurred while parsing the user document to User object")
                 }
             }
 
@@ -90,9 +86,7 @@ class UserServiceImpl @Inject constructor(
                             friendIds.mapNotNull {friendId ->
                                 get(friendId)
                             }.let { friends.addAll(it) }
-
                             trySend(friends.toList())
-                            // TODO: This shit
                         }
                     } catch (e: Error){
                         Log.e(TAG, "Error occurred while fetching friend list:\n", e)
@@ -107,6 +101,27 @@ class UserServiceImpl @Inject constructor(
     }
 
 
+    override suspend fun getMultipleUsers(userIds: List<String>): Flow<List<User>> =
+        callbackFlow {
+            val collection = firestore.collection(USER_COLLECTION)
+            val users = mutableListOf<User>()
+            val listenerRegistration = collection.addSnapshotListener { snapshot, error ->
+                launch {
+                    userIds.forEach { userId ->
+                        try {
+                            get(userId)?.let { users.add(it) }
+                        }catch (e: Exception){
+                            Log.e(TAG, "Error occurred while getting user from list", e)
+                        }
+                    }
+                    trySend(users)
+                }
+
+            }
+            awaitClose {
+                listenerRegistration.remove()
+            }
+        }
     override suspend fun uploadImage(img: Uri) {
         val documentId = UUID.randomUUID().toString()
         val storageRef = storage.reference

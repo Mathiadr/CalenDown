@@ -13,5 +13,6 @@ interface StorageService {
     suspend fun delete (eventId: String)
 
     suspend fun addParticipant(eventId: String, userId: String)
+    suspend fun removeParticipant(eventId: String, userId: String)
 
 }

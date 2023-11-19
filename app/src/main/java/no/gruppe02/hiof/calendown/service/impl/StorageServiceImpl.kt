@@ -71,6 +71,15 @@ class StorageServiceImpl @Inject constructor(
                 Log.e(TAG, "Error occurred while adding participant:\n${it}")
             }
     }
+    override suspend fun removeParticipant(eventId: String, userId: String) {
+        firestore.collection(EVENT_COLLECTION).document(eventId).update(PARTICIPANTS_FIELD, FieldValue.arrayRemove(userId))
+            .addOnSuccessListener {
+                Log.i(TAG, "Participant added to event")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Error occurred while adding participant:\n${it}")
+            }
+    }
 
             companion object {
         private const val EVENT_COLLECTION = "events"
