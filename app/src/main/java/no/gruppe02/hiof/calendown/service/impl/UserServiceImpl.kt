@@ -159,7 +159,7 @@ class UserServiceImpl @Inject constructor(
     override suspend fun uploadImage(img: Uri) {
         val documentId = UUID.randomUUID().toString()
         val storageRef = storage.reference
-        val imageRef = storageRef.child("images/${documentId}")
+        val imageRef = storageRef.child("images/${documentId} ")
         val uploadTask = imageRef.putFile(img)
 
         //Register observers to listen for when the download is done or if it fails

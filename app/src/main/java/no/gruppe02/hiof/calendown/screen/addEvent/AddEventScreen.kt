@@ -3,6 +3,7 @@ package no.gruppe02.hiof.calendown.screen.addEvent
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,19 +26,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 
@@ -46,6 +59,7 @@ import java.util.Date
 fun AddEventScreen(
     onSaveEventClick: () -> Unit
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -74,7 +88,17 @@ fun AddEventScreenContent(
     modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
-    val selectedDate = remember { mutableStateOf("") }
+
+
+    //time and date defaults to now if left empty
+    val currentTime: LocalTime = LocalTime.now()
+    val today: LocalDate = LocalDate.now()
+    val formattedDate: String = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    val formattedTime: String = currentTime.format(DateTimeFormatter.ofPattern(":HH:mm"))
+    val selectedDate = remember { mutableStateOf("$formattedDate") }
+    val mTime = remember { mutableStateOf("$formattedTime") }
+
+
     val mContext = LocalContext.current
     val mYear: Int
     val mMonth: Int
@@ -85,7 +109,7 @@ fun AddEventScreenContent(
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
     val mHour = mCalendar[Calendar.HOUR_OF_DAY]
     val mMinute = mCalendar[Calendar.MINUTE]
-    val mTime = remember { mutableStateOf("") }
+
 
     val mTimePickerDialog = TimePickerDialog(
         mContext,
@@ -98,7 +122,7 @@ fun AddEventScreenContent(
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            selectedDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            selectedDate.value = "$mDayOfMonth/${mMonth + 1}/$mYear"
         }, mYear, mMonth, mDay
     )
 
@@ -157,6 +181,14 @@ fun AddEventScreenContent(
             Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
             Text(text = "Choose Time of Event")
         }
+
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.fillMaxSize(),
+        )
+
         Row(horizontalArrangement = Arrangement.End){
             FilledTonalButton(
                 onClick = {
@@ -165,8 +197,14 @@ fun AddEventScreenContent(
                     viewModel.saveEvent(
                         eventName = eventName.value,
                         eventDescription = eventDescription.value,
-                        eventDate = dateObject)
-                    onSaveEventClick()
+                        eventDate = dateObject
+            )
+
+                    scope.launch {
+                        delay(400)
+                        snackbarHostState.showSnackbar("Event is saved")
+                        onSaveEventClick()
+                    }
                 },
 
                 ) {
