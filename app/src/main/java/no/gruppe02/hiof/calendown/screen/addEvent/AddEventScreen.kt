@@ -192,24 +192,27 @@ fun AddEventScreenContent(
         val snackbarHostState = remember { SnackbarHostState() }
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
-
 
         FilledTonalButton(
             onClick = {
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy:hh:mm")
                 val dateObject = dateFormat.parse(selectedDate.value + mTime.value)
-                scope.launch {
-                    delay(0)
-                    snackbarHostState.showSnackbar("Snackbar")
-                }
+
+
+
                 viewModel.saveEvent(
                     eventName = eventName.value,
                     eventDescription = eventDescription.value,
                     eventDate = dateObject
                 )
-                onSaveEventClick()
+
+                scope.launch {
+                    delay(400)
+                    snackbarHostState.showSnackbar("Event is saved")
+                    onSaveEventClick()
+                }
             },
             modifier = Modifier
                 .absoluteOffset(240.dp, 60.dp)
@@ -220,6 +223,7 @@ fun AddEventScreenContent(
         }
 
         }
+
 
     }
 

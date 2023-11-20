@@ -18,28 +18,10 @@ class AddEventViewModel @Inject constructor(
     private val storageService: StorageService,
     private val authenticationService: AuthenticationService)
     : ViewModel() {
-    fun saveEvent(
-        eventName: String,
-        eventDescription: String,
-        eventDate: Date,
-
-    ) {
+    fun saveEvent(eventName: String, eventDescription: String, eventDate: Date) {
         viewModelScope.launch {
-            runCatching {
-                storageService.save(
-                    Event(
-                        userId = authenticationService.currentUserId,
-                        title = eventName,
-                        description = eventDescription,
-                        date = eventDate
-                    )
-                )
-            }.onSuccess {
-                println("Event lagret")
-            }.onFailure {exception ->
-                println("Event ikke lagret. ${exception.message}")
-            }
+            storageService.save(Event(userId = authenticationService.currentUserId, title = eventName, description = eventDescription, date = eventDate))
         }
-    } 
     }
+}
 
