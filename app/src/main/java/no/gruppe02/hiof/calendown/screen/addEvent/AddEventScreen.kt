@@ -59,7 +59,6 @@ fun AddEventScreen(
 ) {
 
     Scaffold(
-
         topBar = {
             TopAppBar(
                 {
@@ -148,7 +147,7 @@ fun AddEventScreenContent(
                 .absoluteOffset(0.dp, (-50).dp),
             value = eventName.value,
             onValueChange = { eventName.value = it },
-            label = { Text(text = "Enter eventname") },
+            label = { Text(text = "Enter event name") },
         )
 
         OutlinedTextField(
@@ -158,7 +157,7 @@ fun AddEventScreenContent(
                 .absoluteOffset(0.dp, (-100).dp),
             value = eventDescription.value,
             onValueChange = { eventDescription.value = it },
-            label = { Text(text = "Enter eventname") },
+            label = { Text(text = "Enter event description") },
         )
 
         OutlinedButton(
@@ -223,8 +222,6 @@ fun AddEventScreenContent(
         }
 
         }
-
-
     }
 
 
