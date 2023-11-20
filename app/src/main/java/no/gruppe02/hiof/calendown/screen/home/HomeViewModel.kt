@@ -40,19 +40,19 @@ class HomeViewModel @Inject constructor(
                 }
             } catch(e: Exception) {
                 error("Error occurred while fetching events")
-            } finally {
-                if (activeEvents.first().isEmpty() && !userService.currentUser.first().isAnonymous) {
-                    populateWithDummies()
-                }
             }
             handleCountdown()
         }
     }
 
-    // TODO: Remove from production
     fun deleteAll(){
         viewModelScope.launch {
-            activeEvents.value.keys.forEach { event: Event -> storageService.deleteEvent(event) }
+            activeEvents.value.keys.forEach { event: Event ->
+                if (event.userId == authenticationService.currentUserId)
+                    storageService.deleteEvent(event)
+                else if (event.participants.contains(authenticationService.currentUserId))
+                    storageService.removeParticipant(event.uid, authenticationService.currentUserId)
+            }
         }
     }
 
@@ -66,7 +66,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun populateWithDummies(){
+    fun debugPopulateWithDummies(){
         viewModelScope.launch {
             val dummyFriend = DummyGenerator.yourBestFriend
             val userId = userService.currentUserId

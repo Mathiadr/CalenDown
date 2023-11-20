@@ -414,11 +414,22 @@ fun DeleteEventDialog(
         },
         onDismissRequest = { closeDialog() },
         confirmButton = {
-            closeDialog()
-            viewModel.deleteEvent()
-            navController.previousBackStackEntry
-    })
+            TextButton(onClick = {
+                closeDialog()
+                viewModel.deleteEvent()
+                navController.previousBackStackEntry
+            }) {
+                Text(text = "Delete", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { closeDialog() }) {
+                Text(text = "Cancel")
+            }
+        }
+    )
 }
+
 
 @Composable
 fun Timer(eventTimer: EventTimer){

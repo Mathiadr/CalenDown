@@ -3,42 +3,56 @@ package no.gruppe02.hiof.calendown.screen.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
@@ -63,13 +77,13 @@ fun HomeScreen(modifier: Modifier = Modifier,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
-                    DeleteAll(onDelete = { viewModel.deleteAll()})
                 },
-
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
-                )
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                actions = { OptionsDropdownMenu(viewModel = viewModel) }
             )
+
         },
         floatingActionButton = {
             OpenAddEventScreen(onAddEventClick)
@@ -106,6 +120,8 @@ fun HomeScreen(modifier: Modifier = Modifier,
     }
 }
 
+
+
 @Composable
 fun OpenAddEventScreen(
     onAddEventClick: () -> Unit
@@ -122,19 +138,82 @@ fun OpenAddEventScreen(
 }
 
 @Composable
-fun DeleteAll(
-    onDelete: () -> Unit
-) {
-    Button(
-        onClick = { onDelete() }
-    )
-    {
-        Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = "Delete All",
-            tint = Color.Red
-        )
+fun OptionsDropdownMenu(viewModel: HomeViewModel){
+    var expanded by remember { mutableStateOf(false) }
+    var openDeleteEventsDialog by remember { mutableStateOf(false)}
+    Box(modifier = Modifier
+        .wrapContentSize()) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Actions for all events")
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+
+            // This option is for demonstration purposes only, and not meant to be included in production
+            DropdownMenuItem(
+                text = { Text(text = "(DEMONSTRATION) Populate with dummies", color = Color.Blue) },
+                onClick = {
+                    viewModel.debugPopulateWithDummies()
+                    expanded = false
+                }
+            )
+
+            DropdownMenuItem(
+                text = { Text(text = "Delete all events", color = Color.Red) },
+                onClick = {
+                    openDeleteEventsDialog = true
+                    expanded = false
+                }
+            )
+
+        }
     }
+
+    if (openDeleteEventsDialog){
+        DeleteEventsDialog(
+            viewModel = viewModel,
+            closeDialog = { openDeleteEventsDialog = false })
+    }
+}
+
+@Composable
+fun DeleteEventsDialog(
+    viewModel: HomeViewModel,
+    closeDialog: () -> Unit
+) {
+    AlertDialog(
+        title = {
+            Text(text = "Delete All Events", color = Color.Red)
+        },
+        text = {
+            Column {
+                Text(text = "Are you sure you wish to delete all of your events? This action cannot be undone.")
+                Text(
+                    text = "This will also make you leave events you participate in.",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.Gray
+                )
+            }
+        },
+        icon = {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+        },
+        onDismissRequest = { closeDialog() },
+        confirmButton = {
+            TextButton(onClick = {
+                closeDialog()
+                viewModel.deleteAll()}) {
+                Text(text = "Delete All", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { closeDialog() }) {
+                Text(text = "Cancel")
+            }
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -155,12 +234,14 @@ fun EventCard(
 
 
     Card (
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 6.dp
+        ),
         onClick = {onEventClick(event.uid)},
-        modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .clickable { },
-
     ) {
         Row (
             verticalAlignment = Alignment.CenterVertically,
