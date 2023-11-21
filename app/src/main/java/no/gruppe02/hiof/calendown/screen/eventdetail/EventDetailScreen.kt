@@ -62,7 +62,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.components.HeaderText
-import no.gruppe02.hiof.calendown.dummydata.DefaultIcons
+import no.gruppe02.hiof.calendown.datasource.EventIcons
 import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.ui.theme.CalenDownTheme
@@ -114,7 +114,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                 .padding(innerPadding)
         ) {
             Icon(
-                imageVector = DefaultIcons.defaultIcons.getOrDefault(
+                imageVector = EventIcons.DefaultIcons.defaultIcons.getOrDefault(
                     event.icon,
                     Icons.Default.DateRange
                 ),

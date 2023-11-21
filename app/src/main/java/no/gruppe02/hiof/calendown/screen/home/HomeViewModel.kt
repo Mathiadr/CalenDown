@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import no.gruppe02.hiof.calendown.dummydata.DummyGenerator
+import no.gruppe02.hiof.calendown.datasource.DummyGenerator
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.model.Invitation
