@@ -3,11 +3,14 @@
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
 import android.graphics.fonts.FontFamily
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,6 +77,7 @@ import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicContainer
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
+import no.gruppe02.hiof.calendown.components.ProfileImage
 import no.gruppe02.hiof.calendown.datasource.EventIcons
 import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.model.User
@@ -86,9 +90,6 @@ import java.text.SimpleDateFormat
 fun EventDetailScreen(modifier: Modifier = Modifier,
                       viewModel: EventDetailViewModel = hiltViewModel()
 ) {
-    val participants = viewModel.participants.collectAsStateWithLifecycle().value
-    viewModel.getParticipants()
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -117,9 +118,9 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 
     ) { innerPadding ->
 
-    BasicScreenLayout(innerPadding = innerPadding) {
-        GenericInformation(viewModel)
-        if (participants.isNotEmpty()) Participants(participants = participants)
+        BasicScreenLayout(innerPadding = innerPadding) {
+            GenericInformation(viewModel)
+            Participants(viewModel = viewModel)
         }
     }
 }
@@ -185,14 +186,32 @@ fun GenericInformation(viewModel: EventDetailViewModel){
 }
 
 @Composable
-fun Participants(participants: List<User>){
+fun Participants(viewModel: EventDetailViewModel){
+    val participants = viewModel.participants.collectAsStateWithLifecycle().value
+    val participantProfileImages = viewModel.userImages.toMap()
+    viewModel.getParticipants()
+
     BasicContainer {
-        Text(text = "Participants of this event:")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Participants of this event",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.width(6.dp))
+            Divider()
+        }
         LazyColumn(
+            modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(6.dp, 0.dp),
+            userScrollEnabled = true,
             content = {
                 participants.forEach { user ->
                     item {
-                        Participant(participant = user)
+                        Participant(
+                            participant = user,
+                            participantProfileImageUri = participantProfileImages[user.uid])
                     }
                 }
             }
@@ -203,14 +222,15 @@ fun Participants(participants: List<User>){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Participant(participant: User){
+fun Participant(participant: User, participantProfileImageUri: Uri?){
     ListItem (headlineText = {
         Text(text = participant.username)
     },
         leadingContent = {
-            Icon(imageVector = Icons.Default.Face,
-                contentDescription = null,
-                modifier = Modifier.size(25.dp))
+            ProfileImage(
+                imageUrl = participantProfileImageUri,
+                modifier = Modifier.size(50.dp)
+            )
         })
     Divider()
 }
@@ -296,6 +316,7 @@ fun InviteToEventDialog(
     ){
     val friends = viewModel.friendList.collectAsStateWithLifecycle()
     val selectedFriends = remember { mutableStateListOf<User>() }
+    val friendProfileImages = viewModel.userImages.toMap()
     viewModel.getFriendList()
 
     Dialog(
@@ -322,9 +343,10 @@ fun InviteToEventDialog(
                                     Text(text = friend.username)
                                 },
                                 leadingContent = {
-                                    Icon(imageVector = Icons.Default.Face,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(25.dp))
+                                    ProfileImage(
+                                        imageUrl = friendProfileImages[friend.uid],
+                                        modifier = Modifier.size(50.dp)
+                                        )
                                 },
                                 trailingContent = {
                                     if (friend.uid != viewModel.currentUserId){
