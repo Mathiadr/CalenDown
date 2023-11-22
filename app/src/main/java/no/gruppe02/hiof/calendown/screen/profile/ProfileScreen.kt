@@ -23,17 +23,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -43,6 +50,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -198,6 +206,9 @@ fun FriendListCard(viewModel: ProfileViewModel){
                                 leadingContent = {
                                     ProfileImage(imageUrl = friendImages[friend.uid],
                                         modifier = Modifier.size(50.dp))
+                                },
+                                trailingContent = {
+                                    FriendOptionDropdownMenu(viewModel = viewModel, friendId = friend.uid)
                                 }
                             )
                         }
@@ -225,6 +236,37 @@ fun FriendListCard(viewModel: ProfileViewModel){
     }
     if (openSendFriendRequestDialog.value) {
         SearchDialog(viewModel = viewModel, closeDialog = { openSendFriendRequestDialog.value = false })
+    }
+}
+
+@Composable
+fun FriendOptionDropdownMenu(viewModel: ProfileViewModel, friendId: String){
+    val expandFriendOptions = remember { mutableStateOf(false) }
+    val openDeleteFriendDialog = remember { mutableStateOf(false) }
+
+    IconButton(onClick = { expandFriendOptions.value = true }) {
+        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More actions for friend")
+        Box(modifier = Modifier.wrapContentSize()){
+            DropdownMenu(
+                expanded = expandFriendOptions.value,
+                onDismissRequest = { expandFriendOptions.value = false }) {
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "Delete friend", color = Color.Red)
+                    },
+                    onClick = {
+                        openDeleteFriendDialog.value = true
+                    }
+                )
+            }
+        }
+    }
+
+    if (openDeleteFriendDialog.value) {
+        RemoveFriendDialog(
+            viewModel = viewModel,
+            friendId = friendId,
+            closeDialog = { openDeleteFriendDialog.value = false })
     }
 }
 
@@ -343,5 +385,34 @@ fun SearchDialog(
             }
         }
     }
+}
+
+@Composable
+fun RemoveFriendDialog(viewModel: ProfileViewModel, friendId: String,  closeDialog: () -> Unit){
+    AlertDialog(
+        title = {
+            Text(text = stringResource(R.string.remove_friend_dialog_unfriend), color = Color.Red)
+        },
+        text = {
+            Text(text = stringResource(R.string.delete_friend_dialog_desc))
+        },
+        icon = {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+        },
+        onDismissRequest = { closeDialog() },
+        confirmButton = {
+            TextButton(onClick = {
+                closeDialog()
+                viewModel.removeFriend(friendId)
+            }) {
+                Text(text = stringResource(R.string.delete), color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { closeDialog() }) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 

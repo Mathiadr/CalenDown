@@ -37,9 +37,12 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="edit_profile_picture">Edit profile picture</string>
-    <string name="no_friends_detected">You have no friends currently added... Try adding some!</string>
+    <string name="no_friends_detected">You have no friends currently added… Try adding some!</string>
     <string name="friends">Friends</string>
     <string name="profile_information">Profile Information</string>
+    <string name="delete_friend_dialog_desc">Are you sure you wish to unfriend this user?</string>
+    <string name="remove_friend_dialog_unfriend">Unfriend</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.gruppe02.hiof.calendown.model.User
@@ -87,6 +86,12 @@ class ProfileViewModel @Inject constructor(
     fun sendFriendRequest(recipientId: String){
         viewModelScope.launch {
             userService.addFriend(currentUser.value.uid, recipientId)
+        }
+    }
+
+    fun removeFriend(friendId: String){
+        viewModelScope.launch {
+            userService.removeFriend(currentUser.value.uid, friendId)
         }
     }
 
