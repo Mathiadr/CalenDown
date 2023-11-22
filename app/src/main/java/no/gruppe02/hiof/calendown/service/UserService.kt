@@ -1,6 +1,8 @@
 package no.gruppe02.hiof.calendown.service
 
 import android.net.Uri
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.Flow
 import no.gruppe02.hiof.calendown.model.User
 
@@ -19,6 +21,7 @@ interface UserService {
     suspend fun save(user: User)
     suspend fun addFriend(userId: String, friendId: String)
     suspend fun removeFriend(userId: String, friendId: String)
-    suspend fun uploadImage(img: Uri)
+    suspend fun uploadProfileImg(img: Uri, userId: String)
+    suspend fun getImageUrl(path: String): Uri
 
 }

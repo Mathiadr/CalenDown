@@ -31,9 +31,7 @@ class UserServiceImpl @Inject constructor(
     override val hasUser: Boolean
         get() = auth.currentUser != null
 
-
     override val currentUser: Flow<User> = getUserData(currentUserId)
-
 
     // Gathered from ChatGPT
     override fun getUserData(userId: String): Flow<User> =
@@ -66,7 +64,6 @@ class UserServiceImpl @Inject constructor(
         }
     // TODO: HANDLE ANON USE CASE
 
-
     override suspend fun searchUser(nameQuery: String): Flow<List<User>> =
         callbackFlow {
             val docRef = firestore.collection(USER_COLLECTION).document(currentUserId)
@@ -96,7 +93,6 @@ class UserServiceImpl @Inject constructor(
                 listenerRegistration.remove()
             }
         }
-
 
     override suspend fun getFriendList(userId: String): Flow<List<User>> =
         callbackFlow {
@@ -134,7 +130,6 @@ class UserServiceImpl @Inject constructor(
             }
     }
 
-
     override suspend fun getMultipleUsers(userIds: List<String>): Flow<List<User>> =
         callbackFlow {
             val collection = firestore.collection(USER_COLLECTION)
@@ -156,19 +151,29 @@ class UserServiceImpl @Inject constructor(
                 listenerRegistration.remove()
             }
         }
-    override suspend fun uploadImage(img: Uri) {
+
+    override suspend fun uploadProfileImg(img: Uri, userId: String) {
+        // Upload to storage
         val documentId = UUID.randomUUID().toString()
         val storageRef = storage.reference
-        val imageRef = storageRef.child("images/${documentId} ")
-        val uploadTask = imageRef.putFile(img)
+        val path = "images/${userId}/${documentId}"
+        val imgRef = storageRef.child(path)
+        val uploadTask = imgRef.putFile(img)
 
         //Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
         }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
         }
+        // Add image reference to firestore
+        firestore.collection(USER_COLLECTION).document(currentUserId).update(IMG_URL_FIELD, path)
+    }
+
+    override suspend fun getImageUrl(path: String): Uri {
+        val storageRef = storage.reference
+        val downloadUrl = storageRef.child(path).downloadUrl.await()
+        return downloadUrl
     }
 
     override suspend fun delete(user: User){
@@ -177,7 +182,6 @@ class UserServiceImpl @Inject constructor(
 
     override suspend fun get(userId: String): User? =
         firestore.collection(USER_COLLECTION).document(userId).get().await().toObject()
-
 
     override suspend fun save(user: User) {
         firestore.collection(USER_COLLECTION).document(user.uid).set(user).await()
@@ -203,5 +207,6 @@ class UserServiceImpl @Inject constructor(
         private const val USER_USERNAME_FIELD = "username"
         private const val USER_ID = "id"
         private const val FRIENDS_FIELD = "friends"
+        private const val IMG_URL_FIELD = "imgUrl"
     }
 }
