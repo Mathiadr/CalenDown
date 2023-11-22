@@ -8,14 +8,11 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,17 +22,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -46,8 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,13 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,10 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 import no.gruppe02.hiof.calendown.components.HeaderText
-import no.gruppe02.hiof.calendown.model.User
+import no.gruppe02.hiof.calendown.components.ProfileImage
 
 
 @SuppressLint("StateFlowValueCalledInComposition") // ?
@@ -113,7 +96,6 @@ fun ProfileScreen(
 
                 PrimaryInfo(viewModel = viewModel)
                 FriendListCard(viewModel = viewModel)
-                //Text(text = "Logged in as " + viewModel.userId)
             }
         }
     }
@@ -145,20 +127,17 @@ fun PrimaryInfo(viewModel: ProfileViewModel){
             }
             Row(verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)){
-                RoundImage(
-                    image = painterResource(R.drawable.profilepic),
-                    modifier = Modifier
-                        .size(80.dp)
-                )
+                ProfileImage(
+                    imageUrl = viewModel.userImage.value,
+                    modifier = Modifier.size(80.dp))
                 Text(
                     text = currentUser.username,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
-
             }
-            //ImgPicker(viewModel)
-            ProfilePicturePicker(viewModel = viewModel)
+            ImgPicker(viewModel)
+            //ProfilePicturePicker(viewModel = viewModel)
         }
     }
 }
@@ -166,6 +145,7 @@ fun PrimaryInfo(viewModel: ProfileViewModel){
 @Composable
 fun FriendListCard(viewModel: ProfileViewModel){
     val friends = viewModel.friendList.collectAsStateWithLifecycle().value
+    val friendImages = viewModel.friendImages.toMap()
     val openSendFriendRequestDialog = remember { mutableStateOf(false) }
 
     viewModel.getFriendList()
@@ -202,11 +182,10 @@ fun FriendListCard(viewModel: ProfileViewModel){
                             ListItem(
                                 headlineText = { Text(text = friend.username) },
                                 leadingContent = {
-                                    Icon(
-                                        imageVector = Icons.Default.Face,
-                                        contentDescription = null
-                                    )
-                                })
+                                    ProfileImage(imageUrl = friendImages[friend.uid],
+                                        modifier = Modifier.size(50.dp))
+                                }
+                            )
                         }
                     }
                 })
@@ -234,15 +213,19 @@ fun FriendListCard(viewModel: ProfileViewModel){
         SearchDialog(viewModel = viewModel, closeDialog = { openSendFriendRequestDialog.value = false })
     }
 }
-
+/*
 @Composable
 fun RoundImage (
     image: Painter,
+    viewModel: ProfileViewModel,
     modifier: Modifier = Modifier
 ) {
-    Image(
-        painter = image,
+    val userImgUrl = viewModel.userImage.value
+
+    AsyncImage(
+        model = userImgUrl ?: viewModel.fallbackImage,
         contentDescription = null,
+        contentScale = ContentScale.Crop,
         modifier = modifier
             .aspectRatio(1f, matchHeightConstraintsFirst = true)
             .border(
@@ -251,11 +234,16 @@ fun RoundImage (
                 shape = CircleShape
             )
             .padding(3.dp)
-            .clip(CircleShape))
+            .clip(CircleShape)
+    )
 }
+
+ */
+
 
 @Composable
 fun ProfilePicturePicker(modifier: Modifier = Modifier, viewModel: ProfileViewModel){
+
     Button(modifier = modifier.fillMaxWidth(), onClick = { /*TODO*/ }) {
         Text(text = "Test")
     }

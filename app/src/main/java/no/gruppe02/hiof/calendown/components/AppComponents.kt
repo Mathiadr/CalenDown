@@ -1,7 +1,11 @@
 package no.gruppe02.hiof.calendown.components
 
-import androidx.compose.foundation.background
+import android.net.Uri
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -12,15 +16,40 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import no.gruppe02.hiof.calendown.R
 
+@Composable
+fun ProfileImage (
+    imageUrl: Uri?,
+    modifier: Modifier = Modifier
+) {
+    val fallbackImage = R.drawable.profilepic
+    AsyncImage(
+        model = imageUrl ?: fallbackImage,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface,
+                shape = CircleShape
+            )
+            .padding(3.dp)
+            .clip(CircleShape)
+    )
+}
 @Composable
 fun HeaderText(
     text: String,
