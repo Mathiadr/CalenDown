@@ -12,10 +12,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +32,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -62,6 +65,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -88,7 +92,7 @@ fun ProfileScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Profile",
+                        text = stringResource(R.string.profile),
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -137,7 +141,7 @@ fun PrimaryInfo(viewModel: ProfileViewModel){
         ){
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Profile Information",
+                    text = stringResource(R.string.profile_information),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.width(6.dp))
@@ -183,7 +187,7 @@ fun FriendListCard(viewModel: ProfileViewModel){
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Friends",
+                    text = stringResource(R.string.friends),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.width(6.dp))
@@ -212,7 +216,7 @@ fun FriendListCard(viewModel: ProfileViewModel){
                 })
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "You have no friends currently added... Try adding some!",
+                    Text(text = stringResource(R.string.no_friends_detected),
                         style = MaterialTheme.typography.labelMedium,
                         fontStyle = FontStyle.Italic,
                         textAlign = TextAlign.Center
@@ -224,7 +228,7 @@ fun FriendListCard(viewModel: ProfileViewModel){
                 .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End) {
                 TextButton(onClick = { openSendFriendRequestDialog.value = true }) {
-                    Text(text = "Add friend")
+                    Text(text = stringResource(R.string.add_friend))
                 }
             }
         }
@@ -273,7 +277,7 @@ fun ImgPicker(viewModel: ProfileViewModel) {
         onResult = { uri -> selectedImgUri = uri},
     )
     ElevatedButtonComponent(
-        label = "Rediger profilbilde",
+        label = stringResource(R.string.edit_profile_picture),
         onClick = {
             photoPickerLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -281,7 +285,7 @@ fun ImgPicker(viewModel: ProfileViewModel) {
         })
     if (selectedImgUri != null) {
         ElevatedButtonComponent(
-            label = "Lagre",
+            label = stringResource(R.string.save),
             onClick = { viewModel.uploadProfileImg(selectedImgUri!!) })
     }
 }
@@ -307,33 +311,42 @@ fun SearchDialog(
     closeDialog: () -> Unit){
 
     var searchQuery by remember { mutableStateOf("") }
-    var searchResult = viewModel.searchResults.collectAsState().value
+    val searchResult = viewModel.searchResults.collectAsState().value
     val selectedUserId = remember { mutableStateOf("") }
 
     Dialog(
         onDismissRequest = { closeDialog() }){
         Surface(modifier = Modifier
-            .width(300.dp)
-            .height(400.dp)
-            .padding(16.dp),
+            .fillMaxWidth()
+            .wrapContentHeight(),
             shape = RoundedCornerShape(16.dp)) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                HeaderText(text = "Search for user")
-                Divider()
+                HeaderText(text = stringResource(R.string.search_for_user))
                 TextField(
                     value = searchQuery,
                     onValueChange = {
                         searchQuery = it
                         viewModel.searchUsers(it)
-                    })
-                if (searchResult.isNotEmpty()){
+                    },
+                    maxLines = 1,
+                    shape = RoundedCornerShape(25.dp),
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    }
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Divider()
+                Box(){
                     LazyColumn(
-                        modifier = Modifier.height(200.dp),
+                        modifier = Modifier
+                            .height(250.dp)
+                            .fillMaxWidth(),
                         content = {
                             searchResult.forEach { user ->
                                 item {
@@ -357,9 +370,10 @@ fun SearchDialog(
                                 }
                                 viewModel.getFriendList()
                             }
-                        })
-                    }
-                Divider()
+                        }
+                    )
+                    Divider()
+                }
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly) {
                     TextButton(
@@ -369,10 +383,11 @@ fun SearchDialog(
                             closeDialog()
                         },
                         enabled = selectedUserId.value.isNotEmpty()) {
-                        Text(text = "Send friend request")
+                        // Originally supposed to send a friend request, but was not implemented in time
+                        Text(text = stringResource(R.string.add_friend))
                     }
                     TextButton(onClick = { closeDialog() }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(R.string.cancel))
                     }
                 }
             }

@@ -32,6 +32,14 @@
     <string name="could_not_create_account">Could not create account</string>
     <string name="could_not_log_in">Could not log in</string>
     <string name="sign_out">Sign out</string>
+    <string name="search_for_user">Search for user</string>
+    <string name="add_friend">Add friend</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="edit_profile_picture">Edit profile picture</string>
+    <string name="no_friends_detected">You have no friends currently added... Try adding some!</string>
+    <string name="friends">Friends</string>
+    <string name="profile_information">Profile Information</string>
 
 
 </resources>
