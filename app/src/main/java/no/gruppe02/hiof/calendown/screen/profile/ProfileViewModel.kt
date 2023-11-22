@@ -2,9 +2,9 @@ package no.gruppe02.hiof.calendown.screen.profile
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.gruppe02.hiof.calendown.model.User
@@ -28,7 +29,6 @@ class ProfileViewModel @Inject constructor(
 
     val userId = authenticationService.currentUserId
     val currentUser = mutableStateOf<User>(User())
-    var selectedImgUri by mutableStateOf<Uri?>(null)
 
     private val _searchResults = MutableStateFlow<List<User>>(emptyList())
     val searchResults = _searchResults.asStateFlow()
@@ -36,15 +36,30 @@ class ProfileViewModel @Inject constructor(
     private val _friendList = MutableStateFlow<List<User>>(emptyList())
     val friendList = _friendList.asStateFlow()
 
+    private val _friendImages = mutableStateMapOf<String, Uri?>()
+    val friendImages = _friendImages
+
+    private val _userImage = mutableStateOf<Uri?>(null)
+    val userImage: State<Uri?> = _userImage
+
     init {
         viewModelScope.launch {
             currentUser.value = userService.currentUser.first()
+            _userImage.value = getProfileImage(currentUser.value.imgUrl)
         }
     }
 
+    private suspend fun getProfileImage(path: String): Uri? =
+        withContext(Dispatchers.Default) {
+            if (path.isNotEmpty()) {
+                return@withContext userService.getImageUrl(path)
+            } else
+                return@withContext null
+        }
+
     fun uploadProfileImg (img: Uri) {
         viewModelScope.launch {
-            userService.uploadImage(img)
+            userService.uploadProfileImg(img, userId)
         }
     }
 
@@ -73,10 +88,13 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 userService.getFriendList(userService.currentUserId)
-                    .collect {
-                            friends -> _friendList.value = friends
-                    }
+                    .collect { friends ->
+                        _friendList.value = friends
 
+                        friends.forEach{ friend ->
+                            _friendImages[friend.uid] = getProfileImage(friend.imgUrl)
+                        }
+                    }
             } catch (e: Exception){
                 Log.e(TAG, "Error occurred while fetching friend list of user", e)
             }
