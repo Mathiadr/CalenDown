@@ -243,6 +243,7 @@ fun EventDropdownMenu(viewModel: EventDetailViewModel,
     var openInviteDialog by remember { mutableStateOf(false)}
     var openDeleteEventDialog by remember { mutableStateOf(false)}
     var openRemoveParticipantDialog by remember { mutableStateOf(false)}
+    var openLeaveEventDialog by remember { mutableStateOf(false)}
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
 
@@ -278,9 +279,9 @@ fun EventDropdownMenu(viewModel: EventDetailViewModel,
                 DropdownMenuItem(
                     text = { Text(text = "Leave event") },
                     onClick = {
-                        viewModel.removeFromEvent(viewModel.currentUserId)
-                        navController.previousBackStackEntry
-                    })
+                        openLeaveEventDialog = true
+                    }
+                )
             }
         }
     }
@@ -290,21 +291,33 @@ fun EventDropdownMenu(viewModel: EventDetailViewModel,
             closeDialog = {
                 openInviteDialog = false
                 expanded = false
-            })
+            }
+        )
     if (openDeleteEventDialog)
         DeleteEventDialog(
             viewModel = viewModel,
             closeDialog = {
                 openDeleteEventDialog = false
                 expanded = false
-            })
+            }
+        )
     if (openRemoveParticipantDialog)
         RemoveParticipantFromEventDialog(
             viewModel = viewModel,
             closeDialog = {
                 openRemoveParticipantDialog = false
                 expanded = false
-            })
+            }
+        )
+    if (openLeaveEventDialog)
+        LeaveEventDialog(
+            viewModel = viewModel,
+            closeDialog = {
+                openLeaveEventDialog = false
+                expanded = false
+            }
+        )
+
 }
 
 
@@ -477,6 +490,42 @@ fun DeleteEventDialog(
                 navController.previousBackStackEntry
             }) {
                 Text(text = "Delete", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { closeDialog() }) {
+                Text(text = "Cancel")
+            }
+        }
+    )
+}
+
+
+
+@Composable
+fun LeaveEventDialog(
+    viewModel: EventDetailViewModel,
+    closeDialog: () -> Unit){
+
+    val navController = rememberNavController()
+    AlertDialog(
+        title = {
+            Text(text = "Leave event", color = Color.Red)
+        },
+        text = {
+            Text(text = "Are you sure you wish to leave this event? You can rejoin this event if you receive a new invite.")
+        },
+        icon = {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+        },
+        onDismissRequest = { closeDialog() },
+        confirmButton = {
+            TextButton(onClick = {
+                closeDialog()
+                viewModel.removeFromEvent(viewModel.currentUserId)
+                navController.previousBackStackEntry
+            }) {
+                Text(text = "Leave", color = Color.Red)
             }
         },
         dismissButton = {

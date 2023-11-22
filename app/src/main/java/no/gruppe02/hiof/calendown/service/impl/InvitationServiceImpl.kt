@@ -27,12 +27,9 @@ class InvitationServiceImpl @Inject constructor(
 ) : InvitationService {
     private val TAG = this::class.simpleName
     override val invitations: Flow<List<Invitation>>
-        get() = userService.currentUser.flatMapLatest { user ->
-            firestore.collection("${USER_COLLECTION}/${user.uid}/${INVITATION_SUBCOLLECTION}").dataObjects<Invitation>()
-                .onEach {
-                    it.forEach { invitation -> invitation.recipientId = user.uid }
-                }
-        }
+        get() = firestore.collection("${USER_COLLECTION}/${userService.currentUserId}/${INVITATION_SUBCOLLECTION}")
+            .dataObjects()
+
 
     override suspend fun create(invitation: Invitation) {
         firestore.collection("${USER_COLLECTION}/${invitation.recipientId}/${INVITATION_SUBCOLLECTION}")
@@ -42,13 +39,13 @@ class InvitationServiceImpl @Inject constructor(
             .await()
         Log.d(TAG, "Invitation created")
     }
-    override suspend fun delete(invitation: Invitation) {
+    override suspend fun delete(invitationId: String) {
         firestore.collection(USER_COLLECTION)
-            .document(invitation.recipientId)
+            .document(userService.currentUserId)
             .collection(INVITATION_SUBCOLLECTION)
-            .document(invitation.uid)
+            .document(invitationId)
             .delete()
-            .addOnFailureListener { Log.d(TAG, "Error occurred while deleting Invitation ${invitation.uid} for user ${invitation.recipientId}") }
+            .addOnFailureListener { Log.d(TAG, "Error occurred while deleting Invitation $invitationId for user ${userService.currentUserId}") }
             .addOnSuccessListener { Log.d(TAG, "Invitation deleted") }
 
     }

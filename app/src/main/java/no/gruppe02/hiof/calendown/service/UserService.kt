@@ -22,6 +22,6 @@ interface UserService {
     suspend fun addFriend(userId: String, friendId: String)
     suspend fun removeFriend(userId: String, friendId: String)
     suspend fun uploadProfileImg(img: Uri, userId: String)
-    suspend fun getImageUrl(path: String): Uri
+    suspend fun getImageUrl(path: String): Uri?
 
 }

@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +38,10 @@ class HomeViewModel @Inject constructor(
                 }.sortedBy { event -> event.date.time  }
                     .associateWith { event: Event ->
                     EventTimer(event.date.time)
+                }
+                Log.d(TAG, activeEvents.value.size.toString())
+                activeEvents.value.forEach { event, eventTimer ->
+                    Log.d(TAG, event.uid)
                 }
             } catch(e: Exception) {
                 error("Error occurred while fetching events")

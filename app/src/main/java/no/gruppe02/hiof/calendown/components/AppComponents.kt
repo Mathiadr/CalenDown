@@ -101,7 +101,7 @@ fun BasicScreenLayout(innerPadding: PaddingValues, modifier: Modifier = Modifier
         .padding(innerPadding)
         .background(MaterialTheme.colorScheme.background)) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(16.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),

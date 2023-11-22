@@ -170,10 +170,21 @@ class UserServiceImpl @Inject constructor(
         firestore.collection(USER_COLLECTION).document(currentUserId).update(IMG_URL_FIELD, path)
     }
 
-    override suspend fun getImageUrl(path: String): Uri {
-        val storageRef = storage.reference
-        val downloadUrl = storageRef.child(path).downloadUrl.await()
-        return downloadUrl
+    override suspend fun getImageUrl(path: String): Uri? {
+        return try {
+            val storageRef = storage.reference
+            val downloadUrl = storageRef.child(path).downloadUrl
+                .addOnFailureListener {
+                    Log.d(TAG, "Could not fetch user profile image")
+                }
+                .addOnSuccessListener {
+                    Log.d(TAG, "Successfully fetched user profile image")
+                }.await()
+            downloadUrl
+        } catch (e: Exception) {
+            Log.e(TAG, "Error occurred while fetching user profile image", e)
+            null
+        }
     }
 
     override suspend fun delete(user: User){

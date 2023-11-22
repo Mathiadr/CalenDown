@@ -1,5 +1,6 @@
 package no.gruppe02.hiof.calendown.screen.notifications
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import no.gruppe02.hiof.calendown.components.BasicScreenLayout
+import no.gruppe02.hiof.calendown.components.ProfileImage
+import no.gruppe02.hiof.calendown.model.Invitation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +49,7 @@ fun NotificationsScreen(
     modifier: Modifier = Modifier,
     viewModel: NotificationsViewModel = hiltViewModel()
 ) {
-    val invitations = viewModel.invitations
+    val invitations = viewModel.invitations.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
@@ -68,11 +73,18 @@ fun NotificationsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                items(invitations, key = { it.invitation.uid }) { invitation ->
-                    InvitationCard(invitation = invitation, viewModel = viewModel)
+                .background(MaterialTheme.colorScheme.background)) {
+            Column (
+                modifier = Modifier
+                    .padding()
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                LazyColumn {
+                    items(invitations, key = { it.eventId })
+                    { invitation ->
+                        InvitationCard(invitation, viewModel)
+                    }
                 }
             }
         }
@@ -87,14 +99,10 @@ fun InvitationCard(
     viewModel: NotificationsViewModel,
     modifier: Modifier = Modifier){
 
-    val senderName = invitation.senderName
-    val eventName = invitation.eventName
-
     Card (
         modifier
             .fillMaxWidth()
             .padding(10.dp),
-
         ) {
         Row (
             verticalAlignment = Alignment.CenterVertically,
@@ -103,19 +111,13 @@ fun InvitationCard(
                 .padding(10.dp)
                 .padding(top = 6.dp, bottom = 6.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(50.dp)
-                    .background(Color.Gray, CircleShape))
+            ProfileImage(imageUrl = invitation.senderProfileImageUri, modifier = Modifier.size(50.dp))
             Column {
                 Text(
-                    text = senderName,
+                    text = invitation.senderName,
                     style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    text = eventName,
+                    text = invitation.eventName,
                     modifier = Modifier.width(150.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -125,8 +127,17 @@ fun InvitationCard(
                     style = MaterialTheme.typography.labelMedium)
             }
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
-                AcceptButton { viewModel.acceptInvitation(invitation.invitation) }
-                DeclineButton { viewModel.acceptInvitation(invitation.invitation) }
+                AcceptButton {
+                    viewModel.acceptInvitation(
+                        invitationId = invitation.uid,
+                        eventId = invitation.eventId
+                        )
+                }
+                DeclineButton {
+                    viewModel.declineInvitation(
+                        invitationId = invitation.uid
+                    )
+                }
             }
         }
     }

@@ -7,5 +7,5 @@ interface InvitationService {
     val invitations: Flow<List<Invitation>>
 
     suspend fun create(invitation: Invitation): Unit
-    suspend fun delete(invitation: Invitation): Unit
+    suspend fun delete(invitationId: String): Unit
 }
