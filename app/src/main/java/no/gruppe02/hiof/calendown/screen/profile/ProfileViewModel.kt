@@ -33,6 +33,9 @@ class ProfileViewModel @Inject constructor(
     private val _searchResults = MutableStateFlow<List<User>>(emptyList())
     val searchResults = _searchResults.asStateFlow()
 
+    private val _searchResultProfileImages = mutableStateMapOf<String, Uri?>()
+    val searchResultProfileImages = _searchResultProfileImages
+
     private val _friendList = MutableStateFlow<List<User>>(emptyList())
     val friendList = _friendList.asStateFlow()
 
@@ -68,6 +71,9 @@ class ProfileViewModel @Inject constructor(
             if (query.length < 2) {
                 userService.searchUser(query).collect {queryResult ->
                     _searchResults.value = queryResult
+                    queryResult.map {user ->
+                        searchResultProfileImages.put(user.uid, getProfileImage(user.imgUrl))
+                    }
                 }
             }
         }

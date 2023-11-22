@@ -227,40 +227,6 @@ fun FriendListCard(viewModel: ProfileViewModel){
         SearchDialog(viewModel = viewModel, closeDialog = { openSendFriendRequestDialog.value = false })
     }
 }
-/*
-@Composable
-fun RoundImage (
-    image: Painter,
-    viewModel: ProfileViewModel,
-    modifier: Modifier = Modifier
-) {
-    val userImgUrl = viewModel.userImage.value
-
-    AsyncImage(
-        model = userImgUrl ?: viewModel.fallbackImage,
-        contentDescription = null,
-        modifier = modifier
-            .aspectRatio(1f, matchHeightConstraintsFirst = true)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface,
-                shape = CircleShape
-            )
-            .padding(3.dp)
-            .clip(CircleShape)
-    )
-}
-
- */
-
-
-@Composable
-fun ProfilePicturePicker(modifier: Modifier = Modifier, viewModel: ProfileViewModel){
-
-    Button(modifier = modifier.fillMaxWidth(), onClick = { /*TODO*/ }) {
-        Text(text = "Test")
-    }
-}
 
 @Composable
 fun ImgPicker(viewModel: ProfileViewModel) {
@@ -288,27 +254,13 @@ fun ImgPicker(viewModel: ProfileViewModel) {
 }
 
 @Composable
-fun ImgagePicker(onImageSelected: (Uri) -> Unit) {
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {  uri: Uri? -> uri?.let { onImageSelected(it) }},
-    )
-    ElevatedButtonComponent(
-        label = "Rediger profilbilde",
-        onClick = {
-            photoPickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        })
-}
-
-@Composable
 fun SearchDialog(
     viewModel: ProfileViewModel,
     closeDialog: () -> Unit){
 
     var searchQuery by remember { mutableStateOf("") }
     val searchResult = viewModel.searchResults.collectAsState().value
+    val searchResultImages = viewModel.searchResultProfileImages.toMap()
     val selectedUserId = remember { mutableStateOf("") }
 
     Dialog(
@@ -352,9 +304,10 @@ fun SearchDialog(
                                             Text(text = user.username)
                                         },
                                         leadingContent = {
-                                            Icon(imageVector = Icons.Default.Face,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(25.dp))
+                                            ProfileImage(
+                                                imageUrl = searchResultImages[user.uid],
+                                                modifier = Modifier.size(50.dp)
+                                                )
                                         },
                                         trailingContent = {
                                                 RadioButton(
