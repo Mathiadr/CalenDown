@@ -2,20 +2,26 @@
 
 package no.gruppe02.hiof.calendown.screen.eventdetail
 
+import android.graphics.fonts.FontFamily
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
@@ -34,6 +40,7 @@ import androidx.compose.material3.ListItem
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -53,6 +60,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,6 +70,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import no.gruppe02.hiof.calendown.R
+import no.gruppe02.hiof.calendown.components.BasicContainer
+import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
 import no.gruppe02.hiof.calendown.datasource.EventIcons
 import no.gruppe02.hiof.calendown.model.EventTimer
@@ -74,8 +86,6 @@ import java.text.SimpleDateFormat
 fun EventDetailScreen(modifier: Modifier = Modifier,
                       viewModel: EventDetailViewModel = hiltViewModel()
 ) {
-    val event = viewModel.event.value
-    val eventTimer = viewModel.eventTimer.value
     val participants = viewModel.participants.collectAsStateWithLifecycle().value
     viewModel.getParticipants()
 
@@ -96,7 +106,7 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
                     )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 actions = {
                     EventDropdownMenu(viewModel, snackbarHostState)
@@ -106,31 +116,10 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
         }
 
     ) { innerPadding ->
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(25.dp),
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Icon(
-                imageVector = EventIcons.DefaultIcons.defaultIcons.getOrDefault(
-                    event.icon,
-                    Icons.Default.DateRange
-                ),
-                contentDescription = null,
-                modifier = Modifier.size(100.dp)
-            )
-            GenericInformation(viewModel)
-            if (participants.isNotEmpty()){
-                Participants(participants = participants)
-            }
-            Row(horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 6.dp)) {
-                Timer(eventTimer = eventTimer)
-            }
+
+    BasicScreenLayout(innerPadding = innerPadding) {
+        GenericInformation(viewModel)
+        if (participants.isNotEmpty()) Participants(participants = participants)
         }
     }
 }
@@ -140,29 +129,75 @@ fun GenericInformation(viewModel: EventDetailViewModel){
     val event = viewModel.event.value
     val dateString = SimpleDateFormat.getDateTimeInstance().format(event.date)
     val owner = viewModel.owner.value
-    Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(text = event.title, style = MaterialTheme.typography.headlineLarge)
-        Text(text = dateString, style = MaterialTheme.typography.headlineSmall)
-        Text(text = "by ${owner.username}", style = MaterialTheme.typography.headlineSmall)
-        Text(text = event.description)
+
+    BasicContainer {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Event",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.width(6.dp))
+            Divider()
+        }
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top) {
+            Icon(
+                imageVector = EventIcons.DefaultIcons.defaultIcons.getOrDefault(
+                    event.icon,
+                    Icons.Default.DateRange
+                ),
+                tint = MaterialTheme.colorScheme.surfaceTint,
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
+            Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = event.title,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = dateString,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = "by ${owner.username}",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+        }
+        Divider()
+        Timer(eventTimer = viewModel.eventTimer.value)
+    }
+
+    BasicContainer {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            value = event.description.ifEmpty { "This event does not contain a description" },
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = "Event description") }
+        )
     }
 }
 
 @Composable
 fun Participants(participants: List<User>){
-    Column {
+    BasicContainer {
         Text(text = "Participants of this event:")
-
-        LazyColumn(content = {
-            participants.forEach { user ->
-                item {
-                    Participant(participant = user)
+        LazyColumn(
+            content = {
+                participants.forEach { user ->
+                    item {
+                        Participant(participant = user)
+                    }
                 }
             }
-        })
-
+        )
     }
-
 }
 
 
@@ -440,95 +475,141 @@ fun Timer(eventTimer: EventTimer){
     val minutes = eventTimer.minutes.value
     val seconds = eventTimer.seconds.value
 
-    Column(verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = years,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "years",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
-    }
-    Column(verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = months,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "months",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
-    }
-    Column(verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = days,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "days",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
-    }
-    Column(verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = hours,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "hours",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
-    }
-    Column(verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = minutes,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "minutes",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
-    }
-    Column(verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(
-            text = seconds,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(end = 5.dp),
-            textAlign = TextAlign.End)
-        Text(
-            text = "seconds",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(end = 2.dp),
-            textAlign = TextAlign.End)
+
+    val countStyle = MaterialTheme.typography.headlineMedium
+    val countFont = null
+    val countColor = MaterialTheme.colorScheme.primary
+    val labelStyle = MaterialTheme.typography.headlineSmall
+    val labelFont = null
+    val labelColor = MaterialTheme.colorScheme.primary
+    val timerArrangement = Arrangement.Top
+    val timerAlignment = Alignment.CenterHorizontally
+    
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (years != "0" || months != "0" || days != "0") {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.Top) {
+                Column(verticalArrangement = timerArrangement,
+                    horizontalAlignment = timerAlignment){
+                    Text(
+                        text = years,
+                        style = countStyle,
+                        color = countColor,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "years",
+                        style = labelStyle,
+                        color = labelColor,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = timerArrangement,
+                    horizontalAlignment = timerAlignment){
+                    Text(
+                        text = months,
+                        style = countStyle,
+                        color = countColor,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "months",
+                        style = labelStyle,
+                        color = labelColor,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+                Column(verticalArrangement = timerArrangement,
+                    horizontalAlignment = timerAlignment){
+                    Text(
+                        text = days,
+                        style = countStyle,
+                        color = countColor,
+                        modifier = Modifier
+                            .padding(end = 5.dp),
+                        textAlign = TextAlign.End)
+                    Text(
+                        text = "days",
+                        style = labelStyle,
+                        color = labelColor,
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        textAlign = TextAlign.End)
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.Top) {
+            Column(verticalArrangement = timerArrangement,
+                horizontalAlignment = timerAlignment){
+                Text(
+                    text = hours,
+                    style = countStyle,
+                    color = countColor,
+                    modifier = Modifier
+                        .padding(end = 5.dp),
+                    textAlign = TextAlign.End)
+                Text(
+                    text = "hours",
+                    style = labelStyle,
+                    color = labelColor,
+                    modifier = Modifier
+                        .padding(end = 2.dp),
+                    textAlign = TextAlign.End)
+            }
+            Column(verticalArrangement = timerArrangement,
+                horizontalAlignment = timerAlignment){
+                Text(
+                    text = minutes,
+                    style = countStyle,
+                    color = countColor,
+                    modifier = Modifier
+                        .padding(end = 5.dp),
+                    textAlign = TextAlign.End)
+                Text(
+                    text = "minutes",
+                    style = labelStyle,
+                    color = labelColor,
+                    modifier = Modifier
+                        .padding(end = 2.dp),
+                    textAlign = TextAlign.End)
+            }
+            Column(verticalArrangement = timerArrangement,
+                horizontalAlignment = timerAlignment){
+                Text(
+                    text = seconds,
+                    style = countStyle,
+                    color = countColor,
+                    modifier = Modifier
+                        .padding(end = 5.dp),
+                    textAlign = TextAlign.End
+                )
+                Text(
+                    text = "seconds",
+                    style = labelStyle,
+                    color = labelColor,
+                    modifier = Modifier
+                        .padding(end = 2.dp),
+                    textAlign = TextAlign.End
+                )
+            }
+        }
     }
 }
 
