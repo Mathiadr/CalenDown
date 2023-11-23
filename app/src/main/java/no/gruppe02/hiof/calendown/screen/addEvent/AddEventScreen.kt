@@ -246,7 +246,7 @@ fun IconSelectionBox(viewModel: AddEventViewModel, selectedIcon: MutableState<Im
     FilledIconButton(
         onClick = { expanded = true },
         modifier = Modifier
-            .aspectRatio(1f, false)
+            .height(48.dp)
             .width(48.dp)
     ){
         Icon(imageVector = selectedIcon.value!!, contentDescription = null)
