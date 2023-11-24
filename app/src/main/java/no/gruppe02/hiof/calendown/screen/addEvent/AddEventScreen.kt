@@ -3,18 +3,12 @@ package no.gruppe02.hiof.calendown.screen.addEvent
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.DatePicker
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,24 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -57,7 +46,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -66,11 +55,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import no.gruppe02.hiof.calendown.components.BasicContainer
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
-import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -152,18 +138,15 @@ fun AddEventScreenContent(
     Column(verticalArrangement = Arrangement.spacedBy(25.dp)) {
 
         Column {
-            Row(modifier = Modifier
-                    .wrapContentWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 OutlinedTextField(
                     singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     value = eventName.value,
                     onValueChange = { eventName.value = it },
-                    label = { Text(text = "Enter event name") },
+                    label = { Text(text = "Enter event name *") },
                 )
-                IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
-            }
+
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 singleLine = false,
@@ -172,37 +155,64 @@ fun AddEventScreenContent(
                     .fillMaxWidth(),
                 value = eventDescription.value,
                 onValueChange = { eventDescription.value = it },
-                label = { Text(text = "Describe your event (optional)") },
+                label = { Text(text = "Describe your event") },
             )
         }
 
-        Column {
-            OutlinedButton(
+        val trailingIconView = @Composable {
+            IconButton(
                 onClick = {
+                    if (mTime.value.isEmpty())
+                        mTimePickerDialog.show()
                     mDatePickerDialog.show()
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                //.size(200.dp, 50.dp)
             ) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event date")
-                Text(text = selectedDate.value.ifEmpty { "Select the date of the event" } )
-            }
-
-            OutlinedButton(
-                onClick = {
-                    mTimePickerDialog.show()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                //.size(200.dp, 50.dp)
-
-            ) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
-                Text(text = mTime.value.ifEmpty { "Select the time of the event" } )
+                Icon(
+                    Icons.Default.DateRange,
+                    contentDescription = "Button for datepicker",
+                    tint = Color.Black
+                )
             }
         }
-
+        val trailingIconView2 = @Composable {
+            IconButton(
+                onClick = {
+                    mTimePickerDialog.show()
+                    //if (selectedDate.value.isEmpty())
+                    //mDatePickerDialog.show()
+                },
+            ) {
+                Icon(
+                    Icons.Default.DateRange,
+                    contentDescription = "Button for timepicker",
+                    tint = Color.Black
+                )
+            }
+        }
+        Row {
+            OutlinedTextField(
+                trailingIcon = trailingIconView,
+                readOnly = true,
+                enabled = true,
+                singleLine = false,
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(0.5F),
+                value = eventDescription.value,
+                onValueChange = { eventDescription.value = it },
+                label = { Text(text = selectedDate.value.ifEmpty { "Select date *" } ) },
+            )
+            OutlinedTextField(
+                trailingIcon = trailingIconView2,
+                readOnly = true,
+                singleLine = false,
+                modifier = Modifier
+                    .wrapContentHeight(),
+                value = eventDescription.value,
+                onValueChange = { eventDescription.value = it },
+                label = { Text(text = mTime.value.ifEmpty { "Select time *" } )},
+            )
+        }
 
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
@@ -210,6 +220,7 @@ fun AddEventScreenContent(
             hostState = snackbarHostState,
             modifier = Modifier.fillMaxSize(),
         )
+        IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
 
         Row(horizontalArrangement = Arrangement.Start){
             FilledTonalButton(
