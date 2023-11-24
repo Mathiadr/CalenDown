@@ -3,6 +3,7 @@ package no.gruppe02.hiof.calendown.screen.addEvent
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -138,14 +139,18 @@ fun AddEventScreenContent(
     Column(verticalArrangement = Arrangement.spacedBy(25.dp)) {
 
         Column {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier,
                     value = eventName.value,
                     onValueChange = { eventName.value = it },
                     label = { Text(text = "Enter event name *") },
                 )
+                IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
+            }
+
 
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
@@ -178,8 +183,6 @@ fun AddEventScreenContent(
             IconButton(
                 onClick = {
                     mTimePickerDialog.show()
-                    //if (selectedDate.value.isEmpty())
-                    //mDatePickerDialog.show()
                 },
             ) {
                 Icon(
@@ -189,28 +192,28 @@ fun AddEventScreenContent(
                 )
             }
         }
-        Row {
+        Row (horizontalArrangement = Arrangement.SpaceBetween) {
             OutlinedTextField(
                 trailingIcon = trailingIconView,
                 readOnly = true,
                 enabled = true,
-                singleLine = false,
+                singleLine = true,
                 modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(0.5F),
-                value = eventDescription.value,
-                onValueChange = { eventDescription.value = it },
-                label = { Text(text = selectedDate.value.ifEmpty { "Select date *" } ) },
+                    .fillMaxWidth(0.5f)
+                    .clickable { mDatePickerDialog.show()  },
+                value = selectedDate.value,
+                onValueChange = { selectedDate.value = it },
+                label = { Text(text = "Select date") },
             )
             OutlinedTextField(
                 trailingIcon = trailingIconView2,
                 readOnly = true,
-                singleLine = false,
+                singleLine = true,
                 modifier = Modifier
-                    .wrapContentHeight(),
-                value = eventDescription.value,
-                onValueChange = { eventDescription.value = it },
-                label = { Text(text = mTime.value.ifEmpty { "Select time *" } )},
+                    .clickable { mTimePickerDialog.show() },
+                value = mTime.value,
+                onValueChange = { },
+                label = { Text(text = "Select time")},
             )
         }
 
@@ -220,9 +223,9 @@ fun AddEventScreenContent(
             hostState = snackbarHostState,
             modifier = Modifier.fillMaxSize(),
         )
-        IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
 
-        Row(horizontalArrangement = Arrangement.Start){
+
+        Row(horizontalArrangement = Arrangement.End){
             FilledTonalButton(
                 enabled = viewModel.selectedDateIsValid(selectedDate.value, mTime.value) && eventName.value.isNotEmpty(),
                 onClick = {
