@@ -43,6 +43,23 @@
     <string name="delete_friend_dialog_desc">Are you sure you wish to unfriend this user?</string>
     <string name="remove_friend_dialog_unfriend">Unfriend</string>
     <string name="delete">Delete</string>
+    <string name="test_string_resource">Test_String_Resource</string>
+    <string name="events">Events</string>
+    <string name="create_new_event_button">Create new event button</string>
+    <string name="actions_for_all_events">Actions for all events</string>
+    <string name="delete_all_events">Delete all events</string>
+    <string name="delete_all_events_confirmation">Are you sure you wish to delete all of your events? This action cannot be undone.</string>
+    <string name="delete_all_events_confirmation_subdescription">This will also make you leave events you participate in.</string>
+    <string name="delete_all">Delete All</string>
+    <string name="years">years</string>
+    <string name="months">months</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="minutes">minutes</string>
+    <string name="seconds">seconds</string>
+    <string name="event_reminder">Event Reminder</string>
+    <string name="your_event_is_due">Your event is due!</string>
+    <string name="is_due">\'%1$s\' is due!</string>
 
 
 </resources>

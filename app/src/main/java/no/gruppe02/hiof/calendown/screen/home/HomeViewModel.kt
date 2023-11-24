@@ -9,10 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import no.gruppe02.hiof.calendown.datasource.DummyGenerator
+import no.gruppe02.hiof.calendown.data.DummyGenerator
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.model.Invitation
+import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
@@ -24,7 +25,8 @@ class HomeViewModel @Inject constructor(
     private val authenticationService: AuthenticationService,
     private val invitationService: InvitationService,
     private val userService: UserService,
-    private val storageService: StorageService)
+    private val storageService: StorageService,
+    private val alarmSchedulerService: AlarmSchedulerService)
     : ViewModel() {
     private val TAG = this::class.simpleName
 
@@ -39,12 +41,8 @@ class HomeViewModel @Inject constructor(
                     .associateWith { event: Event ->
                     EventTimer(event.date.time)
                 }
-                Log.d(TAG, activeEvents.value.size.toString())
-                activeEvents.value.forEach { event, eventTimer ->
-                    Log.d(TAG, event.uid)
-                }
             } catch(e: Exception) {
-                error("Error occurred while fetching events")
+                Log.e(TAG, "Error occurred while fetching events", e)
             }
             handleCountdown()
         }
@@ -53,6 +51,7 @@ class HomeViewModel @Inject constructor(
     fun deleteAll(){
         viewModelScope.launch {
             activeEvents.value.keys.forEach { event: Event ->
+                alarmSchedulerService.cancel(event)
                 if (event.userId == authenticationService.currentUserId)
                     storageService.deleteEvent(event)
                 else if (event.participants.contains(authenticationService.currentUserId))
@@ -82,9 +81,7 @@ class HomeViewModel @Inject constructor(
                 if (!event.participants.contains(userId) && event.userId != userId){
                     invitationService.create(Invitation(recipientId = userId, senderId = dummyFriend.uid, eventId = docId))
                 }
-
             }
         }
-
     }
 }

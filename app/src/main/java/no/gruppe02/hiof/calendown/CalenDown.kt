@@ -5,4 +5,6 @@ import dagger.hilt.android.HiltAndroidApp
 
 // Required for Hilt to work
 @HiltAndroidApp
-class CalenDown : Application()
+class CalenDown : Application() {
+
+}

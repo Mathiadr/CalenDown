@@ -25,6 +25,7 @@ import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
 import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.model.User
+import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
@@ -37,6 +38,7 @@ class EventDetailViewModel @Inject constructor(
     private val storageService: StorageService,
     private val userService: UserService,
     private val invitationService: InvitationService,
+    private val alarmSchedulerService: AlarmSchedulerService
 )
     : ViewModel() {
     private val TAG = this::class.simpleName
@@ -87,6 +89,7 @@ class EventDetailViewModel @Inject constructor(
 
      fun deleteEvent(){
         viewModelScope.launch {
+            alarmSchedulerService.cancel(event.value)
             storageService.delete(event.value.uid)
         }
     }

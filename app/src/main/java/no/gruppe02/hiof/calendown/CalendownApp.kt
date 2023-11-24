@@ -1,5 +1,7 @@
 package no.gruppe02.hiof.calendown
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
@@ -14,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -206,3 +207,17 @@ fun BottomNavigationBar (
         }
     }
 }
+
+fun setNotificationsChannel(){
+    val CHANNEL_ID = "2"
+    val name = "test"
+    val descriptionText = "test"
+    val importance = NotificationManager.IMPORTANCE_DEFAULT
+    val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+    mChannel.description = descriptionText
+    //val notificationManager = System .createNotificationChannel(mChannel)
+}
+
+
+
+

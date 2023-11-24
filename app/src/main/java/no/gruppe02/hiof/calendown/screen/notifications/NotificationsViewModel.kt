@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.model.User
+import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
@@ -27,7 +28,7 @@ class NotificationsViewModel @Inject constructor(
     private val invitationService: InvitationService,
     private val userService: UserService,
     private val storageService: StorageService,
-    private val authenticationService: AuthenticationService
+    private val alarmSchedulerService: AlarmSchedulerService
 ) : ViewModel() {
     private val TAG = this::class.simpleName
 
@@ -85,6 +86,7 @@ class NotificationsViewModel @Inject constructor(
         viewModelScope.launch {
             storageService.addParticipant(eventId, userService.currentUserId)
             invitationService.delete(invitationId)
+            storageService.getEvent(eventId)?.let { alarmSchedulerService.setAlarm(it) }
         }
     }
     fun declineInvitation(invitationId: String) {

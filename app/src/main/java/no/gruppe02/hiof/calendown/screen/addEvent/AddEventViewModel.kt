@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import no.gruppe02.hiof.calendown.datasource.EventIcons
+import no.gruppe02.hiof.calendown.data.EventIcons
 import no.gruppe02.hiof.calendown.model.Event
+import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import java.text.SimpleDateFormat
@@ -17,7 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEventViewModel @Inject constructor(
     private val storageService: StorageService,
-    private val authenticationService: AuthenticationService)
+    private val authenticationService: AuthenticationService,
+    private val alarmSchedulerService: AlarmSchedulerService
+)
     : ViewModel() {
     private val TAG = this.javaClass.simpleName
 
@@ -28,14 +31,20 @@ class AddEventViewModel @Inject constructor(
         date: Date,
         icon: String?) {
         viewModelScope.launch {
-            storageService.save(
-                Event(
+            try {
+                val event = Event(
                     userId = authenticationService.currentUserId,
                     title = name,
                     description = description,
                     date = date,
                     icon = icon ?: Icons.Default.DateRange.name
-                    ))
+                )
+                storageService.save(event).apply {
+                    alarmSchedulerService.setAlarm(event)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error occurred while saving event to database")
+            }
         }
     }
 
@@ -61,5 +70,7 @@ class AddEventViewModel @Inject constructor(
             throw Exception(e)
         }
     }
+
+
 }
 

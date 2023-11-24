@@ -4,10 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
+import no.gruppe02.hiof.calendown.service.impl.AlarmSchedulerServiceImpl
 import no.gruppe02.hiof.calendown.service.impl.AuthenticationServiceImpl
 import no.gruppe02.hiof.calendown.service.impl.InvitationServiceImpl
 import no.gruppe02.hiof.calendown.service.impl.StorageServiceImpl
@@ -28,4 +30,7 @@ abstract class ServiceModule {
 
     @Binds
     abstract fun provideInvitationService(impl: InvitationServiceImpl): InvitationService
+
+    @Binds
+    abstract fun provideAlarmSchedulerService(impl: AlarmSchedulerServiceImpl): AlarmSchedulerService
 }
