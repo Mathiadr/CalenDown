@@ -16,8 +16,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -41,12 +41,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import no.gruppe02.hiof.calendown.datasource.EventIcons
+import no.gruppe02.hiof.calendown.R
+import no.gruppe02.hiof.calendown.data.EventIcons
 import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.EventTimer
 import java.text.SimpleDateFormat
@@ -65,7 +67,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
             TopAppBar(
                 {
                     Text(
-                        text = "Events",
+                        text = stringResource(R.string.events),
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -125,7 +127,7 @@ fun OpenAddEventScreen(
     {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = "Create new event button",
+            contentDescription = stringResource(R.string.create_new_event_button),
         )
     }
 }
@@ -137,7 +139,7 @@ fun OptionsDropdownMenu(viewModel: HomeViewModel){
     Box(modifier = Modifier
         .wrapContentSize()) {
         IconButton(onClick = { expanded = !expanded }) {
-            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Actions for all events")
+            Icon(imageVector = Icons.Default.MoreVert, contentDescription = stringResource(R.string.actions_for_all_events))
         }
 
         DropdownMenu(
@@ -154,7 +156,7 @@ fun OptionsDropdownMenu(viewModel: HomeViewModel){
             )
 
             DropdownMenuItem(
-                text = { Text(text = "Delete all events", color = Color.Red) },
+                text = { Text(text = stringResource(R.string.delete_all_events), color = Color.Red) },
                 onClick = {
                     openDeleteEventsDialog = true
                     expanded = false
@@ -178,13 +180,13 @@ fun DeleteEventsDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = "Delete All Events", color = Color.Red)
+            Text(text = stringResource(R.string.delete_all_events), color = Color.Red)
         },
         text = {
             Column {
-                Text(text = "Are you sure you wish to delete all of your events? This action cannot be undone.")
+                Text(text = stringResource(R.string.delete_all_events_confirmation))
                 Text(
-                    text = "This will also make you leave events you participate in.",
+                    text = stringResource(R.string.delete_all_events_confirmation_subdescription),
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = FontStyle.Italic,
                     color = Color.Gray
@@ -199,12 +201,12 @@ fun DeleteEventsDialog(
             TextButton(onClick = {
                 closeDialog()
                 viewModel.deleteAll()}) {
-                Text(text = "Delete All", color = Color.Red)
+                Text(text = stringResource(R.string.delete_all), color = Color.Red)
             }
         },
         dismissButton = {
             TextButton(onClick = { closeDialog() }) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.cancel))
             }
         })
 }
@@ -276,7 +278,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "years",
+                    text = stringResource(R.string.years),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),
@@ -291,7 +293,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "months",
+                    text = stringResource(R.string.months),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),
@@ -306,7 +308,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "days",
+                    text = stringResource(R.string.days),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),
@@ -321,7 +323,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "hours",
+                    text = stringResource(R.string.hours),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),
@@ -336,7 +338,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "minutes",
+                    text = stringResource(R.string.minutes),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),
@@ -351,7 +353,7 @@ fun EventCard(
                         .padding(end = 5.dp),
                     textAlign = TextAlign.End)
                 Text(
-                    text = "seconds",
+                    text = stringResource(R.string.seconds),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(end = 2.dp),

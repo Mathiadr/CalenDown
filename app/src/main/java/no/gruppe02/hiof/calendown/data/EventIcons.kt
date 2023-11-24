@@ -1,4 +1,4 @@
-package no.gruppe02.hiof.calendown.datasource
+package no.gruppe02.hiof.calendown.data
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
