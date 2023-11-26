@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import no.gruppe02.hiof.calendown.model.Event
 import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
@@ -21,6 +22,8 @@ import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
 import java.security.cert.CertPath
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,25 +38,22 @@ class NotificationsViewModel @Inject constructor(
     private val _invitations = MutableStateFlow<List<InvitationUiState>>(emptyList())
     val invitations = _invitations.asStateFlow()
 
-    private val _userProfileImages = mutableStateMapOf<String, Uri?>()
-    val userProfileImages = _userProfileImages
 
     init {
         viewModelScope.launch {
             invitationService.invitations.collect { invitations ->
                 _invitations.value = invitations.map {invitation ->
                     val sender = getSender(invitation.senderId)
+                    val event = getEvent(invitation.eventId)
                     InvitationUiState(
                         uid = invitation.uid,
                         senderId = invitation.senderId,
                         senderName = sender?.username ?: "Invalid",
                         senderProfileImageUri = getProfileImage(sender?.imgUrl),
                         eventId = invitation.eventId,
-                        eventName = getEventName(invitation.eventId),
+                        eventName = event?.title ?: "Invalid",
+                        eventDate = SimpleDateFormat.getDateTimeInstance().format(event?.date) ?: "Invalid"
                     )
-                }
-                invitations.forEach { invitation ->
-                    _userProfileImages[invitation.senderId] = getProfileImage(invitation.senderId)
                 }
             }
         }
@@ -77,9 +77,9 @@ class NotificationsViewModel @Inject constructor(
             return@withContext userService.get(senderId)?.username ?: "Invalid"
         }
 
-    private suspend fun getEventName(eventId: String): String =
+    private suspend fun getEvent(eventId: String): Event? =
         withContext(Dispatchers.Default) {
-            return@withContext storageService.getEvent(eventId)?.title ?: "Invalid"
+            return@withContext storageService.getEvent(eventId)
     }
     fun acceptInvitation(invitationId: String, eventId: String) {
         Log.d(TAG, "User has accepted invitation $invitationId")

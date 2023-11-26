@@ -1,6 +1,5 @@
 package no.gruppe02.hiof.calendown.screen.notifications
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,7 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,9 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.ProfileImage
-import no.gruppe02.hiof.calendown.model.Invitation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +51,7 @@ fun NotificationsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Notifications",
+                        text = "Invites",
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -81,7 +76,7 @@ fun NotificationsScreen(
                 verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 LazyColumn {
-                    items(invitations, key = { it.eventId })
+                    items(invitations, key = { it.uid })
                     { invitation ->
                         InvitationCard(invitation, viewModel)
                     }
@@ -123,10 +118,10 @@ fun InvitationCard(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.headlineMedium)
                 Text(
-                    text = "Received 2 days ago", // TODO: Change
+                    text = invitation.eventDate,
                     style = MaterialTheme.typography.labelMedium)
             }
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround){
                 AcceptButton {
                     viewModel.acceptInvitation(
                         invitationId = invitation.uid,
@@ -149,13 +144,13 @@ fun AcceptButton(onAccept: () -> Unit){
         onClick = { onAccept() },
         modifier = Modifier
             .clip(CircleShape)
-            .size(40.dp),
+            .size(48.dp),
         colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.hsv(110f, 0.5f, 0.9f)),
         ) {
         Icon(modifier = Modifier
             .clip(CircleShape)
-            .size(25.dp),
+            .size(24.dp),
             imageVector = Icons.Default.Check,
             tint = Color.DarkGray,
             contentDescription = "Accept invitation")
@@ -168,31 +163,15 @@ fun DeclineButton(onDecline: () -> Unit){
         onClick = { onDecline() },
         modifier = Modifier
             .clip(CircleShape)
-            .size(40.dp),
+            .size(48.dp),
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.hsv(0f, 0.5f, 0.9f)),
     ) {
         Icon(modifier = Modifier
             .clip(CircleShape)
-            .size(25.dp),
+            .size(24.dp),
             imageVector = Icons.Default.Close,
             tint = Color.DarkGray,
             contentDescription = "Decline invitation")
     }
 }
-
-@Composable
-fun invitation(){
-
-}
-
-/*
-@Preview
-@Composable
-fun InvitationPreview(){
-    CalenDownTheme {
-        InvitationCard()
-    }
-}
-
- */

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package no.gruppe02.hiof.calendown.screen.profile
 
@@ -80,7 +80,6 @@ import no.gruppe02.hiof.calendown.components.HeaderText
 import no.gruppe02.hiof.calendown.components.ProfileImage
 
 
-@SuppressLint("StateFlowValueCalledInComposition") // ?
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -333,10 +332,10 @@ fun SearchDialog(
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Divider()
-                Box(){
+                Box {
                     LazyColumn(
                         modifier = Modifier
-                            .height(250.dp)
+                            .height(450.dp)
                             .fillMaxWidth(),
                         content = {
                             searchResult.forEach { user ->

@@ -50,12 +50,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
 import java.time.LocalDate
@@ -72,12 +74,15 @@ fun AddEventScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar( title = {
+            TopAppBar( title =
+            {
                 Text(
                     text = "Create Event",
                     style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
-                )},
+                )
+            },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
