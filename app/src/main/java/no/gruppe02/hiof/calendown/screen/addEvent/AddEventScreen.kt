@@ -111,7 +111,7 @@ fun AddEventScreenContent(
     val currentTime: LocalTime = LocalTime.now()
     val today: LocalDate = LocalDate.now()
     val formattedDate: String = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    val formattedTime: String = currentTime.format(DateTimeFormatter.ofPattern(":HH:mm:ss"))
+    val formattedTime: String = currentTime.format(DateTimeFormatter.ofPattern(":HH:mm"))
     val selectedDate = remember { mutableStateOf("") }
     val mTime = remember { mutableStateOf("") }
 
@@ -133,7 +133,7 @@ fun AddEventScreenContent(
     val mTimePickerDialog = TimePickerDialog(
         mContext,
         {_, mHour : Int, mMinute: Int ->
-            mTime.value = ":$mHour:$mMinute:00"
+            mTime.value = ":$mHour:$mMinute"
         }, mHour, mMinute, false
     )
     // logikk for datepicker https://www.geeksforgeeks.org/date-picker-in-android-using-jetpack-compose/
@@ -209,8 +209,11 @@ fun AddEventScreenContent(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .clickable { mDatePickerDialog.show()  },
-                value = selectedDate.value,
+                    .clickable(
+                        enabled = true,
+                        onClick = { mDatePickerDialog.show() },
+                        ),
+                value = selectedDate.value.format("dd/MM/yyyy"),
                 onValueChange = { selectedDate.value = it },
                 label = { Text(text = "Select date") },
             )
@@ -219,8 +222,11 @@ fun AddEventScreenContent(
                 readOnly = true,
                 singleLine = true,
                 modifier = Modifier
-                    .clickable { mTimePickerDialog.show() },
-                value = mTime.value,
+                    .clickable(
+                        enabled = true,
+                        onClick = { mTimePickerDialog.show() },
+                    ),
+                value = mTime.value.format("HH:mm"),
                 onValueChange = { },
                 label = { Text(text = "Select time")},
             )

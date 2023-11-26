@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService

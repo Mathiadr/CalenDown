@@ -1,7 +1,5 @@
 package no.gruppe02.hiof.calendown
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
@@ -36,13 +34,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import no.gruppe02.hiof.calendown.screen.addEvent.AddEventScreen
 import no.gruppe02.hiof.calendown.screen.createaccount.CreateAccountScreen
+import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 import no.gruppe02.hiof.calendown.screen.home.HomeScreen
 import no.gruppe02.hiof.calendown.screen.login.LoginScreen
 import no.gruppe02.hiof.calendown.screen.notifications.NotificationsScreen
 import no.gruppe02.hiof.calendown.screen.profile.ProfileScreen
-import no.gruppe02.hiof.calendown.screen.addEvent.AddEventScreen
-import no.gruppe02.hiof.calendown.screen.eventdetail.EventDetailScreen
 
 sealed class Screen(
     val route: String,
