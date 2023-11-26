@@ -121,13 +121,16 @@ fun AddEventScreenContent(
     val mMinute = mCalendar[Calendar.MINUTE]
 
 
+
+
+    //logikk for timepicker https://www.geeksforgeeks.org/timepicker-in-android/
     val mTimePickerDialog = TimePickerDialog(
         mContext,
         {_, mHour : Int, mMinute: Int ->
             mTime.value = ":$mHour:$mMinute:00"
         }, mHour, mMinute, false
     )
-
+    // logikk for datepicker https://www.geeksforgeeks.org/date-picker-in-android-using-jetpack-compose/
     mCalendar.time = Date()
     val mDatePickerDialog = DatePickerDialog(
         mContext,
