@@ -2,7 +2,6 @@
 
 package no.gruppe02.hiof.calendown.screen.profile
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,11 +27,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -50,7 +45,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,14 +53,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -75,6 +63,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import no.gruppe02.hiof.calendown.R
+import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 import no.gruppe02.hiof.calendown.components.HeaderText
 import no.gruppe02.hiof.calendown.components.ProfileImage
@@ -82,10 +71,7 @@ import no.gruppe02.hiof.calendown.components.ProfileImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
-    modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel()
-) {
+fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     Scaffold (
         topBar = {
             TopAppBar(
@@ -102,21 +88,12 @@ fun ProfileScreen(
         }
     ) { innerPadding ->
 
-        Surface(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .background(MaterialTheme.colorScheme.background)) {
-            Column (
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.Top),
-                horizontalAlignment = Alignment.CenterHorizontally){
-
-                PrimaryInfo(viewModel = viewModel)
-                FriendListCard(viewModel = viewModel)
-            }
+        BasicScreenLayout(
+            innerPadding = innerPadding,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ){
+            PrimaryInfo(viewModel = viewModel)
+            FriendListCard(viewModel = viewModel)
         }
     }
 }

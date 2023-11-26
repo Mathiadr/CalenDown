@@ -77,7 +77,7 @@ fun HeaderText(
 }
 
 @Composable
-fun BasicContainer(modifier: Modifier = Modifier, content: @Composable() ColumnScope.() -> Unit): Unit{
+fun BasicContainer(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit){
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,8 +94,9 @@ fun BasicContainer(modifier: Modifier = Modifier, content: @Composable() ColumnS
     }
 }
 
+// Cannot be immediately followed by a LazyColumn/LazyRow or any other component with infinite constraint
 @Composable
-fun BasicScreenLayout(innerPadding: PaddingValues, modifier: Modifier = Modifier, content: @Composable() ColumnScope.() -> Unit): Unit{
+fun BasicScreenLayout(innerPadding: PaddingValues, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit){
     Surface(modifier = Modifier
         .fillMaxSize()
         .padding(innerPadding)
@@ -103,8 +104,7 @@ fun BasicScreenLayout(innerPadding: PaddingValues, modifier: Modifier = Modifier
         Column(
             modifier = modifier
                 .padding(16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = content

@@ -4,8 +4,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 private const val MILLIS_IN_SECOND = 1000L
 private const val SECONDS_IN_MINUTE = 60

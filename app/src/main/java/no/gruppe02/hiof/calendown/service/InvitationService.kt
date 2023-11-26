@@ -6,6 +6,6 @@ import no.gruppe02.hiof.calendown.model.Invitation
 interface InvitationService {
     val invitations: Flow<List<Invitation>>
 
-    suspend fun create(invitation: Invitation): Unit
-    suspend fun delete(invitationId: String): Unit
+    suspend fun create(invitation: Invitation)
+    suspend fun delete(invitationId: String)
 }

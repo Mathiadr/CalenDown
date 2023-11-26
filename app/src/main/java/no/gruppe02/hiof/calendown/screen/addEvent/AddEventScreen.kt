@@ -50,14 +50,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
 import java.time.LocalDate
@@ -89,8 +87,11 @@ fun AddEventScreen(
             )
         },
     ) { innerPadding ->
-        BasicScreenLayout(innerPadding = innerPadding) {
-            AddEventScreenContent(onSaveEventClick, Modifier.padding(innerPadding))
+        BasicScreenLayout(
+            innerPadding = innerPadding,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            AddEventScreenContent(onSaveEventClick)
         }
     }
 }
@@ -100,10 +101,10 @@ fun AddEventScreen(
 @Composable
 fun AddEventScreenContent(
     onSaveEventClick: () -> Unit,
-    modifier: Modifier = Modifier, viewModel: AddEventViewModel = hiltViewModel()) {
+    viewModel: AddEventViewModel = hiltViewModel()) {
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
-    val selectedIcon = remember { mutableStateOf<ImageVector?>(viewModel.icons[Icons.Default.DateRange.name]) }
+    val selectedIcon = remember { mutableStateOf(viewModel.icons[Icons.Default.DateRange.name]) }
 
 
     //time and date defaults to now if left empty
@@ -151,7 +152,7 @@ fun AddEventScreenContent(
                 verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     singleLine = true,
-                    modifier = Modifier,
+                    modifier = Modifier.fillMaxWidth(0.75f),
                     value = eventName.value,
                     onValueChange = { eventName.value = it },
                     label = { Text(text = "Enter event name *") },
@@ -257,7 +258,8 @@ fun AddEventScreenContent(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun IconSelectionBox(viewModel: AddEventViewModel, selectedIcon: MutableState<ImageVector?>){
     var expanded by remember { mutableStateOf(false) }

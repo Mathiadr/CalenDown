@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val TAG = this::class.simpleName
 
     val userId = authenticationService.currentUserId
-    val currentUser = mutableStateOf<User>(User())
+    val currentUser = mutableStateOf(User())
 
     private val _searchResults = MutableStateFlow<List<User>>(emptyList())
     val searchResults = _searchResults.asStateFlow()

@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
@@ -77,9 +79,8 @@ import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetailScreen(modifier: Modifier = Modifier,
-                      viewModel: EventDetailViewModel = hiltViewModel()
-) {
+fun EventDetailScreen(viewModel: EventDetailViewModel = hiltViewModel())
+{
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -108,7 +109,10 @@ fun EventDetailScreen(modifier: Modifier = Modifier,
 
     ) { innerPadding ->
 
-        BasicScreenLayout(innerPadding = innerPadding) {
+        BasicScreenLayout(
+            innerPadding = innerPadding,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             GenericInformation(viewModel)
             Participants(viewModel = viewModel)
         }
@@ -234,14 +238,6 @@ fun EventDropdownMenu(viewModel: EventDetailViewModel,
     var openDeleteEventDialog by remember { mutableStateOf(false)}
     var openRemoveParticipantDialog by remember { mutableStateOf(false)}
     var openLeaveEventDialog by remember { mutableStateOf(false)}
-    val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
-
-    fun launchSnackbar(message: String){
-        scope.launch{
-            snackbarHostState.showSnackbar("Test: $message")
-        }
-    }
 
     Box(modifier = Modifier
         .wrapContentSize()) {

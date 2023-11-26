@@ -19,6 +19,7 @@ const val OLIVER_ID = "kwA1lNGBRZd0zMluHLoM3WC0k763"
 const val NIKOLAS_ID = "bmtqUlv0nGdZ4co2m64ud1WaKwG2"
 
 
+// Meant for debugging or demonstration purposes
 object DummyGenerator{
     val yourBestFriend = User(
         uid = UUID.randomUUID().toString(),

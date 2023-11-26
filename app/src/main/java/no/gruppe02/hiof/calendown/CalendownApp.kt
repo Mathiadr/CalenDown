@@ -208,16 +208,6 @@ fun BottomNavigationBar (
     }
 }
 
-fun setNotificationsChannel(){
-    val CHANNEL_ID = "2"
-    val name = "test"
-    val descriptionText = "test"
-    val importance = NotificationManager.IMPORTANCE_DEFAULT
-    val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
-    mChannel.description = descriptionText
-    //val notificationManager = System .createNotificationChannel(mChannel)
-}
-
 
 
 

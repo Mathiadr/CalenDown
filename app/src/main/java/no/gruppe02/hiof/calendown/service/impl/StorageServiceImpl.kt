@@ -6,12 +6,9 @@ import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject

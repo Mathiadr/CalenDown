@@ -2,13 +2,8 @@ package no.gruppe02.hiof.calendown.service.impl
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.service.AuthenticationService
-import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject
 
 

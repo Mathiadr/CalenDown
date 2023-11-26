@@ -3,24 +3,14 @@ package no.gruppe02.hiof.calendown.service.impl
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.tasks.await
 import no.gruppe02.hiof.calendown.model.Invitation
-import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
-import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
+
 class InvitationServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val userService: UserService

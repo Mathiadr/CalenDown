@@ -2,28 +2,21 @@ package no.gruppe02.hiof.calendown.screen.notifications
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.gruppe02.hiof.calendown.model.Event
-import no.gruppe02.hiof.calendown.model.Invitation
 import no.gruppe02.hiof.calendown.model.User
 import no.gruppe02.hiof.calendown.service.AlarmSchedulerService
-import no.gruppe02.hiof.calendown.service.AuthenticationService
 import no.gruppe02.hiof.calendown.service.InvitationService
 import no.gruppe02.hiof.calendown.service.StorageService
 import no.gruppe02.hiof.calendown.service.UserService
-import java.security.cert.CertPath
 import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,8 +36,8 @@ class NotificationsViewModel @Inject constructor(
         viewModelScope.launch {
             invitationService.invitations.collect { invitations ->
                 _invitations.value = invitations.map {invitation ->
-                    val sender = getSender(invitation.senderId)
-                    val event = getEvent(invitation.eventId)
+                    val sender = userService.get(invitation.senderId)
+                    val event = storageService.getEvent(invitation.eventId)
                     InvitationUiState(
                         uid = invitation.uid,
                         senderId = invitation.senderId,
@@ -66,21 +59,6 @@ class NotificationsViewModel @Inject constructor(
             } else
                 return@withContext null
         }
-
-    private suspend fun getSender(senderId: String): User? =
-        withContext(Dispatchers.Default) {
-            return@withContext userService.get(senderId)
-    }
-
-    private suspend fun getSenderName(senderId: String): String =
-        withContext(Dispatchers.Default) {
-            return@withContext userService.get(senderId)?.username ?: "Invalid"
-        }
-
-    private suspend fun getEvent(eventId: String): Event? =
-        withContext(Dispatchers.Default) {
-            return@withContext storageService.getEvent(eventId)
-    }
     fun acceptInvitation(invitationId: String, eventId: String) {
         Log.d(TAG, "User has accepted invitation $invitationId")
         viewModelScope.launch {

@@ -1,8 +1,6 @@
 package no.gruppe02.hiof.calendown.service
 
 import android.net.Uri
-import com.google.android.gms.tasks.Task
-import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.Flow
 import no.gruppe02.hiof.calendown.model.User
 
