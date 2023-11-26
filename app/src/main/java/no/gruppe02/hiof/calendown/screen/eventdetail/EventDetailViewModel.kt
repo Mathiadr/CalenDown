@@ -69,7 +69,7 @@ class EventDetailViewModel @Inject constructor(
             viewModelScope.launch {
                 event.value = storageService.getEvent(eventId) ?: Event()
                 eventTimer.value = EventTimer(event.value.date.time)
-                owner.value =  userService.get(event.value.userId)!! // TODO: Catch error
+                owner.value =  userService.getUserData(event.value.userId).first() // TODO: Catch error
                 getFriendList()
                 getParticipants()
                 handleCountdown()
