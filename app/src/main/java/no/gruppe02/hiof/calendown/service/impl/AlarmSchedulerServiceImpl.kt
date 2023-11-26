@@ -35,7 +35,7 @@ class AlarmSchedulerServiceImpl @Inject constructor(
                 putExtra("content", event.description)
                 putExtra("message", getMessageSuffix(event.title))
             }.let{ intent ->
-                PendingIntent.getBroadcast(context, event.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE)
+                PendingIntent.getBroadcast(context, event.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
             }
 
             val alarmTime = event.date.time
@@ -63,7 +63,7 @@ class AlarmSchedulerServiceImpl @Inject constructor(
                 putExtra("content", event.description)
                 putExtra("message", getMessageSuffix(event.title))
             }.let{ intent ->
-                PendingIntent.getBroadcast(context, event.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE)
+                PendingIntent.getBroadcast(context, event.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
             }
             alarmManager.cancel(intent)
             //Log.d(TAG, "Alarm for event ${event.title} has been successfully cancelled")
