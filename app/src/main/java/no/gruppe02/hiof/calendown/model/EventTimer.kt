@@ -12,6 +12,7 @@ import no.gruppe02.hiof.calendown.api.getRemainingTime
 import no.gruppe02.hiof.calendown.api.getSeconds
 import no.gruppe02.hiof.calendown.api.getYears
 
+// This is probably a HORRIBLE way of doing it. But I'm out of time to refactor it.
 class EventTimer(
     var targetTimeInMillis: Long,
     val remainingTimeInMillis: MutableLongState = mutableLongStateOf(getRemainingTime(targetTimeInMillis)),

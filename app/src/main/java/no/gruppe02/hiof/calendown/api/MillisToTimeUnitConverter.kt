@@ -15,29 +15,34 @@ private const val DAYS_IN_YEAR = 365
 private const val YEAR_MILLISECONDS =
     (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * DAYS_IN_YEAR)
 
-
+// Solution based on code from the following link: https://www.geeksforgeeks.org/find-the-duration-of-difference-between-two-dates-in-java/
 fun getRemainingTime(futureTimeInLong: Long): Long {
     val currentTimeMillis = System.currentTimeMillis()
     return futureTimeInLong - currentTimeMillis
 }
 
+// Solution based on code from the following link: https://www.geeksforgeeks.org/find-the-duration-of-difference-between-two-dates-in-java/
 fun getSeconds(timeInLong: Long): Int{
     return ((timeInLong / MILLIS_IN_SECOND) % SECONDS_IN_MINUTE).toInt()
 }
 
+// Solution based on code from the following link: https://www.geeksforgeeks.org/find-the-duration-of-difference-between-two-dates-in-java/
 fun getMinutes(timeInLong: Long): Int{
     return (timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE) % MINUTES_IN_HOUR).toInt()
 }
 
+// Solution based on code from the following link: https://www.geeksforgeeks.org/find-the-duration-of-difference-between-two-dates-in-java/
 fun getHours(timeInLong: Long): Int{
     return (timeInLong / (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR) % HOURS_IN_DAY).toInt()
 }
 
+// Solution based on code from the following link: https://www.geeksforgeeks.org/find-the-duration-of-difference-between-two-dates-in-java/
 fun getTotalDays(timeInLong: Long): Int{
     return (timeInLong /
             (MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY)).toInt()
 }
 
+// Solution based on code provided by ChatGPT
 fun getDays(timeInLong: Long): Int{
     val dateCurrent = LocalDate.now()
     val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
@@ -47,6 +52,7 @@ fun getDays(timeInLong: Long): Int{
     ).days
 }
 
+// Solution based on code provided by ChatGPT
 fun getMonths(timeInLong: Long): Int {
     val dateCurrent = LocalDate.now()
     val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
@@ -56,6 +62,7 @@ fun getMonths(timeInLong: Long): Int {
     ).months
 }
 
+// Solution based on code provided by ChatGPT
 fun getYears(timeInLong: Long): Int {
     val dateCurrent = LocalDate.now()
     val dateTarget = Instant.ofEpochMilli(timeInLong + System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()

@@ -67,7 +67,7 @@ class ProfileViewModel @Inject constructor(
 
     fun searchUsers(query: String){
         viewModelScope.launch {
-            if (query.length < 2) {
+            if (query.length > 2) {
                 userService.searchUser(query).collect {queryResult ->
                     _searchResults.value = queryResult
                     queryResult.map {user ->

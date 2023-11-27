@@ -76,7 +76,6 @@ class UserServiceImpl @Inject constructor(
 
                 if (snapshot != null && snapshot.exists()) {
                     try {
-                        val currentFriends = snapshot.get(FRIENDS_FIELD) as List<String>
                         launch {
                             val collection = firestore.collection(USER_COLLECTION).where(
                                 Filter.greaterThanOrEqualTo(USER_USERNAME_FIELD, nameQuery)
@@ -94,6 +93,7 @@ class UserServiceImpl @Inject constructor(
             }
         }
 
+    // Solution (partially) based on code provided from ChatGPT
     override suspend fun getFriendList(userId: String): Flow<List<User>> =
         callbackFlow {
             val document = firestore.collection(USER_COLLECTION).document(userId)

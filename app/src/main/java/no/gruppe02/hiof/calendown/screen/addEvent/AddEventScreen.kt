@@ -3,7 +3,6 @@ package no.gruppe02.hiof.calendown.screen.addEvent
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.DatePicker
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -28,8 +27,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -47,20 +46,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 
@@ -69,8 +67,16 @@ import java.util.Date
 fun AddEventScreen(
     onSaveEventClick: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.fillMaxSize(),
+                ) },
         topBar = {
             TopAppBar( title =
             {
@@ -91,7 +97,11 @@ fun AddEventScreen(
             innerPadding = innerPadding,
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            AddEventScreenContent(onSaveEventClick)
+            AddEventScreenContent(
+                onSaveEventClick = onSaveEventClick,
+                snackbarHostState = snackbarHostState,
+                scope = scope
+            )
         }
     }
 }
@@ -101,7 +111,9 @@ fun AddEventScreen(
 @Composable
 fun AddEventScreenContent(
     onSaveEventClick: () -> Unit,
-    viewModel: AddEventViewModel = hiltViewModel()) {
+    viewModel: AddEventViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
+    scope: CoroutineScope) {
     val eventName = remember { mutableStateOf("") }
     val eventDescription = remember { mutableStateOf("") }
     val selectedIcon = remember { mutableStateOf(viewModel.icons[Icons.Default.DateRange.name]) }
@@ -110,8 +122,7 @@ fun AddEventScreenContent(
     //time and date defaults to now if left empty
     val currentTime: LocalTime = LocalTime.now()
     val today: LocalDate = LocalDate.now()
-    val formattedDate: String = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    val formattedTime: String = currentTime.format(DateTimeFormatter.ofPattern(":HH:mm"))
+
     val selectedDate = remember { mutableStateOf("") }
     val mTime = remember { mutableStateOf("") }
 
@@ -134,8 +145,9 @@ fun AddEventScreenContent(
         mContext,
         {_, mHour : Int, mMinute: Int ->
             mTime.value = ":$mHour:$mMinute"
-        }, mHour, mMinute, false
+        }, mHour, mMinute, true
     )
+
     // logikk for datepicker https://www.geeksforgeeks.org/date-picker-in-android-using-jetpack-compose/
     mCalendar.time = Date()
     val mDatePickerDialog = DatePickerDialog(
@@ -155,7 +167,7 @@ fun AddEventScreenContent(
                     modifier = Modifier.fillMaxWidth(0.75f),
                     value = eventName.value,
                     onValueChange = { eventName.value = it },
-                    label = { Text(text = "Enter event name *") },
+                    label = { Text(text = "Enter event name") },
                 )
                 IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
             }
@@ -169,75 +181,33 @@ fun AddEventScreenContent(
                     .fillMaxWidth(),
                 value = eventDescription.value,
                 onValueChange = { eventDescription.value = it },
-                label = { Text(text = "Describe your event") },
+                label = { Text(text = "Describe your event (optional)") },
             )
         }
 
-        val trailingIconView = @Composable {
-            IconButton(
+        Column {
+            OutlinedButton(
                 onClick = {
-                    if (mTime.value.isEmpty())
-                        mTimePickerDialog.show()
                     mDatePickerDialog.show()
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    Icons.Default.DateRange,
-                    contentDescription = "Button for datepicker",
-                    tint = Color.Black
-                )
+                Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event date")
+                Text(text = selectedDate.value.ifEmpty { "Select the date of the event" } )
             }
-        }
-        val trailingIconView2 = @Composable {
-            IconButton(
+
+            OutlinedButton(
                 onClick = {
                     mTimePickerDialog.show()
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    Icons.Default.DateRange,
-                    contentDescription = "Button for timepicker",
-                    tint = Color.Black
-                )
+                Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
+                Text(text = mTime.value.ifEmpty { "Select the time of the event" } )
             }
         }
-        Row (horizontalArrangement = Arrangement.SpaceBetween) {
-            OutlinedTextField(
-                trailingIcon = trailingIconView,
-                readOnly = true,
-                enabled = true,
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .clickable(
-                        enabled = true,
-                        onClick = { mDatePickerDialog.show() },
-                        ),
-                value = selectedDate.value.format("dd/MM/yyyy"),
-                onValueChange = { selectedDate.value = it },
-                label = { Text(text = "Select date") },
-            )
-            OutlinedTextField(
-                trailingIcon = trailingIconView2,
-                readOnly = true,
-                singleLine = true,
-                modifier = Modifier
-                    .clickable(
-                        enabled = true,
-                        onClick = { mTimePickerDialog.show() },
-                    ),
-                value = mTime.value.format("HH:mm"),
-                onValueChange = { },
-                label = { Text(text = "Select time")},
-            )
-        }
-
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.fillMaxSize(),
-        )
 
 
         Row(horizontalArrangement = Arrangement.End){
@@ -252,9 +222,10 @@ fun AddEventScreenContent(
                     )
                     scope.launch {
                         delay(400)
-                        snackbarHostState.showSnackbar("Event created")
+                        snackbarHostState.showSnackbar("Event '${eventName.value}' created")
                         onSaveEventClick()
                     }
+
                 }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "save event")
                 Text(text = "Save")

@@ -52,7 +52,7 @@ class AddEventViewModel @Inject constructor(
         if (selectedDate.isBlank() || selectedTime.isBlank()) return false
 
         return try {
-            val date = SimpleDateFormat("dd/MM/yyyy:HH:MM")
+            val date = SimpleDateFormat("dd/MM/yyyy:hh:mm")
                 .parse(selectedDate + selectedTime)
             Date().before(date)
         } catch (e: Exception){
@@ -63,7 +63,7 @@ class AddEventViewModel @Inject constructor(
 
     fun getDate(selectedDate: String, selectedTime: String): Date{
         return try {
-            SimpleDateFormat("dd/MM/yyyy:HH:MM")
+            SimpleDateFormat("dd/MM/yyyy:hh:mm")
                 .parse(selectedDate + selectedTime)!!
         } catch (e: Exception){
             Log.e(TAG, "Error occurred while parsing date. Invalid date?", e)

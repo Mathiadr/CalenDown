@@ -42,7 +42,7 @@ class StorageServiceImpl @Inject constructor(
                 Log.i(TAG, "Event saved to Firestore")
             }
             .addOnFailureListener {
-                Log.e(TAG, "Error occurred while saving event to Firestore:\n$it")
+                Log.e(TAG, "Error occurred while saving event to Firestore", it)
             }
             .await().id
     }
