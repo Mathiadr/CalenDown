@@ -77,7 +77,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(80.dp))
 
             ElevatedButtonComponent(
-                label = "Login",
+                label = stringResource(R.string.login),
                 onClick = { viewModel.onLoginClick(loggedIn) }
             )
 
@@ -92,8 +92,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             ClickableTextComponent(
-                initialText = "No account? ",
-                actionText = "Create account",
+                initialText = stringResource(R.string.no_account),
+                actionText = stringResource(R.string.create_account),
                 onClick = {
                     createAccount()
                 }
@@ -102,8 +102,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             ClickableTextComponent(
-                initialText = "Continue as ",
-                actionText = "guest?",
+                initialText = stringResource(R.string.continue_as),
+                actionText = stringResource(R.string.guest_login),
                 onClick = {
                     viewModel.createAnonymousAccount(loggedIn)
                 }

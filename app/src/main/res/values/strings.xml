@@ -60,6 +60,23 @@
     <string name="event_reminder">Event Reminder</string>
     <string name="your_event_is_due">Your event is due!</string>
     <string name="is_due">\'%1$s\' is due!</string>
+    <string name="enter_event_name">Enter event name</string>
+    <string name="describe_your_event_optional">Describe your event (optional)</string>
+    <string name="select_date">Select the date of the event</string>
+    <string name="select_time">Select the time of the event</string>
+    <string name="username">Username</string>
+    <string name="leave_event">Leave event</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="manage_participants">Manage participants</string>
+    <string name="invite_friends_to_event">Invite friends to event</string>
+    <string name="actions_for_the_event">Actions for the event</string>
+    <string name="invite">Invite</string>
+    <string name="send">Send</string>
+    <string name="no_account">"No account? "</string>
+    <string name="continue_as">"Continue as "</string>
+    <string name="guest_login">guest?</string>
+    <string name="invited_you_to">%1$s invited you to</string>
+    <string name="delete_friend">Delete friend</string>
 
 
 </resources>

@@ -1,10 +1,14 @@
 package no.gruppe02.hiof.calendown.screen.createaccount
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
@@ -20,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import no.gruppe02.hiof.calendown.R
+import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.BasicTextField
 import no.gruppe02.hiof.calendown.components.ElevatedButtonComponent
 import no.gruppe02.hiof.calendown.components.EmailField
@@ -34,19 +39,17 @@ fun CreateAccountScreen(
 
     val uiState by viewModel.uiState
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(28.dp)
-    ) {
+    BasicScreenLayout(innerPadding = PaddingValues(28.dp), modifier = Modifier.verticalScroll(
+        rememberScrollState())) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             HeaderText(text = stringResource(R.string.create_account))
 
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(70.dp))
 
             if (uiState.errorMessage != 0)
                 Text(
@@ -54,40 +57,38 @@ fun CreateAccountScreen(
                     color = MaterialTheme.colorScheme.error
                 )
 
-            BasicTextField(
-                value = uiState.username,
-                onNewValue = viewModel::onUsernameChange,
-                label = "Username",
-                imageVector = Icons.Outlined.Person)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-            Spacer(modifier = Modifier.height(10.dp))
 
-            EmailField(
-                uiState.email,
-                viewModel::onEmailChange,
-                label = stringResource(R.string.email),
-                imageVector = Icons.Outlined.Email)
+                BasicTextField(
+                    value = uiState.username,
+                    onNewValue = viewModel::onUsernameChange,
+                    label = stringResource(R.string.username),
+                    imageVector = Icons.Outlined.Person)
 
-            Spacer(modifier = Modifier.height(10.dp))
+                EmailField(
+                    uiState.email,
+                    viewModel::onEmailChange,
+                    label = stringResource(R.string.email),
+                    imageVector = Icons.Outlined.Email)
 
-            PasswordField(
-                uiState.password,
-                viewModel::onPasswordChange,
-                label = stringResource(R.string.password),
-                imageVector = Icons.Outlined.Lock)
+                PasswordField(
+                    uiState.password,
+                    viewModel::onPasswordChange,
+                    label = stringResource(R.string.password),
+                    imageVector = Icons.Outlined.Lock)
 
-            Spacer(modifier = Modifier.height(10.dp))
+                PasswordField(
+                    uiState.repeatPassword,
+                    viewModel::onRepeatPasswordChange,
+                    label = stringResource(R.string.repeat_password),
+                    imageVector = Icons.Outlined.Lock)
+            }
 
-            PasswordField(
-                uiState.repeatPassword,
-                viewModel::onRepeatPasswordChange,
-                label = stringResource(R.string.repeat_password),
-                imageVector = Icons.Outlined.Lock)
-
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(70.dp))
 
             ElevatedButtonComponent(
-                label = "Create account",
+                label = stringResource(R.string.create_account),
                 onClick = { viewModel.onSignUpClick(loggedIn) }
             )
         }

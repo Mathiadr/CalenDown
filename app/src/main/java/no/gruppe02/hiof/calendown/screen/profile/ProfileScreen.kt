@@ -226,7 +226,7 @@ fun FriendOptionDropdownMenu(viewModel: ProfileViewModel, friendId: String){
                 onDismissRequest = { expandFriendOptions.value = false }) {
                 DropdownMenuItem(
                     text = {
-                        Text(text = "Delete friend", color = Color.Red)
+                        Text(text = stringResource(R.string.delete_friend), color = Color.Red)
                     },
                     onClick = {
                         openDeleteFriendDialog.value = true

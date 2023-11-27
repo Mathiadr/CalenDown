@@ -57,6 +57,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicContainer
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
@@ -239,28 +241,28 @@ fun EventDropdownMenu(viewModel: EventDetailViewModel,
     Box(modifier = Modifier
         .wrapContentSize()) {
         IconButton(onClick = { expanded = !expanded}) {
-            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Actions for the event")
+            Icon(imageVector = Icons.Default.MoreVert, contentDescription = stringResource(R.string.actions_for_the_event))
         }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
             DropdownMenuItem(
-                text = { Text(text = "Invite friends to event") },
+                text = { Text(text = stringResource(R.string.invite_friends_to_event)) },
                 onClick = {openInviteDialog = true})
             if (viewModel.owner.value.uid == viewModel.currentUserId){
                 DropdownMenuItem(
                     text = { Text(text = "Edit event (Not yet implemented)") },
                     onClick = {/* TODO */ })
                 DropdownMenuItem(
-                    text = { Text(text = "Manage participants") },
+                    text = { Text(text = stringResource(R.string.manage_participants)) },
                     onClick = {openRemoveParticipantDialog = true})
                 DropdownMenuItem(
-                    text = { Text(text = "Delete Event") },
+                    text = { Text(text = stringResource(R.string.delete_event)) },
                     onClick = { openDeleteEventDialog = true },
                     colors = MenuDefaults.itemColors(textColor = Color.Red))
             } else {
                 DropdownMenuItem(
-                    text = { Text(text = "Leave event") },
+                    text = { Text(text = stringResource(R.string.leave_event)) },
                     onClick = {
                         openLeaveEventDialog = true
                     }
@@ -327,7 +329,7 @@ fun InviteToEventDialog(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                HeaderText(text = "Invite")
+                HeaderText(text = stringResource(R.string.invite))
                 Divider()
                 LazyColumn(
                     content = {
@@ -366,10 +368,10 @@ fun InviteToEventDialog(
                             closeDialog()
                         },
                         enabled = selectedFriends.isNotEmpty()) {
-                        Text(text = "Send")
+                        Text(text = stringResource(R.string.send))
                     }
                     TextButton(onClick = { closeDialog() }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(R.string.cancel))
                     }
                 }
             }

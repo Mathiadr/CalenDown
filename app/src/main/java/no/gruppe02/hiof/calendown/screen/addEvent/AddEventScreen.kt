@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -55,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.HeaderText
 import java.time.LocalDate
@@ -167,7 +169,7 @@ fun AddEventScreenContent(
                     modifier = Modifier.fillMaxWidth(0.75f),
                     value = eventName.value,
                     onValueChange = { eventName.value = it },
-                    label = { Text(text = "Enter event name") },
+                    label = { Text(text = stringResource(R.string.enter_event_name)) },
                 )
                 IconSelectionBox(viewModel = viewModel, selectedIcon = selectedIcon)
             }
@@ -181,7 +183,7 @@ fun AddEventScreenContent(
                     .fillMaxWidth(),
                 value = eventDescription.value,
                 onValueChange = { eventDescription.value = it },
-                label = { Text(text = "Describe your event (optional)") },
+                label = { Text(text = stringResource(R.string.describe_your_event_optional)) },
             )
         }
 
@@ -194,7 +196,7 @@ fun AddEventScreenContent(
                     .fillMaxWidth()
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event date")
-                Text(text = selectedDate.value.ifEmpty { "Select the date of the event" } )
+                Text(text = selectedDate.value.ifEmpty { stringResource(R.string.select_date) } )
             }
 
             OutlinedButton(
@@ -205,7 +207,7 @@ fun AddEventScreenContent(
                     .fillMaxWidth()
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = "pick event time")
-                Text(text = mTime.value.ifEmpty { "Select the time of the event" } )
+                Text(text = mTime.value.ifEmpty { stringResource(R.string.select_time) } )
             }
         }
 
@@ -228,7 +230,7 @@ fun AddEventScreenContent(
 
                 }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "save event")
-                Text(text = "Save")
+                Text(text = stringResource(R.string.save))
             }
         }
     }

@@ -50,6 +50,7 @@ sealed class Screen(
     val selectedIcon: ImageVector? = null,
     val unselectedIcon: ImageVector? = null) {
 
+    // TODO: Create string resources
     object Home : Screen("Home", R.string.home, Icons.Filled.Home, Icons.Outlined.Home)
     object Profile : Screen("Profile", R.string.profile, Icons.Filled.Person, Icons.Outlined.Person)
     object Notifications : Screen("Notifications", R.string.notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)

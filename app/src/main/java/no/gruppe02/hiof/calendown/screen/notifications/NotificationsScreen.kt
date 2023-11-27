@@ -30,11 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import no.gruppe02.hiof.calendown.R
 import no.gruppe02.hiof.calendown.components.BasicScreenLayout
 import no.gruppe02.hiof.calendown.components.ProfileImage
 
@@ -48,7 +50,7 @@ fun NotificationsScreen(viewModel: NotificationsViewModel = hiltViewModel()) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Notifications",
+                        text = stringResource(R.string.notifications),
                         style = MaterialTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -103,7 +105,7 @@ fun InvitationCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "${invitation.senderName} invited you to",
+                        text = stringResource(R.string.invited_you_to, invitation.senderName),
                         modifier = Modifier.fillMaxWidth(0.55f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
